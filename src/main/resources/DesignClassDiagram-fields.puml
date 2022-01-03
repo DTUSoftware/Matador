@@ -1,0 +1,42 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam classAttributeIconSize 0
+
+package fields {
+    abstract Field {
+        -fieldID : UUID
+
+        {abstract} +doLandingAction(playerID:UUID) : void
+    }
+
+    class StartField {
+    }
+
+    class PropertyField {
+        -color : Color
+
+        +isAvailable() : boolean
+    }
+
+    class ChanceField {
+    }
+
+    class JailField {
+    }
+
+    class BreakField {
+    }
+
+    class GoToJailField {
+    }
+
+    Field <|-- StartField
+    Field <|-- PropertyField
+    Field <|-- ChanceField
+    Field <|-- JailField
+    Field <|-- BreakField
+    Field <|-- GoToJailField
+}
+
+@enduml

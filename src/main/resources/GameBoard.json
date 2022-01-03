@@ -1,0 +1,151 @@
+{
+  "property_field_groups": {
+    "#9a5013": {
+      "base_price": 4000,
+      "base_rent": 2000,
+      "group_rent": 3000
+    },
+    "CYAN": {
+      "base_price": 2000,
+      "base_rent": 1000,
+      "group_rent": 2000
+    },
+    "PINK": {
+      "base_price": 5000,
+      "base_rent": 2000,
+      "group_rent": 3000
+    },
+    "ORANGE": {
+      "base_price": 3000,
+      "base_rent": 1000,
+      "group_rent": 2000
+    },
+    "RED": {
+      "base_price": 4000,
+      "base_rent": 2000,
+      "group_rent": 3000
+    },
+    "YELLOW": {
+      "base_price": 2000,
+      "base_rent": 1000,
+      "group_rent": 2000
+    },
+    "GREEN": {
+      "base_price": 5000,
+      "base_rent": 2000,
+      "group_rent": 3000
+    },
+    "BLUE": {
+      "base_price": 3000,
+      "base_rent": 1000,
+      "group_rent": 2000
+    }
+  },
+  "fields": [
+    {
+      "field_type": "StartField",
+      "pass_reward": 3000
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "burger_joint",
+      "field_color": "#9a5013"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "pizza_house",
+      "field_color": "#9a5013"
+    },
+    {
+      "field_type": "ChanceField"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "candy_store",
+      "field_color": "CYAN"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "ice_cream_parlor",
+      "field_color": "CYAN"
+    },
+    {
+      "field_type": "JailField"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "museum",
+      "field_color": "PINK"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "library",
+      "field_color": "PINK"
+    },
+    {
+      "field_type": "ChanceField"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "skate_park",
+      "field_color": "ORANGE"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "swimming_pool",
+      "field_color": "ORANGE"
+    },
+    {
+      "field_type": "BreakField"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "video_game_arcade",
+      "field_color": "RED"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "movie_theater",
+      "field_color": "RED"
+    },
+    {
+      "field_type": "ChanceField"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "toy_store",
+      "field_color": "YELLOW"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "pet_store",
+      "field_color": "YELLOW"
+    },
+    {
+      "field_type": "GoToJailField"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "bowling_alley",
+      "field_color": "GREEN"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "the_zoo",
+      "field_color": "GREEN"
+    },
+    {
+      "field_type": "ChanceField"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "park_place",
+      "field_color": "BLUE"
+    },
+    {
+      "field_type": "PropertyField",
+      "field_name": "boardwalk",
+      "field_color": "BLUE"
+    }
+  ]
+}

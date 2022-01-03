@@ -1,0 +1,40 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Game {
+}
+
+class Die {
+    faceValue
+}
+
+class Player {
+    name
+}
+
+class Fields {
+    name
+    price
+    rent
+}
+
+
+class FieldGroup {
+    groupRent
+}
+
+class Account {
+    balance
+}
+
+class ChanceCards {
+    name
+}
+
+Game "1" -r "2..4" Player : Includes
+Game "1" -l "2" Die : Includes
+Game "1" -- "24" Fields : Includes
+Fields "2" -- "1" FieldGroup : Includes
+Player  "1" -d- "1" Account: Includes
+Game "1" -d- "16" ChanceCards: Includes
+@enduml

@@ -1,0 +1,136 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam classAttributeIconSize 0
+
+class Game {
+
+}
+
+package diplomitdtu.matadorgui {}
+
+' Managers
+package managers {
+    class GameManager {
+        {static} -gameManager : GameManager
+
+        -GameManager()
+        {static} +getInstance() : GameManager
+    }
+
+    class PlayerManager {
+        {static} -playerManager : PlayerManager
+
+        -PlayerManager()
+        {static} +getInstance() : PlayerManager
+    }
+
+    class DeedManager {
+        {static} -deedManager : DeedManager
+
+        -deeds : BiMap<deedID:UUID, fieldID:UUID> [16]
+        -deedOwnership : HashMap<deedID:UUID, playerID:UUID> [16]
+        -deedGroups : HashMap<color:Color, deeds:Deed[2]> [8]
+
+        -DeedManager()
+        {static} +getInstance() : DeedManager
+
+        +getPlayerDeeds(playerID:UUID) : Deed[]
+        +getDeed(fieldID:UUID) : UUID
+        +getField(deedID:UUID) : UUID
+        +getDeedGroupDeeds(color:Color) : Deed[2]
+        +createDeed(fieldID:UUID) : void
+        +setDeedOwner(deedID:UUID, playerID:UUID) : void
+    }
+
+    class LanguageManager {
+        {static} -languageManager : LanguageManager
+
+        -LanguageManager()
+        {static} +getInstance() : LanguageManager
+
+        +getMessage(messageString) : String
+    }
+
+    class GUIManager {
+        {static} -guiManager : GUIManager
+
+        -GUIManager()
+        {static} +getInstance() : GUIManager
+    }
+
+    GUIManager ..> diplomitdtu.matadorgui : <<use>>
+}
+
+Game ..> GameManager : <<use>>
+Game ..> PlayerManager : <<use>>
+Game ..> GUIManager : <<use>>
+Game ..> LanguageManager : <<use>>
+
+
+' Objects
+package objects {
+    class GameBoard {
+        +getField(position:int) : Field
+        +getRandomChanceCard() : ChanceCard
+    }
+
+    class DiceCup {
+        +raffle() : void
+        +getValues() : int[]
+        +getSum() : int
+    }
+
+    class Die {
+        -value : int
+
+        +roll() : int
+    }
+
+    class Player {
+        -name : String
+        -playerID : UUID
+    }
+
+    class Account {
+        -balance : double
+    }
+
+    class Deed {
+        -price : double
+        -rent : double
+        -groupRent : double
+
+        +getPrice() : double
+        +getRent() : double
+        +payRent(player) : void
+    }
+
+    package fields {
+        abstract Field {
+            -fieldID : UUID
+
+            {abstract} +doLandingAction(playerID:UUID) : void
+        }
+    }
+
+    package chancecards {
+        abstract ChanceCard {
+            -cardName : String
+
+            {abstract} +doCardAction(playerID:UUID) : void
+            +showCard() : void
+        }
+    }
+
+    GameBoard --> "24 -fields" Field
+    GameBoard --> "18 -chanceCards" ChanceCard
+    DiceCup --> "2 -dice" Die
+    Player --> "1 -account" Account
+}
+
+PlayerManager --> "2..4 -players" Player
+GameManager --> "1 -gameBoard" GameBoard
+GameManager --> "1 -diceCup" DiceCup
+
+@enduml
