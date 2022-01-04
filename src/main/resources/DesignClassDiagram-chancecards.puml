@@ -4,95 +4,43 @@
 skinparam classAttributeIconSize 0
 
 package chancecards {
-    abstract ChanceCard {
+    abstract class ChanceCard {
         -cardName : String
 
         {abstract} +doCardAction(playerID:UUID) : void
     }
 
-    abstract MoveToFieldCC {
+    package pay {
+        abstract class PayCC {
+        }
+
+        ChanceCard <|-- PayCC
     }
 
-    abstract MoveToColorCC {
+    package receive {
+        abstract class ReceiveCC {
+        }
+
+        ChanceCard <|-- ReceiveCC
     }
 
-    ChanceCard <|-- MoveToFieldCC
-    ChanceCard <|-- MoveToColorCC
+    package move {
+        abstract class MoveToFieldCC {
+        }
 
-    class BrownRedCC {
+        abstract class MoveToColorCC {
+        }
+
+        ChanceCard <|-- MoveToFieldCC
+        ChanceCard <|-- MoveToColorCC
     }
 
-    class LightBlueCC {
+    package misc {
+        class KingsBirthdayCC {
+        }
+
+        ChanceCard <|-- KingsBirthdayCC
     }
-
-    class LightBlueYellowCC {
-    }
-
-    class OrangeBlueCC {
-    }
-
-    class OrangeCC {
-    }
-
-    class RedCC {
-    }
-
-    class SalmonGreenCC {
-    }
-
-    MoveToColorCC <|-- BrownRedCC
-    MoveToColorCC <|-- LightBlueCC
-    MoveToColorCC <|-- LightBlueYellowCC
-    MoveToColorCC <|-- OrangeBlueCC
-    MoveToColorCC <|-- OrangeCC
-    MoveToColorCC <|-- RedCC
-    MoveToColorCC <|-- SalmonGreenCC
-
-    class BoardWalkCC {
-    }
-
-    class SkateparkCC {
-    }
-
-    class StartCC {
-    }
-
-    MoveToFieldCC <|-- BoardWalkCC
-    MoveToFieldCC <|-- SkateparkCC
-    MoveToFieldCC <|-- StartCC
-
-    class BailCC {
-    }
-
-    class BirthdayCC {
-    }
-
-    class CarCC {
-    }
-
-    class DidHomeWorkCC {
-    }
-
-    class EatCandyCC {
-    }
-
-    class MoveFieldsCC {
-    }
-
-    class MoveOrDrawCC {
-    }
-
-    class ShipCC {
-    }
-
-    ChanceCard <|-- BailCC
-    ChanceCard <|-- BirthdayCC
-    ChanceCard <|-- CarCC
-    ChanceCard <|-- DidHomeWorkCC
-    ChanceCard <|-- EatCandyCC
-    ChanceCard <|-- MoveFieldsCC
-    ChanceCard <|-- MoveOrDrawCC
-    ChanceCard <|-- ShipCC
 }
 
 @enduml

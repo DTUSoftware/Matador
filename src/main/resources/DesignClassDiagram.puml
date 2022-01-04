@@ -129,7 +129,7 @@ package objects {
     Player --> "1 -account" Account
 }
 
-PlayerManager --> "2..4 -players" Player
+PlayerManager --> "3..6 -players" Player
 GameManager --> "1 -gameBoard" GameBoard
 GameManager --> "1 -diceCup" DiceCup
 
