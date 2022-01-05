@@ -57,6 +57,7 @@ public class JailField extends Field {
     @Override
     public void reloadLanguage() {
         super.getGUIField().setTitle(getLanguageManager().getString("field_"+super.getFieldName()+"_name"));
+        super.getGUIField().setSubText(getLanguageManager().getString("field_"+super.getFieldName()+"_name"));
         super.getGUIField().setDescription(getLanguageManager().getString("field_"+super.getFieldName()+"_description"));
     }
 }

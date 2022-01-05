@@ -90,7 +90,6 @@ public class GameBoard {
                 case "StartField":
                     fields[i] = new StartField();
                     Game.setStartPassReward(jsonField.getDouble("pass_reward"));
-                    fields[i].reloadLanguage();
                     break;
                 case "PropertyField":
                     String fieldColorString = jsonField.getString("field_color");
@@ -140,9 +139,6 @@ public class GameBoard {
                     if (fieldDeed == null) {
                         break;
                     }
-
-                    // Update prices
-                    ((PropertyField) fields[i]).updatePrices(fieldDeed.getID());
                     break;
                 case "ChanceField":
                     fields[i] = new ChanceField();
@@ -186,6 +182,14 @@ public class GameBoard {
     public void reloadLanguage() {
         for (Field field : fields) {
             field.reloadLanguage();
+        }
+    }
+
+    public void updatePrices() {
+        for (Field field : fields) {
+            if (field instanceof PropertyField) {
+                ((PropertyField) field).updatePrices(DeedManager.getInstance().getDeedID(field.getID()));
+            }
         }
     }
 

@@ -13,7 +13,7 @@ public class GameInstance {
     private UUID gameID;
     private UUID guiID;
     private GameManager gameM;
-    private LanguageManager lm;
+    private LanguageManager lm = new LanguageManager();
     private static GUIManager guiM = GUIManager.getInstance();
     private static PlayerManager pm = PlayerManager.getInstance();
 
@@ -21,7 +21,6 @@ public class GameInstance {
         gameID = UUID.randomUUID();
 
         gameM = new GameManager(gameID);
-        lm = new LanguageManager();
 
         Game.logDebug("Fields array: " + gameM.getGameBoard().fieldsToString());
 

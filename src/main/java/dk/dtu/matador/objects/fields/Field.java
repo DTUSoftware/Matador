@@ -39,7 +39,6 @@ public abstract class Field {
         fieldID = UUID.randomUUID();
         this.fieldName = fieldName;
         this.fieldColor = fieldColor;
-        LanguageManager lm = getLanguageManager();
 
         switch (fieldName) {
             case "chance":
@@ -49,22 +48,17 @@ public abstract class Field {
                 this.guiField = new GUI_Start();
                 break;
             case "jail":
-                this.guiField = new GUIJailField("GUI_Field.Image.Jail", "", lm.getString("field_"+fieldName+"_name"), "", fieldColor, Color.BLACK);
+                this.guiField = new GUIJailField("GUI_Field.Image.Jail", "", "", "", fieldColor, Color.BLACK);
                 break;
             case "go_to_jail":
-                this.guiField = new GUIJailField("GUI_Field.Image.GoToJail", lm.getString("field_"+fieldName+"_name"), "", "", fieldColor, Color.BLACK);
+                this.guiField = new GUIJailField("GUI_Field.Image.GoToJail", "", "", "", fieldColor, Color.BLACK);
                 break;
             default:
                 this.guiField = new GUI_Street();
                 break;
         }
         this.guiField.setBackGroundColor(fieldColor);
-        this.guiField.setTitle(lm.getString("field_"+fieldName+"_name"));
         this.guiField.setSubText("");
-        if (description) {
-            this.guiField.setDescription(lm.getString("field_"+fieldName+"_description")
-                    .replace("{start_pass_amount}", Double.toString(Game.getStartPassReward())));
-        }
     }
 
     // TODO: this could probably have some performance issues, oops
