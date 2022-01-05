@@ -65,16 +65,37 @@ public class DeedManager {
     /**
      * Creates a new deed for a given field.
      *
+     * @param fieldID       The UUID of the field to create a deed for.
+     * @param price         The price to buy the deed.
+     * @param mortgage      The mortgage of the deed.
+     * @param rent          The rent options that one would have to pay if they land on the field.
+     * @param housePrice    The price to build a new house.
+     * @param hotelPrice    The price to build a hotel.
+     * @return              The created Deed.
+     */
+    public Deed createDeed(UUID fieldID, double price, double mortgage, double[] rent, double housePrice, double hotelPrice) {
+        Deed deed = new Deed();
+        deed.setPrices(price, mortgage, rent, housePrice, hotelPrice);
+
+        UUID deedID = deed.getID();
+        deedMap.put(deedID, deed);
+        deeds.put(deedID, fieldID);
+        deedOwnership.put(deedID, null);
+
+        return deed;
+    }
+
+    /**
+     * Creates a new deed for a given field.
+     *
      * @param fieldID   The UUID of the field to create a deed for.
      * @param price     The price to buy the deed.
-     * @param rent      The rent one would have to pay if they land on the field.
-     * @param groupRent The collective grouprent, if one were to land on the field,
-     *                  when the owner of the field owns all of the deeds in the deed group.
+     * @param mortgage  The mortgage of the deed.
      * @return          The created Deed.
      */
-    public Deed createDeed(UUID fieldID, double price, double rent, double groupRent) {
+    public Deed createDeed(UUID fieldID, double price, double mortgage) {
         Deed deed = new Deed();
-        deed.setPrices(price, rent, groupRent);
+        deed.setPrices(price, mortgage);
 
         UUID deedID = deed.getID();
         deedMap.put(deedID, deed);
@@ -183,9 +204,16 @@ public class DeedManager {
         return deedOwnership.get(deedID);
     }
 
-    public void updateDeedPrices(UUID deedID, double price, double rent, double groupRent) {
+    public void updateDeedPrices(UUID deedID, double price, double mortgage) {
         Deed deed = getDeed(deedID);
-        deed.setPrices(price, rent, groupRent);
+        deed.setPrices(price, mortgage);
+        PropertyField deedField = (PropertyField) getGameBoard(deedID).getFieldFromID(getFieldID(deedID));
+        deedField.updatePrices(deedID);
+    }
+
+    public void updateDeedPrices(UUID deedID, double price, double mortgage, double[] rent, double housePrice, double hotelPrice) {
+        Deed deed = getDeed(deedID);
+        deed.setPrices(price, mortgage, rent, housePrice, hotelPrice);
         PropertyField deedField = (PropertyField) getGameBoard(deedID).getFieldFromID(getFieldID(deedID));
         deedField.updatePrices(deedID);
     }
