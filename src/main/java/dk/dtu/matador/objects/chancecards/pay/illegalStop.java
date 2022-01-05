@@ -1,4 +1,4 @@
 package dk.dtu.matador.objects.chancecards.pay;
 
-public abstract class PayCC {
+public class illegalStop extends {
 }

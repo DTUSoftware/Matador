@@ -1,4 +1,4 @@
 package dk.dtu.matador.objects.chancecards.move;
 
-public class MoveToFieldCC {
+public abstract class MoveToFieldCC {
 }
