@@ -5,9 +5,10 @@ import dk.dtu.matador.objects.Deed;
 import gui_fields.GUI_Ownable;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.UUID;
 
-public class PropertyField extends Field {
+public abstract class PropertyField extends Field {
     public PropertyField(Color color, String fieldName) {
         super(color, fieldName, false);
 //        ((GUI_Ownable) super.getGUIField()).setBorder(Color.BLACK);
@@ -98,7 +99,7 @@ public class PropertyField extends Field {
         Deed fieldDeed = DeedManager.getInstance().getDeed(deedID);
         ((GUI_Ownable) super.getGUIField()).setRent(Double.toString(fieldDeed.getCurrentRent()));
         super.getGUIField().setSubText(Double.toString(fieldDeed.getPrice()));
-        super.getGUIField().setDescription(LanguageManager.getInstance().getString("price")+": " + Double.toString(fieldDeed.getPrice()) + " | "+LanguageManager.getInstance().getString("rent")+": " + Double.toString(fieldDeed.getRent()) + " | "+LanguageManager.getInstance().getString("group_rent")+": " + Double.toString(fieldDeed.getGroupRent()));
+        super.getGUIField().setDescription(LanguageManager.getInstance().getString("price")+": " + Double.toString(fieldDeed.getPrice()) + " | "+LanguageManager.getInstance().getString("rent")+": " + Arrays.toString(fieldDeed.getRent()));
     }
 
     public void setPropertyOwner(UUID playerID) {

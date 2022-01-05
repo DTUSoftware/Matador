@@ -166,7 +166,7 @@
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "bernstorffsvej",
-      "field_color": "GREY",
+      "field_color": "GRAY",
       "prices": {
         "deed": 3600,
         "house": 2000,
@@ -182,7 +182,7 @@
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "hellerupvej",
-      "field_color": "GREY",
+      "field_color": "GRAY",
       "prices": {
         "deed": 3600,
         "house": 2000,
@@ -195,7 +195,7 @@
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "strandvejen",
-      "field_color": "GREY",
+      "field_color": "GRAY",
       "prices": {
         "deed": 4000,
         "house": 2000,

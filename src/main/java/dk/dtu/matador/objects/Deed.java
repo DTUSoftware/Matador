@@ -1,9 +1,11 @@
 package dk.dtu.matador.objects;
 
+import dk.dtu.matador.Game;
 import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.managers.PlayerManager;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -13,8 +15,12 @@ import java.util.UUID;
 public class Deed {
     private final UUID deedID;
     private double price = 0.0;
-    private double rent = 0.0;
-    private double groupRent = 0.0;
+    private double[] rent = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    private double mortgage = 0.0;
+    private double housePrice = 0.0;
+    private double hotelPrice = 0.0;
+    private int houses = 0;
+    private int hotels = 0;
 
     public Deed() {
         deedID = UUID.randomUUID();
@@ -24,10 +30,17 @@ public class Deed {
         return this.deedID;
     }
 
-    public void setPrices(double price, double rent, double groupRent) {
+    public void setPrices(double price, double mortgage, double[] rent, double housePrice, double hotelPrice) {
         this.price = price;
         this.rent = rent;
-        this.groupRent = groupRent;
+        this.mortgage = mortgage;
+        this.housePrice = housePrice;
+        this.hotelPrice = hotelPrice;
+    }
+
+    public void setPrices(double price, double mortgage) {
+        this.price = price;
+        this.mortgage = mortgage;
     }
 
     public double getPrice() {
@@ -35,35 +48,36 @@ public class Deed {
     }
 
     public double getCurrentRent() {
+        double currentRent = 0.0;
         UUID deedOwner = DeedManager.getInstance().getDeedOwnership(deedID);
         if (deedOwner == null) {
             return 0.0;
         }
         else {
-            // get the deed group and if the owner of current deed is owner of both deeds, raise rent to group rent
-            UUID[] deedIDs = DeedManager.getInstance().getDeedGroupDeeds(GameManager.getInstance().getGameBoard().getFieldFromID(DeedManager.getInstance().getFieldID(deedID)).getFieldColor());
-            boolean sameOwner = true;
-            for (UUID groupDeedID : deedIDs) {
-                if (!deedOwner.equals(DeedManager.getInstance().getDeedOwnership(groupDeedID))) {
-                    sameOwner = false;
-                    break;
-                }
-            }
-            if (sameOwner) {
-                return getGroupRent();
+            // raise rent to max rent, if they have a hotel built
+            if (this.hotels >= 1) {
+                currentRent = this.rent[5]; // hotel price
             }
             else {
-                return getRent();
+                currentRent = this.rent[this.houses];
             }
+
+            // get the deed group and if the owner of current deed is owner of both deeds, raise rent to group rent
+            UUID[] deedIDs = DeedManager.getInstance().getDeedGroupDeeds(GameManager.getInstance().getGameBoard().getFieldFromID(DeedManager.getInstance().getFieldID(deedID)).getFieldColor());
+            int sameOwnerCount = 0;
+            for (UUID groupDeedID : deedIDs) {
+                if (deedOwner.equals(DeedManager.getInstance().getDeedOwnership(groupDeedID))) {
+                    sameOwnerCount++;
+                }
+            }
+
+            // TODO: calculate rent, if they own all the group fields
         }
+        return currentRent;
     }
 
-    public double getRent() {
+    public double[] getRent() {
         return this.rent;
-    }
-
-    public double getGroupRent() {
-        return this.groupRent;
     }
 
     public boolean payRent(UUID playerID) {
@@ -72,6 +86,6 @@ public class Deed {
 
     @Override
     public String toString() {
-        return "Price: " + getPrice() + ", Rent: " + getRent() + ", GroupRent: " + getGroupRent();
+        return "Price: " + getPrice() + ", Rent: " + Arrays.toString(getRent());
     }
 }

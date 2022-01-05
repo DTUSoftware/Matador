@@ -14,12 +14,14 @@ import java.util.ResourceBundle;
  * Note: originally made in cdio2, though improved
  */
 public class LanguageManager {
-    private Locale locale = Locale.getDefault();
-    private ResourceBundle messages = getMessages();
+    private Locale locale = null;
+    private ResourceBundle messages = null;
 
     private static LanguageManager languageManager;
 
     private LanguageManager() {
+        locale = Locale.getDefault();
+
         if (locale.getLanguage().equals(new Locale("en").getLanguage())) {
             locale = new Locale("en", "US");
         } else if (locale.getLanguage().equals(new Locale("da").getLanguage())) {
@@ -27,6 +29,12 @@ public class LanguageManager {
         } else {
             locale = new Locale("en", "US");
         }
+
+        // TODO: remove following line after adding English
+        locale = new Locale("da", "DK");
+
+        // initialize
+        messages = getMessages();
     }
 
     public static LanguageManager getInstance() {
@@ -78,7 +86,7 @@ public class LanguageManager {
                 locales.add(locale);
             }
         }
-        locales.add(new Locale("en", "US"));
+//        locales.add(new Locale("en", "US"));
 
         return locales.toArray(new Locale[0]);
     }
