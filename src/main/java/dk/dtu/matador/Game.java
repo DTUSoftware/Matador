@@ -10,8 +10,8 @@ import dk.dtu.matador.objects.Player;
  * Main class for the program
  */
 public class Game {
-    private final static double startingBalance = 12000.0;
-    private static double startPassReward = 3000.0;
+    private final static double startingBalance = 30000.0;
+    private static double startPassReward = 4000.0;
     public final static boolean debug = ((System.getenv("debug") != null) || (System.getProperty("debug") != null));
 
     public static void main(String[] args) {
