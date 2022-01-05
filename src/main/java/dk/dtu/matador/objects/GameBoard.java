@@ -87,6 +87,7 @@ public class GameBoard {
                 case "StartField":
                     fields[i] = new StartField();
                     Game.setStartPassReward(jsonField.getDouble("pass_reward"));
+                    fields[i].reloadLanguage();
                     break;
                 case "PropertyField":
                     String fieldColorString = jsonField.getString("field_color");
