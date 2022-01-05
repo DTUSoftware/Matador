@@ -1,8 +1,12 @@
 package dk.dtu.matador.objects.fields;
 
 import dk.dtu.matador.Game;
+import dk.dtu.matador.GameInstance;
+import dk.dtu.matador.managers.GUIManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.managers.LanguageManager;
+import dk.dtu.matador.objects.GameBoard;
+import dk.dtu.matador.objects.GameGUI;
 import gui_fields.GUI_Chance;
 import gui_fields.GUI_Field;
 import gui_fields.GUI_Start;
@@ -35,6 +39,7 @@ public abstract class Field {
         fieldID = UUID.randomUUID();
         this.fieldName = fieldName;
         this.fieldColor = fieldColor;
+        LanguageManager lm = getLanguageManager();
 
         switch (fieldName) {
             case "chance":
@@ -44,22 +49,66 @@ public abstract class Field {
                 this.guiField = new GUI_Start();
                 break;
             case "jail":
-                this.guiField = new GUIJailField("GUI_Field.Image.Jail", "", LanguageManager.getInstance().getString("field_"+fieldName+"_name"), "", fieldColor, Color.BLACK);
+                this.guiField = new GUIJailField("GUI_Field.Image.Jail", "", lm.getString("field_"+fieldName+"_name"), "", fieldColor, Color.BLACK);
                 break;
             case "go_to_jail":
-                this.guiField = new GUIJailField("GUI_Field.Image.GoToJail", LanguageManager.getInstance().getString("field_"+fieldName+"_name"), "", "", fieldColor, Color.BLACK);
+                this.guiField = new GUIJailField("GUI_Field.Image.GoToJail", lm.getString("field_"+fieldName+"_name"), "", "", fieldColor, Color.BLACK);
                 break;
             default:
                 this.guiField = new GUI_Street();
                 break;
         }
         this.guiField.setBackGroundColor(fieldColor);
-        this.guiField.setTitle(LanguageManager.getInstance().getString("field_"+fieldName+"_name"));
+        this.guiField.setTitle(lm.getString("field_"+fieldName+"_name"));
         this.guiField.setSubText("");
         if (description) {
-            this.guiField.setDescription(LanguageManager.getInstance().getString("field_"+fieldName+"_description")
+            this.guiField.setDescription(lm.getString("field_"+fieldName+"_description")
                     .replace("{start_pass_amount}", Double.toString(Game.getStartPassReward())));
         }
+    }
+
+    // TODO: this could probably have some performance issues, oops
+    private GameInstance getGameInstance() {
+        for (UUID gameID : Game.getGameInstances()) {
+            GameInstance game = Game.getGameInstance(gameID);
+            GameBoard gb = game.getGameManager().getGameBoard();
+            if (gb.getFieldFromID(fieldID) != null) {
+                return game;
+            }
+        }
+        return null;
+    }
+
+    LanguageManager getLanguageManager() {
+        GameInstance game = getGameInstance();
+        if (game != null) {
+            return game.getLanguageManager();
+        }
+        return null;
+    }
+
+    GameGUI getGUI() {
+        GameInstance game = getGameInstance();
+        if (game != null) {
+            return GUIManager.getInstance().getGUI(game.getGUIID());
+        }
+        return null;
+    }
+
+    GameManager getGameManager() {
+        GameInstance game = getGameInstance();
+        if (game != null) {
+            return game.getGameManager();
+        }
+        return null;
+    }
+
+    GameBoard getGameBoard() {
+        GameManager gm = getGameManager();
+        if (gm != null) {
+            return gm.getGameBoard();
+        }
+        return null;
     }
 
     /**
@@ -98,7 +147,7 @@ public abstract class Field {
     @Override
     public String toString() {
         return "["+getID()+"] - " +
-                "(" + String.format("%02d", GameManager.getInstance().getGameBoard().getFieldPosition(getID())) + ") " +
+                "(" + String.format("%02d", getGameBoard().getFieldPosition(getID())) + ") " +
                 getFieldName() +
                 " [" + "Color: " + getFieldColor().toString().replace("java.awt.Color", "") +
                 "]";

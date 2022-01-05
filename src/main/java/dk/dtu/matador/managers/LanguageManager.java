@@ -17,9 +17,7 @@ public class LanguageManager {
     private Locale locale = Locale.getDefault();
     private ResourceBundle messages = getMessages();
 
-    private static LanguageManager languageManager;
-
-    private LanguageManager() {
+    public LanguageManager() {
         if (locale.getLanguage().equals(new Locale("en").getLanguage())) {
             locale = new Locale("en", "US");
         } else if (locale.getLanguage().equals(new Locale("da").getLanguage())) {
@@ -27,14 +25,6 @@ public class LanguageManager {
         } else {
             locale = new Locale("en", "US");
         }
-    }
-
-    public static LanguageManager getInstance() {
-        if (languageManager == null) {
-            languageManager = new LanguageManager();
-        }
-
-        return languageManager;
     }
 
     /**

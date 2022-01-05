@@ -2,6 +2,7 @@ package dk.dtu.matador.objects.fields;
 
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.managers.LanguageManager;
+import dk.dtu.matador.managers.PlayerManager;
 import dk.dtu.matador.objects.chancecards.ChanceCard;
 
 import java.awt.*;
@@ -14,8 +15,8 @@ public class ChanceField extends Field {
 
     @Override
     public void doLandingAction(UUID playerID) {
-        ChanceCard cc = GameManager.getInstance().getGameBoard().getChanceCard();
-        cc.showCardMessage();
+        ChanceCard cc = super.getGameBoard().getChanceCard();
+        cc.showCardMessage(PlayerManager.getInstance().getPlayerGame(playerID));
         cc.doCardAction(playerID);
     }
 
@@ -26,7 +27,7 @@ public class ChanceField extends Field {
 
     @Override
     public void reloadLanguage() {
-        super.getGUIField().setTitle(LanguageManager.getInstance().getString("field_"+super.getFieldName()+"_name"));
-        super.getGUIField().setDescription(LanguageManager.getInstance().getString("field_"+super.getFieldName()+"_description"));
+        super.getGUIField().setTitle(super.getLanguageManager().getString("field_"+super.getFieldName()+"_name"));
+        super.getGUIField().setDescription(super.getLanguageManager().getString("field_"+super.getFieldName()+"_description"));
     }
 }

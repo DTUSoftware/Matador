@@ -8,7 +8,7 @@ import java.util.Locale;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestLanguageManager {
-    LanguageManager lm = LanguageManager.getInstance();
+    LanguageManager lm = new LanguageManager();
 
     @Test
     public void testLanguageManager() {

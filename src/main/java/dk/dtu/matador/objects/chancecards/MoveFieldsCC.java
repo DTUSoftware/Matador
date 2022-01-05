@@ -1,7 +1,10 @@
 package dk.dtu.matador.objects.chancecards;
 
+import dk.dtu.matador.Game;
+import dk.dtu.matador.GameInstance;
 import dk.dtu.matador.managers.GUIManager;
 import dk.dtu.matador.managers.GameManager;
+import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
@@ -21,8 +24,9 @@ public class MoveFieldsCC  extends ChanceCard {
 
     @Override
     public void doCardAction(UUID playerID) {
-        int moveAmount = GUIManager.getInstance().askNumber(1, 5);
-        GameManager gm = GameManager.getInstance();
+        GameInstance game = Game.getGameInstance(PlayerManager.getInstance().getPlayerGame(playerID));
+        int moveAmount = GUIManager.getInstance().getGUI(game.getGUIID()).askNumber(1, 5);
+        GameManager gm = game.getGameManager();
         gm.setPlayerBoardPosition(playerID, (gm.getPlayerPosition(playerID)+moveAmount) % gm.getGameBoard().getFieldAmount(), true);
     }
 }

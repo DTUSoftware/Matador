@@ -4,6 +4,8 @@ import dk.dtu.matador.managers.PlayerManager;
 import dk.dtu.matador.objects.Player;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestPlayerManager {
@@ -11,7 +13,7 @@ public class TestPlayerManager {
 
     @Test
     public void testPlayerManager() {
-        Player player = pm.createPlayer("Test Tester");
+        Player player = pm.createPlayer(UUID.randomUUID(), "Test Tester");
 
         assertEquals("Test Tester", player.getName());
         assertEquals(0.0, player.getBalance());
@@ -35,7 +37,7 @@ public class TestPlayerManager {
 
     @Test
     public void testStartingBalance() {
-        Player player = pm.createPlayer("Test Tester", 3000);
+        Player player = pm.createPlayer(UUID.randomUUID(), "Test Tester", 3000);
         assertEquals(3000, player.getBalance());
     }
 }

@@ -1,5 +1,7 @@
 package dk.dtu.matador.objects.chancecards;
 
+import dk.dtu.matador.Game;
+import dk.dtu.matador.GameInstance;
 import dk.dtu.matador.managers.GUIManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.managers.LanguageManager;
@@ -26,17 +28,18 @@ public class BirthdayCC extends ChanceCard {
     @Override
     public void doCardAction(UUID playerID) {
         double money = 0.0;
-        for (UUID otherPlayerID : PlayerManager.getInstance().getPlayerIDs()) {
+        GameInstance game = Game.getGameInstance(PlayerManager.getInstance().getPlayerGame(playerID));
+        for (UUID otherPlayerID : PlayerManager.getInstance().getPlayerIDs(game.getGameID())) {
             if (otherPlayerID != playerID) {
                 if (PlayerManager.getInstance().getPlayer(otherPlayerID).withdraw(birthdayWithdrawalAmount)) {
                     money = money + birthdayWithdrawalAmount;
                 }
                 else {
-                    GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_pay_birthday")
+                    GUIManager.getInstance().getGUI(game.getGUIID()).showMessage(game.getLanguageManager().getString("could_not_pay_birthday")
                             .replace("{player_name}", PlayerManager.getInstance().getPlayer(otherPlayerID).getName())
                             .replace("{birthday_player_name}", PlayerManager.getInstance().getPlayer(playerID).getName())
                     );
-                    GameManager.getInstance().finishGame();
+                    game.getGameManager().finishGame();
                 }
             }
         }

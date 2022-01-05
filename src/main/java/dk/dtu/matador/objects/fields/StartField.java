@@ -23,7 +23,7 @@ public class StartField extends Field {
 
     @Override
     public void reloadLanguage() {
-        super.getGUIField().setTitle(LanguageManager.getInstance().getString("field_"+super.getFieldName()+"_name"));
-        super.getGUIField().setDescription(LanguageManager.getInstance().getString("field_"+super.getFieldName()+"_description").replace("{start_pass_amount}", Double.toString(Game.getStartPassReward())));
+        super.getGUIField().setTitle(getLanguageManager().getString("field_"+super.getFieldName()+"_name"));
+        super.getGUIField().setDescription(getLanguageManager().getString("field_"+super.getFieldName()+"_description").replace("{start_pass_amount}", Double.toString(Game.getStartPassReward())));
     }
 }

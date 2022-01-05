@@ -7,15 +7,19 @@ class Game {
 
 }
 
+class GameInstance {
+    -gameID : UUID
+    -guiID : UUID
+}
+
+Game -r-> "1..*" GameInstance
+
 package diplomitdtu.matadorgui {}
 
 ' Managers
 package managers {
     class GameManager {
-        {static} -gameManager : GameManager
-
-        -GameManager()
-        {static} +getInstance() : GameManager
+        +GameManager()
     }
 
     class PlayerManager {
@@ -44,10 +48,7 @@ package managers {
     }
 
     class LanguageManager {
-        {static} -languageManager : LanguageManager
-
-        -LanguageManager()
-        {static} +getInstance() : LanguageManager
+        +LanguageManager()
 
         +getMessage(messageString) : String
     }
@@ -55,17 +56,21 @@ package managers {
     class GUIManager {
         {static} -guiManager : GUIManager
 
+        -guiMap : HashMap<guiID:UUID, gui:GUI>
+
         -GUIManager()
         {static} +getInstance() : GUIManager
+
+        +getGUI(guiID:UUID) : GUI
     }
 
     GUIManager ..> diplomitdtu.matadorgui : <<use>>
 }
 
-Game ..> GameManager : <<use>>
-Game ..> PlayerManager : <<use>>
-Game ..> GUIManager : <<use>>
-Game ..> LanguageManager : <<use>>
+GameInstance --> "1" GameManager
+GameInstance ..> PlayerManager : <<use>>
+GameInstance ..> GUIManager : <<use>>
+GameInstance --> "1" LanguageManager
 
 
 ' Objects

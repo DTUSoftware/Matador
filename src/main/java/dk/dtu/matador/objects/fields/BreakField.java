@@ -22,7 +22,7 @@ public class BreakField extends Field {
 
     @Override
     public void reloadLanguage() {
-        super.getGUIField().setTitle(LanguageManager.getInstance().getString("field_"+super.getFieldName()+"_name"));
-        super.getGUIField().setDescription(LanguageManager.getInstance().getString("field_"+super.getFieldName()+"_description"));
+        super.getGUIField().setTitle(super.getLanguageManager().getString("field_"+super.getFieldName()+"_name"));
+        super.getGUIField().setDescription(super.getLanguageManager().getString("field_"+super.getFieldName()+"_description"));
     }
 }

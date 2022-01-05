@@ -1,5 +1,7 @@
 package dk.dtu.matador.objects.chancecards;
 
+import dk.dtu.matador.Game;
+import dk.dtu.matador.GameInstance;
 import dk.dtu.matador.managers.GUIManager;
 import dk.dtu.matador.managers.LanguageManager;
 
@@ -24,9 +26,10 @@ public abstract class ChanceCard {
     /**
      * Shows the card message in the GUI.
      */
-    public void showCardMessage(){
-        String message = LanguageManager.getInstance().getString(cardName+"_chancecard_message");
-        GUIManager.getInstance().showChanceCard(message);
+    public void showCardMessage(UUID gameID){
+        GameInstance game = Game.getGameInstance(gameID);
+        String message = game.getLanguageManager().getString(cardName+"_chancecard_message");
+        GUIManager.getInstance().getGUI(game.getGUIID()).showChanceCard(message);
     }
 
     /**

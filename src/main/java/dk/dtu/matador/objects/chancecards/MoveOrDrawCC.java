@@ -1,8 +1,11 @@
 package dk.dtu.matador.objects.chancecards;
 
+import dk.dtu.matador.Game;
+import dk.dtu.matador.GameInstance;
 import dk.dtu.matador.managers.GUIManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.managers.LanguageManager;
+import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
@@ -22,11 +25,12 @@ public class MoveOrDrawCC  extends ChanceCard {
 
     @Override
     public void doCardAction(UUID playerID) {
-        GameManager gm = GameManager.getInstance();
-        boolean move = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("moveordraw_prompt"));
+        GameInstance game = Game.getGameInstance(PlayerManager.getInstance().getPlayerGame(playerID));
+        GameManager gm = game.getGameManager();
+        boolean move = GUIManager.getInstance().getGUI(game.getGUIID()).askPrompt(game.getLanguageManager().getString("moveordraw_prompt"));
         if (!move) {
             ChanceCard cc = gm.getGameBoard().getChanceCard();
-            cc.showCardMessage();
+            cc.showCardMessage(game.getGameID());
             cc.doCardAction(playerID);
         }
         else {

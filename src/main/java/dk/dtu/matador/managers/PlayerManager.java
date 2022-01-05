@@ -1,8 +1,11 @@
 package dk.dtu.matador.managers;
 
+import dk.dtu.matador.Game;
+import dk.dtu.matador.objects.GameGUI;
 import dk.dtu.matador.objects.Player;
 import gui_fields.GUI_Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -12,8 +15,12 @@ import java.util.UUID;
 public class PlayerManager {
     private static PlayerManager playerManager;
 
-    private final HashMap<UUID, Player> players = new HashMap<>();
-    private final HashMap<UUID, GUI_Player> guiPlayers = new HashMap<>();
+    private final HashMap<UUID, ArrayList<UUID>> gamePlayers = new HashMap<>();  // gameID, Player[]
+    private final HashMap<UUID, UUID> playerGames = new HashMap<>(); // this might be a tad excessive, but better
+                                                                     // than looping through the hashmap above...
+                                                                     // playerID, gameID
+    private final HashMap<UUID, Player> players = new HashMap<>();  // playerID, Player
+    private final HashMap<UUID, GUI_Player> guiPlayers = new HashMap<>();  // playerID, GUI_Player
 
     private PlayerManager() {}
 
@@ -31,14 +38,22 @@ public class PlayerManager {
      * @param name  The name of the player.
      * @return      The created Player object.
      */
-    public Player createPlayer(String name) {
+    public Player createPlayer(UUID gameID, String name) {
+        if (!gamePlayers.containsKey(gameID)) {
+            gamePlayers.put(gameID, new ArrayList<>());
+        }
+
         Player player = new Player(name);
         UUID playerID = player.getID();
         players.put(playerID, player);
+        gamePlayers.get(gameID).add(playerID);
+        playerGames.put(playerID, gameID);
 
         GUI_Player guiPlayer = null;
-        if (GUIManager.getInstance().guiInitialized()) {
-            guiPlayer = GUIManager.getInstance().createGUIPlayer(player.getName(), player.getBalance());
+        UUID guiID = Game.getGameInstance(gameID).getGUIID();
+        GameGUI gui = GUIManager.getInstance().getGUI(guiID);
+        if (gui != null) {
+            guiPlayer = gui.createGUIPlayer(player.getName(), player.getBalance());
         }
         guiPlayers.put(playerID, guiPlayer);
 
@@ -52,14 +67,22 @@ public class PlayerManager {
      * @param startingBalance   The starting balance of the player.
      * @return                  The created Player object.
      */
-    public Player createPlayer(String name, double startingBalance) {
+    public Player createPlayer(UUID gameID, String name, double startingBalance) {
+        if (!gamePlayers.containsKey(gameID)) {
+            gamePlayers.put(gameID, new ArrayList<>());
+        }
+
         Player player = new Player(name, startingBalance);
         UUID playerID = player.getID();
         players.put(playerID, player);
+        gamePlayers.get(gameID).add(playerID);
+        playerGames.put(playerID, gameID);
 
         GUI_Player guiPlayer = null;
-        if (GUIManager.getInstance().guiInitialized()) {
-            guiPlayer = GUIManager.getInstance().createGUIPlayer(player.getName(), player.getBalance());
+        UUID guiID = Game.getGameInstance(gameID).getGUIID();
+        GameGUI gui = GUIManager.getInstance().getGUI(guiID);
+        if (gui != null) {
+            guiPlayer = gui.createGUIPlayer(player.getName(), player.getBalance());
         }
         guiPlayers.put(playerID, guiPlayer);
 
@@ -77,6 +100,10 @@ public class PlayerManager {
         return players.get(playerID);
     }
 
+    public UUID getPlayerGame(UUID playerID) {
+        return playerGames.get(playerID);
+    }
+
     /**
      * Gets a GUI_Player object using the UUID of the player.
      *
@@ -92,7 +119,7 @@ public class PlayerManager {
      * Gets an array with all of the player UUID's.
      * @return An array with player UUID's.
      */
-    public UUID[] getPlayerIDs() {
-        return players.keySet().toArray(new UUID[0]);
+    public UUID[] getPlayerIDs(UUID gameID) {
+        return gamePlayers.get(gameID).toArray(new UUID[0]);
     }
 }

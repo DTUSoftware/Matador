@@ -23,10 +23,10 @@ public class JailField extends Field {
     @Override
     public void doLandingAction(UUID playerID) {
         if (PlayerManager.getInstance().getPlayer(playerID).isJailed()) {
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("jailed"));
+            getGUI().showMessage(getLanguageManager().getString("jailed"));
         }
         else {
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("visiting_jail"));
+            getGUI().showMessage(getLanguageManager().getString("visiting_jail"));
         }
     }
 
@@ -36,18 +36,18 @@ public class JailField extends Field {
         if (player.isJailed()) {
             // if the player has a bail card
             if (player.takeBailCard()) {
-                GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("card_bailout"));
+                getGUI().showMessage(getLanguageManager().getString("card_bailout"));
                 player.unJail();
             }
             else {
                 // if the player can pay bailout fees
                 if (player.withdraw(jailBailOut)) {
-                    GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("paid_bailout").replace("{amount}", Float.toString(Math.round(jailBailOut))));
+                    getGUI().showMessage(getLanguageManager().getString("paid_bailout").replace("{amount}", Float.toString(Math.round(jailBailOut))));
                     player.unJail();
                 }
                 else {
-                    GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_pay_bailout"));
-                    GameManager.getInstance().finishGame();
+                    getGUI().showMessage(getLanguageManager().getString("could_not_pay_bailout"));
+                    getGameManager().finishGame();
                 }
             }
 
@@ -56,7 +56,7 @@ public class JailField extends Field {
 
     @Override
     public void reloadLanguage() {
-        super.getGUIField().setTitle(LanguageManager.getInstance().getString("field_"+super.getFieldName()+"_name"));
-        super.getGUIField().setDescription(LanguageManager.getInstance().getString("field_"+super.getFieldName()+"_description"));
+        super.getGUIField().setTitle(getLanguageManager().getString("field_"+super.getFieldName()+"_name"));
+        super.getGUIField().setDescription(getLanguageManager().getString("field_"+super.getFieldName()+"_description"));
     }
 }

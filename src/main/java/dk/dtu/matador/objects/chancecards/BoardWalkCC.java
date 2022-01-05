@@ -1,8 +1,11 @@
 package dk.dtu.matador.objects.chancecards;
 
+import dk.dtu.matador.Game;
+import dk.dtu.matador.GameInstance;
 import dk.dtu.matador.managers.GUIManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.managers.LanguageManager;
+import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
@@ -20,16 +23,17 @@ public class BoardWalkCC extends ChanceCard {
 
     @Override
     public void doCardAction(UUID playerID) {
-        UUID boardWalk = GameManager.getInstance().getGameBoard().getFieldIDFromType("boardwalk");
+        GameInstance game = Game.getGameInstance(PlayerManager.getInstance().getPlayerGame(playerID));
+        UUID boardWalk = game.getGameManager().getGameBoard().getFieldIDFromType("boardwalk");
         if (boardWalk == null) {
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("error_string"));
+            GUIManager.getInstance().getGUI(game.getGUIID()).showMessage(game.getLanguageManager().getString("error_string"));
             System.out.println("Field ID is null!");
             return;
         }
 
-        GameManager.getInstance().setPlayerBoardPosition(
+        game.getGameManager().setPlayerBoardPosition(
                 playerID,
-                GameManager.getInstance().getGameBoard().getFieldPosition(boardWalk),
+                game.getGameManager().getGameBoard().getFieldPosition(boardWalk),
                 true
         );
     }

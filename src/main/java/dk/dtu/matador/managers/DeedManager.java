@@ -3,7 +3,10 @@ package dk.dtu.matador.managers;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import dk.dtu.matador.Game;
+import dk.dtu.matador.GameInstance;
 import dk.dtu.matador.objects.Deed;
+import dk.dtu.matador.objects.GameBoard;
 import dk.dtu.matador.objects.fields.PropertyField;
 
 import java.awt.*;
@@ -35,6 +38,28 @@ public class DeedManager {
         }
 
         return deedManager;
+    }
+
+
+    // TODO: this could probably have some performance issues, oops
+    private GameInstance getGameInstance(UUID deedID) {
+        UUID fieldID = getFieldID(deedID);
+        for (UUID gameID : Game.getGameInstances()) {
+            GameInstance game = Game.getGameInstance(gameID);
+            GameBoard gb = game.getGameManager().getGameBoard();
+            if (gb.getFieldFromID(fieldID) != null) {
+                return game;
+            }
+        }
+        return null;
+    }
+
+    public GameBoard getGameBoard(UUID deedID) {
+        GameInstance game = getGameInstance(deedID);
+        if (game != null) {
+            return game.getGameManager().getGameBoard();
+        }
+        return null;
     }
 
     /**
@@ -95,8 +120,9 @@ public class DeedManager {
     }
 
     public void updatePlayerDeedPrices(UUID playerID) {
+        GameBoard gb = Game.getGameInstance(PlayerManager.getInstance().getPlayerGame(playerID)).getGameManager().getGameBoard();
         for (UUID deedID : getPlayerDeeds(playerID)) {
-            ((PropertyField) GameManager.getInstance().getGameBoard().getFieldFromID(getFieldID(deedID))).updatePrices(deedID);
+            ((PropertyField) gb.getFieldFromID(getFieldID(deedID))).updatePrices(deedID);
         }
     }
 
@@ -147,8 +173,9 @@ public class DeedManager {
      * @param playerID      The UUID of the player.
      */
     public void setDeedOwnership(UUID deedID, UUID playerID) {
+        GameBoard gb = Game.getGameInstance(PlayerManager.getInstance().getPlayerGame(playerID)).getGameManager().getGameBoard();
         deedOwnership.put(deedID, playerID);
-        PropertyField deedField = (PropertyField) GameManager.getInstance().getGameBoard().getFieldFromID(getFieldID(deedID));
+        PropertyField deedField = (PropertyField) gb.getFieldFromID(getFieldID(deedID));
         deedField.setPropertyOwner(playerID);
     }
 
@@ -159,7 +186,7 @@ public class DeedManager {
     public void updateDeedPrices(UUID deedID, double price, double rent, double groupRent) {
         Deed deed = getDeed(deedID);
         deed.setPrices(price, rent, groupRent);
-        PropertyField deedField = (PropertyField) GameManager.getInstance().getGameBoard().getFieldFromID(getFieldID(deedID));
+        PropertyField deedField = (PropertyField) getGameBoard(deedID).getFieldFromID(getFieldID(deedID));
         deedField.updatePrices(deedID);
     }
 }

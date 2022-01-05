@@ -1,6 +1,8 @@
 package dk.dtu.matador.objects;
 
+import dk.dtu.matador.Game;
 import dk.dtu.matador.managers.GUIManager;
+import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
@@ -25,9 +27,13 @@ public class Player {
         this.playerID = UUID.randomUUID();
         this.account = new Account(startingBalance);
     }
+    
+    private GameGUI getGUI() {
+        return GUIManager.getInstance().getGUI(Game.getGameInstance(PlayerManager.getInstance().getPlayerGame(playerID)).getGUIID());
+    }
 
     private boolean guiInitialized() {
-        return GUIManager.getInstance().guiInitialized();
+        return (getGUI() != null);
     }
 
     public String getName() {
@@ -45,7 +51,7 @@ public class Player {
         boolean success = account.withdraw(amount);
         // update the GUI
         if (guiInitialized()) {
-            GUIManager.getInstance().setPlayerBalance(playerID, getBalance());
+            getGUI().setPlayerBalance(playerID, getBalance());
         }
         return success;
     }
@@ -59,7 +65,7 @@ public class Player {
         account.deposit(amount);
         // update the GUI
         if (guiInitialized()) {
-            GUIManager.getInstance().setPlayerBalance(playerID, getBalance());
+            getGUI().setPlayerBalance(playerID, getBalance());
         }
     }
 
@@ -72,7 +78,7 @@ public class Player {
         account.setBalance(balance);
         // update the GUI
         if (guiInitialized()) {
-            GUIManager.getInstance().setPlayerBalance(playerID, getBalance());
+            getGUI().setPlayerBalance(playerID, getBalance());
         }
     }
 

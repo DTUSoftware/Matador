@@ -4,6 +4,7 @@ import com.google.common.io.Resources;
 import dk.dtu.matador.Game;
 import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.managers.GameManager;
+import dk.dtu.matador.managers.PlayerManager;
 import dk.dtu.matador.objects.chancecards.*;
 import dk.dtu.matador.objects.fields.*;
 import gui_fields.GUI_Field;
@@ -19,10 +20,11 @@ import java.util.*;
  * The GameBoard keeps track of the fields, their positions on the board, as well as the chancecards on the board.
  */
 public class GameBoard {
+    private UUID boardID;
     private final Field[] fields;
-    private final HashMap<UUID, Field> fieldMap = new HashMap<>();
-    private final HashMap<UUID, Integer> fieldPositions = new HashMap<>();
-    private final HashMap<UUID, GUI_Field> guiFields = new LinkedHashMap<>();
+    private final HashMap<UUID, Field> fieldMap = new HashMap<>();  // fieldID, field
+    private final HashMap<UUID, Integer> fieldPositions = new HashMap<>(); // fieldID, field position on board
+    private final HashMap<UUID, GUI_Field> guiFields = new LinkedHashMap<>(); // fieldID, GUI Field
     private final ChanceCard[] chanceCards = new ChanceCard[] {
     /* Bail */          new BailCC(),
     /* Give & Take */   new BirthdayCC(), new DidHomeWorkCC(), new EatCandyCC(),
@@ -72,6 +74,7 @@ public class GameBoard {
      * file into proper game field objects, based on their types and given information.
      */
     public GameBoard() {
+        boardID = UUID.randomUUID();
         loadGameBoardConfig();
 
         JSONArray jsonFields = gameBoardJSON.getJSONArray("fields");
@@ -136,6 +139,10 @@ public class GameBoard {
         for (Color groupColor : fieldGroupsMap.keySet()) {
             DeedManager.getInstance().createDeedGroup(groupColor, fieldGroupsMap.get(groupColor).toArray(new UUID[0]));
         }
+    }
+
+    public UUID getID() {
+        return boardID;
     }
 
     /**
@@ -208,7 +215,7 @@ public class GameBoard {
      * @return          The UUID of the found field.
      */
     public UUID getNextFieldIDWithColor(UUID playerID, Color[] colors) {
-        int playerPosition = GameManager.getInstance().getPlayerPosition(playerID);
+        int playerPosition = Game.getGameInstance(PlayerManager.getInstance().getPlayerGame(playerID)).getGameManager().getPlayerPosition(playerID);
         Field foundField = null;
         for (int currentField = playerPosition+1; currentField < playerPosition+getFieldAmount(); currentField++) {
             Field field = getField(currentField % getFieldAmount());

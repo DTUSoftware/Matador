@@ -1,8 +1,10 @@
 package dk.dtu.matador.managers;
 
 import dk.dtu.matador.Game;
+import dk.dtu.matador.GameInstance;
 import dk.dtu.matador.objects.DiceCup;
 import dk.dtu.matador.objects.GameBoard;
+import dk.dtu.matador.objects.GameGUI;
 import dk.dtu.matador.objects.fields.Field;
 import dk.dtu.matador.objects.fields.PropertyField;
 
@@ -12,25 +14,18 @@ import java.util.*;
  * The GameManager controls the flow of the game, and has an instance of a game board as well as a dice cup.
  */
 public class GameManager {
-    private static GameManager gameManager;
-    private static GameBoard gameBoard;
-    private static DiceCup diceCup;
+    private final GameBoard gameBoard;
+    private final DiceCup diceCup;
+    private UUID gameID;
 
     private Deque<UUID> playerQueue;
     private HashMap<UUID, Integer> playerPositions;
     private boolean gameFinished = false;
 
-    private GameManager() {
+    public GameManager(UUID gameID) {
         gameBoard = new GameBoard();
         diceCup = new DiceCup();
-    }
-
-    public static GameManager getInstance() {
-        if (gameManager == null) {
-            gameManager = new GameManager();
-        }
-
-        return gameManager;
+        this.gameID = gameID;
     }
 
     public GameBoard getGameBoard() {
@@ -87,7 +82,7 @@ public class GameManager {
         UUID maxPlayer = null;
         UUID otherPlayer = null;
         double maxValue = 0.0;
-        for (UUID playerID : PlayerManager.getInstance().getPlayerIDs()) {
+        for (UUID playerID : PlayerManager.getInstance().getPlayerIDs(gameID)) {
             double balance = PlayerManager.getInstance().getPlayer(playerID).getBalance();
             if (balance > maxValue) {
                 maxPlayer = playerID;
@@ -99,9 +94,11 @@ public class GameManager {
             }
         }
 
+        GameGUI gui = GUIManager.getInstance().getGUI(Game.getGameInstance(gameID).getGUIID());
+        LanguageManager lm = Game.getGameInstance(gameID).getLanguageManager();
         if (otherPlayer == null) {
-            GUIManager.getInstance().showMessage(
-                    LanguageManager.getInstance().getString("player_won_balance")
+            gui.showMessage(
+                    lm.getString("player_won_balance")
                             .replace("{player_name}", PlayerManager.getInstance().getPlayer(maxPlayer).getName())
                             .replace("{balance}", Float.toString(Math.round(maxValue)))
             );
@@ -111,7 +108,7 @@ public class GameManager {
             otherPlayer = null;
             maxValue = 0.0;
 
-            for (UUID playerID : PlayerManager.getInstance().getPlayerIDs()) {
+            for (UUID playerID : PlayerManager.getInstance().getPlayerIDs(gameID)) {
                 double wealth = PlayerManager.getInstance().getPlayer(playerID).getBalance();
 
                 for (UUID deedID : DeedManager.getInstance().getPlayerDeeds(playerID)) {
@@ -129,17 +126,15 @@ public class GameManager {
             }
 
             if (otherPlayer == null) {
-                GUIManager.getInstance().showMessage(
-                        LanguageManager.getInstance().getString("player_won_wealth")
-                                .replace("{player_name}", PlayerManager.getInstance().getPlayer(maxPlayer).getName())
-                                .replace("{balance}", Float.toString(Math.round(maxValue)))
+                gui.showMessage(lm.getString("player_won_wealth")
+                                    .replace("{player_name}", PlayerManager.getInstance().getPlayer(maxPlayer).getName())
+                                    .replace("{balance}", Float.toString(Math.round(maxValue)))
                 );
             }
             else {
-                GUIManager.getInstance().showMessage(
-                        LanguageManager.getInstance().getString("game_tie")
-                                .replace("{player1_name}", PlayerManager.getInstance().getPlayer(maxPlayer).getName())
-                                .replace("{player2_name}", PlayerManager.getInstance().getPlayer(otherPlayer).getName())
+                gui.showMessage(lm.getString("game_tie")
+                                    .replace("{player1_name}", PlayerManager.getInstance().getPlayer(maxPlayer).getName())
+                                    .replace("{player2_name}", PlayerManager.getInstance().getPlayer(otherPlayer).getName())
                 );
             }
         }
@@ -151,32 +146,33 @@ public class GameManager {
      * @param playerID  The UUID of the player whose turn it is.
      */
     private void playerPlay(UUID playerID) {
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("player_turn").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
+        GameGUI gui = GUIManager.getInstance().getGUI(Game.getGameInstance(gameID).getGUIID());
+        LanguageManager lm = Game.getGameInstance(gameID).getLanguageManager();
+        gui.showMessage(lm.getString("player_turn").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
 
         int playerPosition = playerPositions.get(playerID);
         // Do leaving action
         gameBoard.getField(playerPosition%gameBoard.getFieldAmount()).doLeavingAction(playerID);
 
         if (!Game.debug) {
-            GUIManager.getInstance().waitUserRoll();
+            gui.waitUserRoll();
         }
         diceCup.raffle();
 
         int[] diceValues = diceCup.getValues();
-        GUIManager.getInstance().updateDice(diceValues[0], diceValues[1]);
+        gui.updateDice(diceValues[0], diceValues[1]);
 
         // Positions
         int newPlayerPosition = playerPosition+diceCup.getSum();
         playerPositions.put(playerID, newPlayerPosition);
 
-        Field field = GUIManager.getInstance().movePlayerField(playerID, playerPositions.get(playerID)%gameBoard.getFieldAmount());
+        Field field = gui.movePlayerField(playerID, playerPositions.get(playerID)%gameBoard.getFieldAmount());
 
         // Check for passing start
         if (((int) (playerPosition/gameBoard.getFieldAmount())) < ((int) (newPlayerPosition/gameBoard.getFieldAmount()))) {
             // passed start
             PlayerManager.getInstance().getPlayer(playerID).deposit(Game.getStartPassReward());
-            GUIManager.getInstance().showMessage(
-                    LanguageManager.getInstance().getString("passed_start")
+            gui.showMessage(lm.getString("passed_start")
                             .replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName())
                             .replace("{start_pass_amount}", Double.toString(Game.getStartPassReward()))
             );
@@ -225,8 +221,8 @@ public class GameManager {
             setPlayerPosition(playerID, oldPlayerPosition+(gameBoard.getFieldAmount()-currentBoardPosition)+boardPosition, buyForFree);
             if (giveStartReward) {
                 PlayerManager.getInstance().getPlayer(playerID).deposit(Game.getStartPassReward());
-                GUIManager.getInstance().showMessage(
-                        LanguageManager.getInstance().getString("passed_start")
+                GUIManager.getInstance().getGUI(Game.getGameInstance(gameID).getGUIID()).showMessage(
+                        Game.getGameInstance(gameID).getLanguageManager().getString("passed_start")
                                 .replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName())
                                 .replace("{start_pass_amount}", Double.toString(Game.getStartPassReward()))
                 );
@@ -244,8 +240,9 @@ public class GameManager {
      */
     public void setPlayerPosition(UUID playerID, int playerPosition, boolean buyForFree) {
         playerPositions.put(playerID, playerPosition);
-        if (GUIManager.getInstance().guiInitialized()) {
-            Field field = GUIManager.getInstance().movePlayerField(playerID, playerPositions.get(playerID)%gameBoard.getFieldAmount());
+        GameGUI gui = GUIManager.getInstance().getGUI(Game.getGameInstance(gameID).getGUIID());
+        if (gui != null) {
+            Field field = gui.movePlayerField(playerID,playerPositions.get(playerID)%gameBoard.getFieldAmount());
             if (buyForFree) {
                 if (field instanceof PropertyField) {
                     ((PropertyField) field).doLandingAction(playerID, true);

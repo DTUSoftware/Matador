@@ -35,16 +35,17 @@ public class Deed {
     }
 
     public double getCurrentRent() {
-        UUID deedOwner = DeedManager.getInstance().getDeedOwnership(deedID);
+        DeedManager dm = DeedManager.getInstance();
+        UUID deedOwner = dm.getDeedOwnership(deedID);
         if (deedOwner == null) {
             return 0.0;
         }
         else {
             // get the deed group and if the owner of current deed is owner of both deeds, raise rent to group rent
-            UUID[] deedIDs = DeedManager.getInstance().getDeedGroupDeeds(GameManager.getInstance().getGameBoard().getFieldFromID(DeedManager.getInstance().getFieldID(deedID)).getFieldColor());
+            UUID[] deedIDs = dm.getDeedGroupDeeds(dm.getGameBoard(deedID).getFieldFromID(DeedManager.getInstance().getFieldID(deedID)).getFieldColor());
             boolean sameOwner = true;
             for (UUID groupDeedID : deedIDs) {
-                if (!deedOwner.equals(DeedManager.getInstance().getDeedOwnership(groupDeedID))) {
+                if (!deedOwner.equals(dm.getDeedOwnership(groupDeedID))) {
                     sameOwner = false;
                     break;
                 }
