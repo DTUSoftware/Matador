@@ -118,7 +118,7 @@ public class GUIManager {
      * @return returns the amount of players as and integer
      */
     public int askPlayers() {
-        String[] playerammountlist = {"2", "3", "4"};
+        String[] playerammountlist = {"3", "4", "5", "6"};
         String player_Ammount = gui.getUserSelection(LanguageManager.getInstance().getString("choose_player_amount"), playerammountlist);
         return Integer.parseInt(player_Ammount);
     }

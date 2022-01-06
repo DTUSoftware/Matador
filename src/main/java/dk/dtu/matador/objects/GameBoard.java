@@ -76,12 +76,7 @@ public class GameBoard {
 
         JSONArray jsonFields = gameBoardJSON.getJSONArray("fields");
         fields = new Field[jsonFields.length()];
-        JSONObject jsonFieldGroups = gameBoardJSON.getJSONObject("property_field_groups");
         HashMap<Color, ArrayList<UUID>> fieldGroupsMap = new HashMap<>();
-        // populate map
-        for (String colorString : jsonFieldGroups.keySet()) {
-            fieldGroupsMap.put(getColor(colorString), new ArrayList<>());
-        }
 
         // Load fields from Game Board config
         for (int i = 0; i < jsonFields.length(); i++) {
@@ -92,22 +87,59 @@ public class GameBoard {
                 case "StartField":
                     fields[i] = new StartField();
                     Game.setStartPassReward(jsonField.getDouble("pass_reward"));
+                    fields[i].reloadLanguage();
                     break;
                 case "PropertyField":
                     String fieldColorString = jsonField.getString("field_color");
                     Color fieldColor = getColor(fieldColorString);
-                    fields[i] = new PropertyField(fieldColor, jsonField.getString("field_name"));
+                    String fieldName = jsonField.getString("field_name");
+                    JSONObject prices = jsonField.getJSONObject("prices");
 
-                    // Register the rent
-                    JSONObject groupRentJSON = jsonFieldGroups.getJSONObject(fieldColorString);
-                    double price = groupRentJSON.getDouble("base_price");
-                    double rent = groupRentJSON.getDouble("base_rent");
-                    double groupRent = groupRentJSON.getDouble("group_rent");
-                    Deed fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, rent, groupRent);
+                    double price = prices.getDouble("deed");
+                    double mortgage = prices.getDouble("mortgage");
+
+                    Deed fieldDeed = null;
+
+                    String fieldSubtype = jsonField.getString("field_subtype");
+                    switch (fieldSubtype.toLowerCase()) {
+                        case "street":
+                            fields[i] = new StreetField(fieldColor, fieldName);
+                            double housePrice = prices.getDouble("house");
+                            double hotelPrice = prices.getDouble("hotel");
+                            JSONArray rentJSON = (JSONArray) prices.get("rent");
+                            double[] rent = new double[rentJSON.length()];
+                            for (int j = 0; j < rentJSON.length(); j++) {
+                                rent[j] = rentJSON.getDouble(j);
+                            }
+                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, mortgage, rent, housePrice, hotelPrice);
+
+                            // Add the group color
+                            if (!fieldGroupsMap.containsKey(fieldColor)) {
+                                fieldGroupsMap.put(fieldColor, new ArrayList<>());
+                            }
+
+                            // Add the field deed to the group array
+                            fieldGroupsMap.get(fieldColor).add(fieldDeed.getID());
+                            break;
+                        case "brewery":
+                            fields[i] = new BreweryField(fieldColor, fieldName);
+                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, mortgage);
+                            break;
+                        case "ferry":
+                            fields[i] = new FerryField(fieldColor, fieldName);
+                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, mortgage);
+                            break;
+                        default:
+                            Game.logDebug("PropertyField has no subtype!");
+                            break;
+                    }
+
+                    if (fieldDeed == null) {
+                        break;
+                    }
+
+                    // Update prices
                     ((PropertyField) fields[i]).updatePrices(fieldDeed.getID());
-
-                    // Add the field deed to the group array
-                    fieldGroupsMap.get(fieldColor).add(fieldDeed.getID());
                     break;
                 case "ChanceField":
                     fields[i] = new ChanceField();
@@ -120,6 +152,9 @@ public class GameBoard {
                     break;
                 case "GoToJailField":
                     fields[i] = new GoToJailField();
+                    break;
+                case "TaxField":
+                    fields[i] = new TaxField(jsonField.getString("field_subtype"));
                     break;
                 default:
                     System.out.println("Ohno, field type doesn't exist...");
