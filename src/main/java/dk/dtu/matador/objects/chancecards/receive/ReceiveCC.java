@@ -11,7 +11,7 @@ public abstract class ReceiveCC {
  * Grundet dyrtiden har De fået gageforhøjelse, modtag kr 1000.
  * Deres præmieobligation er udtrykket. De modtager 1000 kr af banken. (antal 2)
  * De har solg nogle gamle møbler på auktion. Modtag 1000 kr af banken.
- * Værdien af egen avl fra nyttehaven udgør 200 som de modtager af banken
+ * Værdien af egen avl fra nyttehaven udgør 200 kr som de modtager af banken
  * De modtager “Matador-legatet” på kr 40.000, men kun hvis værdier ikke overstiger 15.000 kr
  * Det er deres fødselsdag. Modtag af hver medspiller 200 kr.
  * De har lagt penge ud til et sammenskudsgilde. Mærkværdigvis betaler alle straks. Modtag fra hver medspiller 500 kr.
