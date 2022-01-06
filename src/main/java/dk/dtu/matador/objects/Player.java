@@ -1,6 +1,7 @@
 package dk.dtu.matador.objects;
 
 import dk.dtu.matador.managers.GUIManager;
+import dk.dtu.matador.managers.DeedManager;
 
 import java.util.UUID;
 
@@ -121,6 +122,14 @@ public class Player {
 
     public double getBalance() {
         return account.getBalance();
+    }
+
+    public double getDeedBalance() {
+        UUID[] playerDeeds = getPlayerDeeds();
+        double unitedDeedBalance = 0;
+        for (UUID DeedBalance : playerDeeds)
+            unitedDeedBalance += DeedBalance.fieldDeed.getPrice();
+        return unitedDeedBalance;
     }
 
     public UUID getID() {
