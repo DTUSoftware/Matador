@@ -152,37 +152,51 @@ public class GameManager {
      */
     private void playerPlay(UUID playerID) {
         GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("player_turn").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
+        int turnCounter = 0;
+        do {
+            turnCounter++;
+            if (turnCounter>2){
+                GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("feature_speeding").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
+                PlayerManager.getInstance().getPlayer(playerID).jail();
+                break;
+            }
+            if (turnCounter>1){
+                GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("feature_extratur").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
+            }
 
-        int playerPosition = playerPositions.get(playerID);
-        // Do leaving action
-        gameBoard.getField(playerPosition%gameBoard.getFieldAmount()).doLeavingAction(playerID);
+            int playerPosition = playerPositions.get(playerID);
+            // Do leaving action
+            gameBoard.getField(playerPosition%gameBoard.getFieldAmount()).doLeavingAction(playerID);
 
-        if (!Game.debug) {
-            GUIManager.getInstance().waitUserRoll();
-        }
-        diceCup.raffle();
+            if (!Game.debug) {
+                GUIManager.getInstance().waitUserRoll();
+            }
+            diceCup.raffle();
 
-        int[] diceValues = diceCup.getValues();
-        GUIManager.getInstance().updateDice(diceValues[0], diceValues[1]);
+            int[] diceValues = diceCup.getValues();
+            GUIManager.getInstance().updateDice(diceValues[0], diceValues[1]);
 
-        // Positions
-        int newPlayerPosition = playerPosition+diceCup.getSum();
-        playerPositions.put(playerID, newPlayerPosition);
+            // Positions
+            int newPlayerPosition = playerPosition+diceCup.getSum();
+            playerPositions.put(playerID, newPlayerPosition);
 
-        Field field = GUIManager.getInstance().movePlayerField(playerID, playerPositions.get(playerID)%gameBoard.getFieldAmount());
+            Field field = GUIManager.getInstance().movePlayerField(playerID, playerPositions.get(playerID)%gameBoard.getFieldAmount());
 
-        // Check for passing start
-        if (((int) (playerPosition/gameBoard.getFieldAmount())) < ((int) (newPlayerPosition/gameBoard.getFieldAmount()))) {
-            // passed start
-            PlayerManager.getInstance().getPlayer(playerID).deposit(Game.getStartPassReward());
-            GUIManager.getInstance().showMessage(
-                    LanguageManager.getInstance().getString("passed_start")
-                            .replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName())
-                            .replace("{start_pass_amount}", Double.toString(Game.getStartPassReward()))
-            );
-        }
+            // Check for passing start
+            if (((int) (playerPosition/gameBoard.getFieldAmount())) < ((int) (newPlayerPosition/gameBoard.getFieldAmount()))) {
+                // passed start
+                PlayerManager.getInstance().getPlayer(playerID).deposit(Game.getStartPassReward());
+                GUIManager.getInstance().showMessage(
+                        LanguageManager.getInstance().getString("passed_start")
+                                .replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName())
+                                .replace("{start_pass_amount}", Double.toString(Game.getStartPassReward()))
+                );
+            }
 
-        field.doLandingAction(playerID);
+            field.doLandingAction(playerID);
+        } while (diceCup.getValues()[0]==diceCup.getValues()[1]);
+
+
     }
 
     /**
