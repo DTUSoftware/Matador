@@ -4,6 +4,7 @@ import dk.dtu.matador.managers.LanguageManager;
 import dk.dtu.matador.managers.PlayerManager;
 import dk.dtu.matador.managers.GUIManager;
 import dk.dtu.matador.objects.Account;
+import dk.dtu.matador.objects.Player;
 import dk.dtu.matador.managers.DeedManager;
 
 import java.awt.*;
@@ -20,14 +21,17 @@ public class TaxField extends Field {
     @Override
     public void doLandingAction(UUID playerID) {
 
-        boolean answer = askTaxField();
+        GUIManager gui = GUIManager.getInstance();
+        boolean answer = gui.askTaxField();
+        
+        Player player = PlayerManager.getInstance().getPlayer(playerID);
 
         if (answer == true ) {
-            PlayerManager.getInstance().getPlayer(playerID).withdraw(4000);
+            player.withdraw(4000);
         } else {
-            double playerBalanceWithDeeds = getBalance(PlayerManager.getInstance().getPlayer(playerID));
-            playerBalanceWithDeeds = getDeedBalance(PlayerManager.getInstance().getPlayer(playerID));
-            PlayerManager.getInstance().getPlayer(playerID).withdraw(playerBalanceWithDeeds * 0.1);
+            double playerBalanceWithDeeds = player.getBalance();
+            playerBalanceWithDeeds += player.getDeedBalance();
+            player.withdraw(playerBalanceWithDeeds * 0.1);
         }
     }
 

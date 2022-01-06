@@ -125,10 +125,13 @@ public class Player {
     }
 
     public double getDeedBalance() {
-        UUID[] playerDeeds = getPlayerDeeds();
+        DeedManager dm = DeedManager.getInstance();
+
+        UUID[] playerDeeds = dm.getPlayerDeeds(playerID);
         double unitedDeedBalance = 0;
-        for (UUID DeedBalance : playerDeeds)
-            unitedDeedBalance += DeedBalance.fieldDeed.getPrice();
+        for (UUID deedID : playerDeeds)
+            //TODO missing networth from houses mortgage and hotel(trivago)
+            unitedDeedBalance += dm.getDeed(deedID).getPrice();
         return unitedDeedBalance;
     }
 
