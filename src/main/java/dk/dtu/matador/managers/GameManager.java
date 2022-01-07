@@ -172,11 +172,22 @@ public class GameManager {
             // for example, if player builds houses on two deeds, the turn is still not over
             boolean rolledDice = false;
             while (!rolledDice) {
-                // TODO: Which actions can the player currently take
-                String[] actions = new String[] {"build", "roll"};
-                // player chooses an action
-                String action = GUIManager.getInstance().askAction(actions);
+                // Which actions can the player currently take
+                ArrayList<String> actionList = new ArrayList<>();
+                if (DeedManager.getInstance().getPlayerDeeds(playerID).length != 0) {
+                    actionList.add("build");
+                }
+                actionList.add("roll");
+                String[] actions = actionList.toArray(new String[0]);
 
+                String action = "roll";
+                // if more than just roll is available for the player
+                if (actions.length != 1) {
+                    // player chooses an action
+                    action = GUIManager.getInstance().askAction(actions);
+                }
+
+                // Switch on the action cases
                 switch (action) {
                     case "roll":
                         if (!Game.debug) {
@@ -208,6 +219,7 @@ public class GameManager {
                         field.doLandingAction(playerID);
                         break;
                     case "build":
+                        UUID[] deedIDs = DeedManager.getInstance().getPlayerDeeds(playerID);
                         break;
                     case "trade":
                         break;
