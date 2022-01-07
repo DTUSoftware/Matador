@@ -21,6 +21,7 @@ public class Deed {
     private double hotelPrice = 0.0;
     private int houses = 0;
     private int hotels = 0;
+    private int sameOwnerCount;
 
     public Deed() {
         deedID = UUID.randomUUID();
@@ -57,6 +58,9 @@ public class Deed {
             // raise rent to max rent, if they have a hotel built
             if (this.hotels >= 1) {
                 currentRent = this.rent[5]; // hotel price
+            }
+            else if (this.sameOwnerCount == 1){
+                currentRent = this.rent[0]*2;
             }
             else {
                 currentRent = this.rent[this.houses];
