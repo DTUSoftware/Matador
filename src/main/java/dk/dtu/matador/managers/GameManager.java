@@ -157,7 +157,7 @@ public class GameManager {
                 break;
             }
             if (turnCounter > 1) {
-                GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("feature_extratur").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
+                GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("feature_extraturn").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
             }
 
             int playerPosition = playerPositions.get(playerID);

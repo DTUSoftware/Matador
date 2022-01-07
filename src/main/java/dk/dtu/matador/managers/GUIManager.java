@@ -105,7 +105,7 @@ public class GUIManager {
             return;
         }
 
-        String language = gui.getUserSelection("Choose a language", localeMap.keySet().toArray(new String[0]));
+        String language = gui.getUserSelection("Choose a language", localeMap.keySet().toArray(new String[0])); //isla was here
 
         Locale locale = localeMap.get(language);
         LanguageManager.getInstance().setLocale(locale);
