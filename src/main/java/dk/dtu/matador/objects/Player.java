@@ -13,6 +13,7 @@ public class Player {
     private final Account account;
     private int bailCards = 0;
     private boolean jailed = false;
+    private int jailedTime = 0;
 
     public Player(String name) {
         this.name = name;
@@ -92,6 +93,7 @@ public class Player {
      */
     public void unJail() {
         setJailed(false);
+        setJailedTime(0);
     }
 
     public boolean isJailed() {
@@ -104,6 +106,23 @@ public class Player {
     public void giveBailCard() {
         this.bailCards++;
     }
+
+    /**
+     * Counts for how many rounds the player has been in jail.
+     */
+    public void jailedTimeUp () {this.jailedTime++;}
+
+    /**
+     * gives how long the player has been jailed
+     * @return jailedTime as an integer
+     */
+    public int getJailedTime () {return this.jailedTime;}
+
+    /**
+     * Sets the jaiLedTime to the new jailed time
+     * @param newJailedTime integer for what the new JailedTime should be
+     */
+    public void setJailedTime (int newJailedTime){this.jailedTime=newJailedTime;}
 
     /**
      * Takes one of the player's bail cards, if the player has one.

@@ -172,6 +172,9 @@ public class GUIManager {
         gui.showMessage(LanguageManager.getInstance().getString("click_to_roll"));
     }
 
+    public boolean askJailRoll() {
+        return askPrompt(LanguageManager.getInstance().getString("jail_roll_to_get_out"));
+    }
     /**
      * Function to create a new GUIPlayer. This function is
      * for example used in the PlayerManager, where it is passed
