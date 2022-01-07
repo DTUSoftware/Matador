@@ -1,8 +1,11 @@
 package dk.dtu.matador.objects;
 
+import dk.dtu.matador.Game;
 import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.managers.PlayerManager;
+import dk.dtu.matador.objects.fields.Field;
+import dk.dtu.matador.objects.fields.StreetField;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -84,25 +87,50 @@ public class Deed {
     }
 
     public boolean canBuildHouse() {
-        if ((hotels != 1) & (houses != 4)) {
-            UUID deedOwner = DeedManager.getInstance().getDeedOwnership(deedID);
-            if (deedOwner != null) {
-                return (PlayerManager.getInstance().getPlayer(deedOwner).getBalance() >= housePrice);
-            }
-            else {
-                return true;
+        Field field = GameManager.getInstance().getGameBoard().getFieldFromID(DeedManager.getInstance().getFieldID(deedID));
+        if (field instanceof StreetField) {
+            Game.logDebug("is street field");
+            if ((hotels != 1) & (houses != 4)) {
+                Game.logDebug("no hotels and not 4 houses");
+                UUID deedOwner = DeedManager.getInstance().getDeedOwnership(deedID);
+                // if player has enough money
+                if ((deedOwner != null) & (PlayerManager.getInstance().getPlayer(deedOwner).getBalance() >= housePrice)) {
+                    Game.logDebug("player has enough money");
+                    // check the other deeds in the group, if the player owns the deeds
+                    if (DeedManager.getInstance().playerOwnsAllDeedsInDeedGroup(field.getFieldColor(), deedOwner)) {
+                        Game.logDebug("player owns all the deeds in the deed group");
+                        // does the other deeds in the group have fewer houses on them, than this deed (rule of even building)
+                        UUID[] deedGroupIDs = DeedManager.getInstance().getDeedGroupDeeds(field.getFieldColor());
+                        for (UUID deedID : deedGroupIDs) {
+                            if (DeedManager.getInstance().getDeed(deedID).getHouses() < houses-1) {
+                                Game.logDebug("cannot build, less houses");
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+
+                }
             }
         }
+        Game.logDebug("cannot build");
         return false;
     }
 
     public boolean canBuildHotel() {
+        // no need to check for streetField, since it would already have houses on it
+        // to build a hotel in the first place
         if ((houses == 4) & (hotels != 1)) {
             UUID deedOwner = DeedManager.getInstance().getDeedOwnership(deedID);
-            if (deedOwner != null) {
-                return (PlayerManager.getInstance().getPlayer(deedOwner).getBalance() >= hotelPrice);
-            }
-            else {
+            if ((deedOwner != null) & (PlayerManager.getInstance().getPlayer(deedOwner).getBalance() >= hotelPrice)) {
+                // check if the other deeds in the group also have 4 houses
+                UUID[] deedGroupIDs = DeedManager.getInstance().getDeedGroupDeeds(
+                        GameManager.getInstance().getGameBoard().getFieldFromID(DeedManager.getInstance().getFieldID(deedID)).getFieldColor());
+                for (UUID deedID : deedGroupIDs) {
+                    if (DeedManager.getInstance().getDeed(deedID).getHouses() != 4) {
+                        return false;
+                    }
+                }
                 return true;
             }
         }
