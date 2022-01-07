@@ -168,32 +168,53 @@ public class GameManager {
             // Do leaving action
             gameBoard.getField(playerPosition%gameBoard.getFieldAmount()).doLeavingAction(playerID);
 
-            if (!Game.debug) {
-                GUIManager.getInstance().waitUserRoll();
+            // loop actions, until the player rolls a dice.
+            // for example, if player builds houses on two deeds, the turn is still not over
+            boolean rolledDice = false;
+            while (!rolledDice) {
+                // TODO: Which actions can the player currently take
+                String[] actions = new String[] {"build", "roll"};
+                // player chooses an action
+                String action = GUIManager.getInstance().askAction(actions);
+
+                switch (action) {
+                    case "roll":
+                        if (!Game.debug) {
+                            GUIManager.getInstance().waitUserRoll();
+                        }
+                        rolledDice = true;
+                        diceCup.raffle();
+
+                        int[] diceValues = diceCup.getValues();
+                        GUIManager.getInstance().updateDice(diceValues[0], diceValues[1]);
+
+                        // Positions
+                        int newPlayerPosition = playerPosition+diceCup.getSum();
+                        playerPositions.put(playerID, newPlayerPosition);
+
+                        Field field = GUIManager.getInstance().movePlayerField(playerID, playerPositions.get(playerID)%gameBoard.getFieldAmount());
+
+                        // Check for passing start
+                        if (((int) (playerPosition/gameBoard.getFieldAmount())) < ((int) (newPlayerPosition/gameBoard.getFieldAmount()))) {
+                            // passed start
+                            PlayerManager.getInstance().getPlayer(playerID).deposit(Game.getStartPassReward());
+                            GUIManager.getInstance().showMessage(
+                                    LanguageManager.getInstance().getString("passed_start")
+                                            .replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName())
+                                            .replace("{start_pass_amount}", Double.toString(Game.getStartPassReward()))
+                            );
+                        }
+
+                        field.doLandingAction(playerID);
+                        break;
+                    case "build":
+                        break;
+                    case "trade":
+                        break;
+                    default:
+                        break;
+                }
             }
-            diceCup.raffle();
-
-            int[] diceValues = diceCup.getValues();
-            GUIManager.getInstance().updateDice(diceValues[0], diceValues[1]);
-
-            // Positions
-            int newPlayerPosition = playerPosition+diceCup.getSum();
-            playerPositions.put(playerID, newPlayerPosition);
-
-            Field field = GUIManager.getInstance().movePlayerField(playerID, playerPositions.get(playerID)%gameBoard.getFieldAmount());
-
-            // Check for passing start
-            if (((int) (playerPosition/gameBoard.getFieldAmount())) < ((int) (newPlayerPosition/gameBoard.getFieldAmount()))) {
-                // passed start
-                PlayerManager.getInstance().getPlayer(playerID).deposit(Game.getStartPassReward());
-                GUIManager.getInstance().showMessage(
-                        LanguageManager.getInstance().getString("passed_start")
-                                .replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName())
-                                .replace("{start_pass_amount}", Double.toString(Game.getStartPassReward()))
-                );
-            }
-
-            field.doLandingAction(playerID);
         } while (diceCup.getValues()[0]==diceCup.getValues()[1]);
 
 

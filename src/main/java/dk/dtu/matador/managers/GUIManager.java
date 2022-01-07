@@ -138,6 +138,23 @@ public class GUIManager {
     }
 
     /**
+     * Method that asks which action the player want to take
+     * @param actionList the list of actions (roll, build, trade)
+     * @return the action that the player chose
+     */
+    public String askAction(String[] actionList) {
+        HashMap<String, String> actionMap = new HashMap<>();
+        String[] actions = new String[actionList.length];
+        for (int i = 0; i < actionList.length; i++) {
+            actionMap.put(LanguageManager.getInstance().getString("action_" + actionList[i]), actionList[i]);
+            actions[i] = LanguageManager.getInstance().getString("action_" + actionList[i]);
+        }
+        String actionString = gui.getUserButtonPressed(LanguageManager.getInstance().getString("choose_player_action"), actions);
+
+        return actionMap.get(actionString);
+    }
+
+    /**
      * Asks the player which car type they want.
      *
      * @return The GUI_Car.Type that the player chose.
