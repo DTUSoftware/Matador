@@ -93,8 +93,7 @@ public class GameManager {
                 maxPlayer = playerID;
                 maxValue = balance;
                 otherPlayer = null;
-            }
-            else if (balance == maxValue) {
+            } else if (balance == maxValue) {
                 otherPlayer = playerID;
             }
         }
@@ -105,8 +104,7 @@ public class GameManager {
                             .replace("{player_name}", PlayerManager.getInstance().getPlayer(maxPlayer).getName())
                             .replace("{balance}", Float.toString(Math.round(maxValue)))
             );
-        }
-        else {
+        } else {
             maxPlayer = null;
             otherPlayer = null;
             maxValue = 0.0;
@@ -122,8 +120,7 @@ public class GameManager {
                     maxPlayer = playerID;
                     maxValue = wealth;
                     otherPlayer = null;
-                }
-                else if (wealth == maxValue) {
+                } else if (wealth == maxValue) {
                     otherPlayer = playerID;
                 }
             }
@@ -134,8 +131,7 @@ public class GameManager {
                                 .replace("{player_name}", PlayerManager.getInstance().getPlayer(maxPlayer).getName())
                                 .replace("{balance}", Float.toString(Math.round(maxValue)))
                 );
-            }
-            else {
+            } else {
                 GUIManager.getInstance().showMessage(
                         LanguageManager.getInstance().getString("game_tie")
                                 .replace("{player1_name}", PlayerManager.getInstance().getPlayer(maxPlayer).getName())
@@ -148,53 +144,55 @@ public class GameManager {
     /**
      * Performs a player's turn.
      *
-     * @param playerID  The UUID of the player whose turn it is.
+     * @param playerID The UUID of the player whose turn it is.
      */
     private void playerPlay(UUID playerID) {
         GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("player_turn").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
         int turnCounter = 0;
         do {
             turnCounter++;
-            if (turnCounter>2){
+            if (turnCounter > 2) {
                 GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("feature_speeding").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
                 PlayerManager.getInstance().getPlayer(playerID).jail();
                 break;
             }
-            if (turnCounter>1){
+            if (turnCounter > 1) {
                 GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("feature_extratur").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
             }
 
             int playerPosition = playerPositions.get(playerID);
             // Do leaving action
-            gameBoard.getField(playerPosition%gameBoard.getFieldAmount()).doLeavingAction(playerID);
+            gameBoard.getField(playerPosition % gameBoard.getFieldAmount()).doLeavingAction(playerID);
+            if (!PlayerManager.getInstance().getPlayer(playerID).isJailed()) {
+                if (!Game.debug) {
+                    GUIManager.getInstance().waitUserRoll();
+                }
+                diceCup.raffle();
 
-            if (!Game.debug) {
-                GUIManager.getInstance().waitUserRoll();
+                int[] diceValues = diceCup.getValues();
+                GUIManager.getInstance().updateDice(diceValues[0], diceValues[1]);
+
+                // Positions
+                int newPlayerPosition = playerPosition + diceCup.getSum();
+                playerPositions.put(playerID, newPlayerPosition);
+
+                Field field = GUIManager.getInstance().movePlayerField(playerID, playerPositions.get(playerID) % gameBoard.getFieldAmount());
+
+                // Check for passing start
+                if (((int) (playerPosition / gameBoard.getFieldAmount())) < ((int) (newPlayerPosition / gameBoard.getFieldAmount()))) {
+                    // passed start
+                    PlayerManager.getInstance().getPlayer(playerID).deposit(Game.getStartPassReward());
+                    GUIManager.getInstance().showMessage(
+                            LanguageManager.getInstance().getString("passed_start")
+                                    .replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName())
+                                    .replace("{start_pass_amount}", Double.toString(Game.getStartPassReward()))
+                    );
+                }
+
+                field.doLandingAction(playerID);
             }
-            diceCup.raffle();
 
-            int[] diceValues = diceCup.getValues();
-            GUIManager.getInstance().updateDice(diceValues[0], diceValues[1]);
-
-            // Positions
-            int newPlayerPosition = playerPosition+diceCup.getSum();
-            playerPositions.put(playerID, newPlayerPosition);
-
-            Field field = GUIManager.getInstance().movePlayerField(playerID, playerPositions.get(playerID)%gameBoard.getFieldAmount());
-
-            // Check for passing start
-            if (((int) (playerPosition/gameBoard.getFieldAmount())) < ((int) (newPlayerPosition/gameBoard.getFieldAmount()))) {
-                // passed start
-                PlayerManager.getInstance().getPlayer(playerID).deposit(Game.getStartPassReward());
-                GUIManager.getInstance().showMessage(
-                        LanguageManager.getInstance().getString("passed_start")
-                                .replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName())
-                                .replace("{start_pass_amount}", Double.toString(Game.getStartPassReward()))
-                );
-            }
-
-            field.doLandingAction(playerID);
-        } while (diceCup.getValues()[0]==diceCup.getValues()[1]);
+        } while (diceCup.getValues()[0] == diceCup.getValues()[1]);
 
 
     }
@@ -202,8 +200,8 @@ public class GameManager {
     /**
      * Gets the current position of the player.
      *
-     * @param playerID  The UUID of the player.
-     * @return          The position of the player (not on the board, but in amount of moves).
+     * @param playerID The UUID of the player.
+     * @return The position of the player (not on the board, but in amount of moves).
      */
     public int getPlayerPosition(UUID playerID) {
         return playerPositions.get(playerID);
@@ -212,9 +210,9 @@ public class GameManager {
     /**
      * Sets the player's position on the board.
      *
-     * @param playerID          The UUID of the player to move.
-     * @param boardPosition     The desired board position.
-     * @param giveStartReward   Whether to give the player money when passing GO! (not wished during jailing).
+     * @param playerID        The UUID of the player to move.
+     * @param boardPosition   The desired board position.
+     * @param giveStartReward Whether to give the player money when passing GO! (not wished during jailing).
      */
     public void setPlayerBoardPosition(UUID playerID, int boardPosition, boolean giveStartReward) {
         setPlayerBoardPosition(playerID, boardPosition, giveStartReward, false);
@@ -223,20 +221,19 @@ public class GameManager {
     /**
      * Sets the player's position on the board.
      *
-     * @param playerID          The UUID of the player to move.
-     * @param boardPosition     The desired board position.
-     * @param giveStartReward   Whether to give the player money when passing GO! (not wished during jailing).
-     * @param buyForFree        Whether to provide the player with the deed for free, if the field is vacant.
+     * @param playerID        The UUID of the player to move.
+     * @param boardPosition   The desired board position.
+     * @param giveStartReward Whether to give the player money when passing GO! (not wished during jailing).
+     * @param buyForFree      Whether to provide the player with the deed for free, if the field is vacant.
      */
     public void setPlayerBoardPosition(UUID playerID, int boardPosition, boolean giveStartReward, boolean buyForFree) {
         int oldPlayerPosition = playerPositions.get(playerID);
         int currentBoardPosition = oldPlayerPosition % gameBoard.getFieldAmount();
 
         if (boardPosition > currentBoardPosition) {
-            setPlayerPosition(playerID, oldPlayerPosition+(boardPosition-currentBoardPosition), buyForFree);
-        }
-        else {
-            setPlayerPosition(playerID, oldPlayerPosition+(gameBoard.getFieldAmount()-currentBoardPosition)+boardPosition, buyForFree);
+            setPlayerPosition(playerID, oldPlayerPosition + (boardPosition - currentBoardPosition), buyForFree);
+        } else {
+            setPlayerPosition(playerID, oldPlayerPosition + (gameBoard.getFieldAmount() - currentBoardPosition) + boardPosition, buyForFree);
             if (giveStartReward) {
                 PlayerManager.getInstance().getPlayer(playerID).deposit(Game.getStartPassReward());
                 GUIManager.getInstance().showMessage(
@@ -252,23 +249,21 @@ public class GameManager {
      * Sets the player's position, and executes the action of the field when the player is moved to it.
      * This is NOT the board position, but the amount of moves taken position.
      *
-     * @param playerID          The UUID of the player to move.
-     * @param playerPosition    The desired position.
-     * @param buyForFree        Whether to provide the player with the deed for free, if the field is vacant.
+     * @param playerID       The UUID of the player to move.
+     * @param playerPosition The desired position.
+     * @param buyForFree     Whether to provide the player with the deed for free, if the field is vacant.
      */
     public void setPlayerPosition(UUID playerID, int playerPosition, boolean buyForFree) {
         playerPositions.put(playerID, playerPosition);
         if (GUIManager.getInstance().guiInitialized()) {
-            Field field = GUIManager.getInstance().movePlayerField(playerID, playerPositions.get(playerID)%gameBoard.getFieldAmount());
+            Field field = GUIManager.getInstance().movePlayerField(playerID, playerPositions.get(playerID) % gameBoard.getFieldAmount());
             if (buyForFree) {
                 if (field instanceof PropertyField) {
                     ((PropertyField) field).doLandingAction(playerID, true);
-                }
-                else {
+                } else {
                     field.doLandingAction(playerID);
                 }
-            }
-            else {
+            } else {
                 field.doLandingAction(playerID);
             }
         }
