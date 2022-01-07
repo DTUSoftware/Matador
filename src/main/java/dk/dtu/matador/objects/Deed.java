@@ -102,7 +102,7 @@ public class Deed {
                         // does the other deeds in the group have fewer houses on them, than this deed (rule of even building)
                         UUID[] deedGroupIDs = DeedManager.getInstance().getDeedGroupDeeds(field.getFieldColor());
                         for (UUID deedID : deedGroupIDs) {
-                            if (DeedManager.getInstance().getDeed(deedID).getHouses() < houses-1) {
+                            if (DeedManager.getInstance().getDeed(deedID).getHouses() < houses) {
                                 Game.logDebug("cannot build, less houses");
                                 return false;
                             }
@@ -127,8 +127,11 @@ public class Deed {
                 UUID[] deedGroupIDs = DeedManager.getInstance().getDeedGroupDeeds(
                         GameManager.getInstance().getGameBoard().getFieldFromID(DeedManager.getInstance().getFieldID(deedID)).getFieldColor());
                 for (UUID deedID : deedGroupIDs) {
-                    if (DeedManager.getInstance().getDeed(deedID).getHouses() != 4) {
-                        return false;
+                    Deed deed = DeedManager.getInstance().getDeed(deedID);
+                    if (deed.getHouses() != 4) {
+                        if (!(deed.getHotels() > hotels)) {
+                            return false;
+                        }
                     }
                 }
                 return true;

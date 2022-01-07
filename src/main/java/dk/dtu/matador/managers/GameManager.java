@@ -150,6 +150,62 @@ public class GameManager {
      */
     private void playerPlay(UUID playerID) {
         GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("player_turn").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
+
+        if (Game.debug) {
+            while (true) {
+                String cheatCode = GUIManager.getInstance().getUserString("Enter debug command(s). Continue game with 'x'");
+                if (cheatCode.equals("x")) {
+                    break;
+                }
+
+                String fieldName;
+                UUID fieldID;
+                Field field;
+                switch (cheatCode.split(" ")[0].toLowerCase()) {
+                    case "give":
+                        fieldName = cheatCode.split(" ")[1];
+                        fieldID = gameBoard.getFieldIDFromType(fieldName);
+                        field = gameBoard.getFieldFromID(fieldID);
+                        UUID deedID = DeedManager.getInstance().getDeedID(fieldID);
+                        DeedManager.getInstance().setDeedOwnership(deedID, playerID);
+                        ((PropertyField) field).updatePrices(deedID);
+                        break;
+                    case "build":
+                        fieldName = cheatCode.split(" ")[1];
+                        fieldID = gameBoard.getFieldIDFromType(fieldName);
+                        field = gameBoard.getFieldFromID(fieldID);
+                        Deed deed = DeedManager.getInstance().getDeed(DeedManager.getInstance().getDeedID(fieldID));
+                        if (deed.canBuildHouse()) {
+                            deed.addHouse();
+                            ((StreetField) field).buildHouse();
+                            ((StreetField) field).updatePrices(deed.getID());
+                        }
+                        else if (deed.canBuildHotel()) {
+                            deed.addHotel();
+                            ((StreetField) field).buildHotel();
+                            ((StreetField) field).updatePrices(deed.getID());
+                        }
+                        break;
+                    case "balance":
+                        double amount = 0.0;
+                        switch (cheatCode.split(" ")[1].toLowerCase()) {
+                            case "give":
+                                amount = Integer.parseInt(cheatCode.split(" ")[2]);
+                                PlayerManager.getInstance().getPlayer(playerID).deposit(amount);
+                                break;
+                            case "set":
+                                amount = Integer.parseInt(cheatCode.split(" ")[2]);
+                                PlayerManager.getInstance().getPlayer(playerID).setBalance(amount);
+                                break;
+                        }
+                        break;
+                    default:
+                        GUIManager.getInstance().showMessage("Not a valid command!");
+                        break;
+                }
+            }
+        }
+
         int turnCounter = 0;
         do {
             turnCounter++;
@@ -259,20 +315,23 @@ public class GameManager {
                                     .replace("{propertyDisplayName}", LanguageManager.getInstance().getString("field_"+gameBoard.getFieldFromID(fieldID).getFieldName()+"_name")));
 
                             if (confirmed) {
+                                Field buildField = gameBoard.getFieldFromID(fieldID);
                                 switch (buildingType) {
                                     case "house":
                                         // take money
                                         PlayerManager.getInstance().getPlayer(playerID).withdraw(deed.getHousePrice());
                                         // build on the property
                                         deed.addHouse();
-                                        ((StreetField) gameBoard.getFieldFromID(fieldID)).buildHouse();
+                                        ((StreetField) buildField).buildHouse();
+                                        ((StreetField) buildField).updatePrices(deedID);
                                         break;
                                     case "hotel":
                                         // take money
                                         PlayerManager.getInstance().getPlayer(playerID).withdraw(deed.getHotelPrice());
                                         // build on the property
                                         deed.addHotel();
-                                        ((StreetField) gameBoard.getFieldFromID(fieldID)).buildHotel();
+                                        ((StreetField) buildField).buildHotel();
+                                        ((StreetField) buildField).updatePrices(deedID);
                                         break;
                                     default:
                                         Game.logDebug("Something's wrong with the buildingType...");
