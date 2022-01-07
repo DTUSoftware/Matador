@@ -156,6 +156,7 @@ public class GameManager {
             if (turnCounter > 2) {
                 GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("feature_speeding").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
                 PlayerManager.getInstance().getPlayer(playerID).jail();
+                GameManager.getInstance().setPlayerBoardPosition(playerID, GameManager.getInstance().getGameBoard().getFieldPosition(GameManager.getInstance().getGameBoard().getFieldIDFromType("JailField")), false);
                 break;
             }
             if (turnCounter > 1) {
@@ -177,7 +178,7 @@ public class GameManager {
                 UUID[] playerDeeds = DeedManager.getInstance().getPlayerDeeds(playerID);
                 HashMap<UUID, String> buildableDeeds = new HashMap<>(); // deedID, buildingType (house, hotel)
                 if (playerDeeds.length != 0) {
-                    // TODO: check if all the deeds have houses on them, hotels, and if the player even has enough money to build anything, and if any of the properties owned are even streets
+                    // check what deeds can be built on, and add to the hashmap, together with the buildingType
                     for (UUID deedID : playerDeeds) {
                         Deed deed = DeedManager.getInstance().getDeed(deedID);
                         if (deed.canBuildHouse()) {
@@ -196,90 +197,96 @@ public class GameManager {
                 }
                 String[] actions = actionList.toArray(new String[0]);
 
-                String action = "roll";
+                String action = null;
                 // if more than just roll is available for the player
-                if (!(actions.length == 1 && actions[0].equals(action))) {
+                if (actions.length == 1 && actions[0].equals("roll")) {
+                    action = "roll";
+                }
+                else {
                     // player chooses an action
                     action = GUIManager.getInstance().askAction(actions);
                 }
 
-                // Switch on the action cases
-                switch (action) {
-                    case "roll":
-                        if (!Game.debug) {
-                            GUIManager.getInstance().waitUserRoll();
-                        }
-                        rolledDice = true;
-                        diceCup.raffle();
-
-                        int[] diceValues = diceCup.getValues();
-                        GUIManager.getInstance().updateDice(diceValues[0], diceValues[1]);
-
-                        // Positions
-                        int newPlayerPosition = playerPosition+diceCup.getSum();
-                        playerPositions.put(playerID, newPlayerPosition);
-
-                        Field field = GUIManager.getInstance().movePlayerField(playerID, playerPositions.get(playerID)%gameBoard.getFieldAmount());
-
-                        // Check for passing start
-                        if (((int) (playerPosition/gameBoard.getFieldAmount())) < ((int) (newPlayerPosition/gameBoard.getFieldAmount()))) {
-                            // passed start
-                            PlayerManager.getInstance().getPlayer(playerID).deposit(Game.getStartPassReward());
-                            GUIManager.getInstance().showMessage(
-                                    LanguageManager.getInstance().getString("passed_start")
-                                            .replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName())
-                                            .replace("{start_pass_amount}", Double.toString(Game.getStartPassReward()))
-                            );
-                        }
-
-                        field.doLandingAction(playerID);
-                        break;
-                    case "build":
-                        UUID[] deedIDs = buildableDeeds.keySet().toArray(new UUID[0]);
-                        UUID[] fieldIDs = new UUID[deedIDs.length];
-                        for (int i = 0; i < deedIDs.length; i++) {
-                            fieldIDs[i] = DeedManager.getInstance().getFieldID(deedIDs[i]);
-                        }
-                        // player chooses a field
-                        UUID fieldID = GUIManager.getInstance().askProperty(fieldIDs, "build");
-
-                        // confirm to build
-                        UUID deedID = DeedManager.getInstance().getDeedID(fieldID);
-                        Deed deed = DeedManager.getInstance().getDeed(deedID);
-                        String buildingType = buildableDeeds.get(deedID);
-                        boolean confirmed = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("confirm_build")
-                                .replace("{price}",((buildingType.equals("house")) ? Double.toString(deed.getHousePrice()) : Double.toString(deed.getHotelPrice())))
-                                .replace("{building}", LanguageManager.getInstance().getString(buildingType))
-                                .replace("{propertyDisplayName}", LanguageManager.getInstance().getString("field_"+gameBoard.getFieldFromID(fieldID).getFieldName()+"_name")));
-
-                        if (confirmed) {
-                            switch (buildingType) {
-                                case "house":
-                                    // take money
-                                    PlayerManager.getInstance().getPlayer(playerID).withdraw(deed.getHousePrice());
-                                    // build on the property
-                                    deed.addHouse();
-                                    ((StreetField) gameBoard.getFieldFromID(fieldID)).buildHouse();
-                                    break;
-                                case "hotel":
-                                    // take money
-                                    PlayerManager.getInstance().getPlayer(playerID).withdraw(deed.getHotelPrice());
-                                    // build on the property
-                                    deed.addHotel();
-                                    ((StreetField) gameBoard.getFieldFromID(fieldID)).buildHotel();
-                                    break;
-                                default:
-                                    Game.logDebug("Something's wrong with the buildingType...");
+                // if the player both is jailed and doesn't have anything to build, the action is null
+                if (action != null) {
+                    // Switch on the action cases
+                    switch (action) {
+                        case "roll":
+                            if (!Game.debug) {
+                                GUIManager.getInstance().waitUserRoll();
                             }
-                        }
-                        break;
-                    case "trade":
-                        break;
-                    default:
-                        break;
+                            rolledDice = true;
+                            diceCup.raffle();
+
+                            int[] diceValues = diceCup.getValues();
+                            GUIManager.getInstance().updateDice(diceValues[0], diceValues[1]);
+
+                            // Positions
+                            int newPlayerPosition = playerPosition+diceCup.getSum();
+                            playerPositions.put(playerID, newPlayerPosition);
+
+                            Field field = GUIManager.getInstance().movePlayerField(playerID, playerPositions.get(playerID)%gameBoard.getFieldAmount());
+
+                            // Check for passing start
+                            if (((int) (playerPosition/gameBoard.getFieldAmount())) < ((int) (newPlayerPosition/gameBoard.getFieldAmount()))) {
+                                // passed start
+                                PlayerManager.getInstance().getPlayer(playerID).deposit(Game.getStartPassReward());
+                                GUIManager.getInstance().showMessage(
+                                        LanguageManager.getInstance().getString("passed_start")
+                                                .replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName())
+                                                .replace("{start_pass_amount}", Double.toString(Game.getStartPassReward()))
+                                );
+                            }
+
+                            field.doLandingAction(playerID);
+                            break;
+                        case "build":
+                            UUID[] deedIDs = buildableDeeds.keySet().toArray(new UUID[0]);
+                            UUID[] fieldIDs = new UUID[deedIDs.length];
+                            for (int i = 0; i < deedIDs.length; i++) {
+                                fieldIDs[i] = DeedManager.getInstance().getFieldID(deedIDs[i]);
+                            }
+                            // player chooses a field
+                            UUID fieldID = GUIManager.getInstance().askProperty(fieldIDs, "build");
+
+                            // confirm to build
+                            UUID deedID = DeedManager.getInstance().getDeedID(fieldID);
+                            Deed deed = DeedManager.getInstance().getDeed(deedID);
+                            String buildingType = buildableDeeds.get(deedID);
+                            boolean confirmed = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("confirm_build")
+                                    .replace("{price}",((buildingType.equals("house")) ? Double.toString(deed.getHousePrice()) : Double.toString(deed.getHotelPrice())))
+                                    .replace("{building}", LanguageManager.getInstance().getString(buildingType))
+                                    .replace("{propertyDisplayName}", LanguageManager.getInstance().getString("field_"+gameBoard.getFieldFromID(fieldID).getFieldName()+"_name")));
+
+                            if (confirmed) {
+                                switch (buildingType) {
+                                    case "house":
+                                        // take money
+                                        PlayerManager.getInstance().getPlayer(playerID).withdraw(deed.getHousePrice());
+                                        // build on the property
+                                        deed.addHouse();
+                                        ((StreetField) gameBoard.getFieldFromID(fieldID)).buildHouse();
+                                        break;
+                                    case "hotel":
+                                        // take money
+                                        PlayerManager.getInstance().getPlayer(playerID).withdraw(deed.getHotelPrice());
+                                        // build on the property
+                                        deed.addHotel();
+                                        ((StreetField) gameBoard.getFieldFromID(fieldID)).buildHotel();
+                                        break;
+                                    default:
+                                        Game.logDebug("Something's wrong with the buildingType...");
+                                }
+                            }
+                            break;
+                        case "trade":
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
-        } while (diceCup.getValues()[0]==diceCup.getValues()[1]);
+        } while (diceCup.getValues()[0] == diceCup.getValues()[1]);
     }
 
     /**

@@ -46,8 +46,7 @@ public class JailField extends Field {
                     diceCup.raffle();
                     int[] diceValues = diceCup.getValues();
                     GUIManager.getInstance().updateDice(diceValues[0], diceValues[1]);
-                    if (diceCup.getValues()[0]==diceCup.getValues()[1]){
-
+                    if (diceCup.getValues()[0] == diceCup.getValues()[1]){
                         player.unJail();
                     }
                 }
