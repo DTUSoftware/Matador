@@ -90,11 +90,11 @@ public class Deed {
         Field field = GameManager.getInstance().getGameBoard().getFieldFromID(DeedManager.getInstance().getFieldID(deedID));
         if (field instanceof StreetField) {
             Game.logDebug("is street field");
-            if ((hotels != 1) & (houses != 4)) {
+            if ((hotels != 1) && (houses != 4)) {
                 Game.logDebug("no hotels and not 4 houses");
                 UUID deedOwner = DeedManager.getInstance().getDeedOwnership(deedID);
                 // if player has enough money
-                if ((deedOwner != null) & (PlayerManager.getInstance().getPlayer(deedOwner).getBalance() >= housePrice)) {
+                if ((deedOwner != null) && (PlayerManager.getInstance().getPlayer(deedOwner).getBalance() >= housePrice)) {
                     Game.logDebug("player has enough money");
                     // check the other deeds in the group, if the player owns the deeds
                     if (DeedManager.getInstance().playerOwnsAllDeedsInDeedGroup(field.getFieldColor(), deedOwner)) {
@@ -120,9 +120,9 @@ public class Deed {
     public boolean canBuildHotel() {
         // no need to check for streetField, since it would already have houses on it
         // to build a hotel in the first place
-        if ((houses == 4) & (hotels != 1)) {
+        if ((houses == 4) && (hotels != 1)) {
             UUID deedOwner = DeedManager.getInstance().getDeedOwnership(deedID);
-            if ((deedOwner != null) & (PlayerManager.getInstance().getPlayer(deedOwner).getBalance() >= hotelPrice)) {
+            if ((deedOwner != null) && (PlayerManager.getInstance().getPlayer(deedOwner).getBalance() >= hotelPrice)) {
                 // check if the other deeds in the group also have 4 houses
                 UUID[] deedGroupIDs = DeedManager.getInstance().getDeedGroupDeeds(
                         GameManager.getInstance().getGameBoard().getFieldFromID(DeedManager.getInstance().getFieldID(deedID)).getFieldColor());
