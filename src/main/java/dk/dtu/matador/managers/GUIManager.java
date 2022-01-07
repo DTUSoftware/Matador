@@ -118,9 +118,9 @@ public class GUIManager {
      * @return returns the amount of players as and integer
      */
     public int askPlayers() {
-        String[] playerammountlist = {"3", "4", "5", "6"};
-        String player_Ammount = gui.getUserSelection(LanguageManager.getInstance().getString("choose_player_amount"), playerammountlist);
-        return Integer.parseInt(player_Ammount);
+        String[] playerAmountList = {"3", "4", "5", "6"};
+        String playerAmount = gui.getUserSelection(LanguageManager.getInstance().getString("choose_player_amount"), playerAmountList);
+        return Integer.parseInt(playerAmount);
     }
 
     /**
@@ -152,6 +152,26 @@ public class GUIManager {
         String actionString = gui.getUserButtonPressed(LanguageManager.getInstance().getString("choose_player_action"), actions);
 
         return actionMap.get(actionString);
+    }
+
+    /**
+     * Method that asks which property to choose, from the list
+     *
+     * @param propertyStreetIDs the list of street fields
+     * @param action            the action (build)
+     * @return the fieldID of the property that was chosen
+     */
+    public UUID askProperty(UUID[] propertyStreetIDs, String action) {
+        HashMap<String, UUID> propertyMap = new HashMap<>();
+        String[] propertyDisplayNames = new String[propertyStreetIDs.length];
+        for (int i = 0; i < propertyStreetIDs.length; i++) {
+            String propertyName = GameManager.getInstance().getGameBoard().getFieldFromID(propertyStreetIDs[i]).getFieldName();
+            propertyDisplayNames[i] = LanguageManager.getInstance().getString("field_"+propertyName+"_name");
+            propertyMap.put(propertyDisplayNames[i], propertyStreetIDs[i]);
+        }
+
+        String propertyDisplayName = gui.getUserSelection(LanguageManager.getInstance().getString("choose_a_property_"+action), propertyDisplayNames);
+        return propertyMap.get(propertyDisplayName);
     }
 
     /**

@@ -1,6 +1,5 @@
 package dk.dtu.matador.objects;
 
-import dk.dtu.matador.Game;
 import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.managers.PlayerManager;
@@ -82,6 +81,57 @@ public class Deed {
 
     public boolean payRent(UUID playerID) {
         return PlayerManager.getInstance().getPlayer(playerID).withdraw(getCurrentRent());
+    }
+
+    public boolean canBuildHouse() {
+        if ((hotels != 1) & (houses != 4)) {
+            UUID deedOwner = DeedManager.getInstance().getDeedOwnership(deedID);
+            if (deedOwner != null) {
+                return (PlayerManager.getInstance().getPlayer(deedOwner).getBalance() >= housePrice);
+            }
+            else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean canBuildHotel() {
+        if ((houses == 4) & (hotels != 1)) {
+            UUID deedOwner = DeedManager.getInstance().getDeedOwnership(deedID);
+            if (deedOwner != null) {
+                return (PlayerManager.getInstance().getPlayer(deedOwner).getBalance() >= hotelPrice);
+            }
+            else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public double getHousePrice() {
+        return housePrice;
+    }
+
+    public double getHotelPrice() {
+        return hotelPrice;
+    }
+
+    public int getHouses() {
+        return houses;
+    }
+
+    public int getHotels() {
+        return hotels;
+    }
+
+    public void addHouse() {
+        houses++;
+    }
+
+    public void addHotel() {
+        houses = 0;
+        hotels++;
     }
 
     @Override

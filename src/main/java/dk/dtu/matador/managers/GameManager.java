@@ -1,10 +1,12 @@
 package dk.dtu.matador.managers;
 
 import dk.dtu.matador.Game;
+import dk.dtu.matador.objects.Deed;
 import dk.dtu.matador.objects.DiceCup;
 import dk.dtu.matador.objects.GameBoard;
 import dk.dtu.matador.objects.fields.Field;
 import dk.dtu.matador.objects.fields.PropertyField;
+import dk.dtu.matador.objects.fields.StreetField;
 
 import java.util.*;
 
@@ -175,6 +177,7 @@ public class GameManager {
                 // Which actions can the player currently take
                 ArrayList<String> actionList = new ArrayList<>();
                 if (DeedManager.getInstance().getPlayerDeeds(playerID).length != 0) {
+                    // TODO: check if all the deeds have houses on them, hotels, and if the player even has enough money to build anything, and if any of the properties owned are even streets
                     actionList.add("build");
                 }
                 actionList.add("roll");
@@ -220,6 +223,26 @@ public class GameManager {
                         break;
                     case "build":
                         UUID[] deedIDs = DeedManager.getInstance().getPlayerDeeds(playerID);
+                        // TODO: sort the deeds off, that can't be build on (not street, not enough money, has hotels)
+                        UUID[] fieldIDs = new UUID[deedIDs.length];
+                        for (int i = 0; i < deedIDs.length; i++) {
+                            fieldIDs[i] = DeedManager.getInstance().getFieldID(deedIDs[i]);
+                        }
+                        // player chooses a field
+                        UUID fieldID = GUIManager.getInstance().askProperty(fieldIDs, "build");
+
+                        // confirm to build
+                        boolean confirmed = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("confirm_build")
+                                .replace("{price}","NULL").replace("{building}", "NULL").replace("{propertyDisplayName}", "NULL"));
+
+                        if (confirmed) {
+                            Deed deed = DeedManager.getInstance().getDeed(DeedManager.getInstance().getDeedID(fieldID));
+                            // take money
+                            PlayerManager.getInstance().getPlayer(playerID).withdraw(deed.getHousePrice());
+                            // build on the property
+                            deed.addHouse();
+                            ((StreetField) gameBoard.getFieldFromID(fieldID)).buildHouse();
+                        }
                         break;
                     case "trade":
                         break;
