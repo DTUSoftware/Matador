@@ -273,7 +273,7 @@ public class GameBoard {
     public UUID getFieldIDFromType(String fieldName) {
         for (UUID uuid : fieldMap.keySet()) {
             try {
-                if (Class.forName("dk.dtu.cdio3.objects.fields."+fieldName).isInstance(fieldMap.get(uuid))) {
+                if (Class.forName("dk.dtu.matador.objects.fields."+fieldName).isInstance(fieldMap.get(uuid))) {
                     return uuid;
                 }
             }
