@@ -38,4 +38,11 @@ public class TestPlayerManager {
         Player player = pm.createPlayer("Test Tester", 3000);
         assertEquals(3000, player.getBalance());
     }
+
+    @Test
+    public void testJailed() {
+        Player player = pm.createPlayer("Tester");
+
+
+    }
 }
