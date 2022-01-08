@@ -182,6 +182,10 @@ public class Deed {
         prawned = false;
     }
 
+    public double getBuyBackPrice() {
+        return prawnPrice + Math.ceil((prawnPrice * 0.1)/100.0)*100.0;
+    }
+
     @Override
     public String toString() {
         return "Price: " + getPrice() + ", Rent: " + Arrays.toString(getRent());
