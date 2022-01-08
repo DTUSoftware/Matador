@@ -96,7 +96,7 @@ public class GameBoard {
                     JSONObject prices = jsonField.getJSONObject("prices");
 
                     double price = prices.getDouble("deed");
-                    double mortgage = prices.getDouble("mortgage");
+                    double prawnPrice = prices.getDouble("prawn");
 
                     Deed fieldDeed = null;
 
@@ -111,7 +111,7 @@ public class GameBoard {
                             for (int j = 0; j < rentJSON.length(); j++) {
                                 rent[j] = rentJSON.getDouble(j);
                             }
-                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, mortgage, rent, housePrice, hotelPrice);
+                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice, rent, housePrice, hotelPrice);
 
                             // Add the group color
                             if (!fieldGroupsMap.containsKey(fieldColor)) {
@@ -123,11 +123,11 @@ public class GameBoard {
                             break;
                         case "brewery":
                             fields[i] = new BreweryField(fieldColor, fieldName);
-                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, mortgage);
+                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice);
                             break;
                         case "ferry":
                             fields[i] = new FerryField(fieldColor, fieldName);
-                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, mortgage);
+                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice);
                             break;
                         default:
                             Game.logDebug("PropertyField has no subtype!");
