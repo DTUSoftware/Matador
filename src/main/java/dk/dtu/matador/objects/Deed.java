@@ -18,11 +18,12 @@ public class Deed {
     private final UUID deedID;
     private double price = 0.0;
     private double[] rent = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    private double mortgage = 0.0;
+    private double prawnPrice = 0.0;
     private double housePrice = 0.0;
     private double hotelPrice = 0.0;
     private int houses = 0;
     private int hotels = 0;
+    private boolean prawned = false;
 
     public Deed() {
         deedID = UUID.randomUUID();
@@ -32,17 +33,17 @@ public class Deed {
         return this.deedID;
     }
 
-    public void setPrices(double price, double mortgage, double[] rent, double housePrice, double hotelPrice) {
+    public void setPrices(double price, double prawnPrice, double[] rent, double housePrice, double hotelPrice) {
         this.price = price;
         this.rent = rent;
-        this.mortgage = mortgage;
+        this.prawnPrice = prawnPrice;
         this.housePrice = housePrice;
         this.hotelPrice = hotelPrice;
     }
 
-    public void setPrices(double price, double mortgage) {
+    public void setPrices(double price, double prawnPrice) {
         this.price = price;
-        this.mortgage = mortgage;
+        this.prawnPrice = prawnPrice;
     }
 
     public double getPrice() {
@@ -148,6 +149,10 @@ public class Deed {
         return hotelPrice;
     }
 
+    public double getPrawnPrice() {
+        return prawnPrice;
+    }
+
     public int getHouses() {
         return houses;
     }
@@ -163,6 +168,18 @@ public class Deed {
     public void addHotel() {
         houses = 0;
         hotels++;
+    }
+
+    public boolean isPrawned() {
+        return prawned;
+    }
+
+    public void prawn() {
+        prawned = true;
+    }
+
+    public void buyBack() {
+        prawned = false;
     }
 
     @Override

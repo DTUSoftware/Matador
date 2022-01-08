@@ -1,5 +1,6 @@
 package dk.dtu.matador.objects;
 
+import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.managers.GUIManager;
 
 import java.util.UUID;
@@ -140,6 +141,25 @@ public class Player {
 
     public double getBalance() {
         return account.getBalance();
+    }
+
+    public double getNetWorth() {
+        double netWorth = 0.0;
+        netWorth += getBalance();
+
+        // Calculate the worth of the player's deeds (even if it's prawned)
+        for (UUID deedID : DeedManager.getInstance().getPlayerDeeds(playerID)) {
+            Deed deed = DeedManager.getInstance().getDeed(deedID);
+            netWorth += deed.getPrice();
+            for (int i = 0; i < deed.getHouses(); i++) {
+                netWorth += deed.getHousePrice();
+            }
+            for (int i = 0; i < deed.getHotels(); i++) {
+                netWorth += deed.getHotelPrice();
+            }
+        }
+
+        return netWorth;
     }
 
     public UUID getID() {
