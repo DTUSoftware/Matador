@@ -1,6 +1,16 @@
 package dk.dtu.matador.objects.chancecards.receive;
 
 public abstract class ReceiveCC {
+
+    private final String cardName;
+
+    /**
+     * Initiates a new ChanceCard.
+     *
+     * @param cardName  The programmable card name,
+     *                  also used in the language file.
+     */
+    ReceiveCC(String cardName) {this.cardName = cardName;}
 }
 
 /**
