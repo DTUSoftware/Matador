@@ -161,6 +161,16 @@ public class DeedManager {
         return deedGroups.get(groupColor);
     }
 
+    public boolean playerOwnsAllDeedsInDeedGroup(Color groupColor, UUID playerID) {
+        UUID[] deedGroupIDs = getDeedGroupDeeds(groupColor);
+        for (UUID deedID : deedGroupIDs) {
+            if (getDeedOwnership(deedID) != playerID) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Sets the ownership of a deed.
      *
