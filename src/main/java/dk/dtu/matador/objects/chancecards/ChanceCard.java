@@ -17,7 +17,7 @@ public abstract class ChanceCard {
      * @param cardName  The programmable card name,
      *                  also used in the language file.
      */
-    ChanceCard(String cardName) {
+    public ChanceCard(String cardName) {
         this.cardName = cardName;
     }
 
