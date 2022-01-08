@@ -42,7 +42,12 @@ public class TestPlayerManager {
     @Test
     public void testJailed() {
         Player player = pm.createPlayer("Tester");
-
+        assertFalse(player.isJailed());
+        player.jail();
+        assertTrue(player.isJailed());
+        assertEquals(0,player.getJailedTime());
+        player.unJail();
+        assertFalse(player.isJailed());
 
     }
 }
