@@ -22,9 +22,12 @@ public class GameManager {
     private HashMap<UUID, Integer> playerPositions;
     private boolean gameFinished = false;
 
+    private static boolean initialized = false;
+
     private GameManager() {
         gameBoard = new GameBoard();
         diceCup = new DiceCup();
+        initialized = true;
     }
 
     public static GameManager getInstance() {
@@ -33,6 +36,10 @@ public class GameManager {
         }
 
         return gameManager;
+    }
+
+    public static boolean isInitialized() {
+        return initialized;
     }
 
     public GameBoard getGameBoard() {
@@ -157,10 +164,9 @@ public class GameManager {
                 case "give":
                     fieldName = cheatCode.split(" ")[1];
                     fieldID = gameBoard.getFieldIDFromType(fieldName);
-                    field = gameBoard.getFieldFromID(fieldID);
                     UUID deedID = DeedManager.getInstance().getDeedID(fieldID);
                     DeedManager.getInstance().setDeedOwnership(deedID, playerID);
-                    ((PropertyField) field).updatePrices(deedID);
+                    DeedManager.getInstance().updatePlayerDeedPrices(playerID);
                     break;
                 case "build":
                     fieldName = cheatCode.split(" ")[1];

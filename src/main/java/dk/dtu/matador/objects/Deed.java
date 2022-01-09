@@ -4,6 +4,10 @@ import dk.dtu.matador.Game;
 import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.managers.PlayerManager;
+import dk.dtu.matador.objects.DiceCup;
+import dk.dtu.matador.objects.GameBoard;
+import dk.dtu.matador.objects.fields.BreweryField;
+import dk.dtu.matador.objects.fields.FerryField;
 import dk.dtu.matador.objects.fields.Field;
 import dk.dtu.matador.objects.fields.StreetField;
 
@@ -41,6 +45,12 @@ public class Deed {
         this.hotelPrice = hotelPrice;
     }
 
+    public void setPrices(double price, double prawnPrice, double[] rent) {
+        this.price = price;
+        this.rent = rent;
+        this.prawnPrice = prawnPrice;
+    }
+
     public void setPrices(double price, double prawnPrice) {
         this.price = price;
         this.prawnPrice = prawnPrice;
@@ -51,6 +61,12 @@ public class Deed {
     }
 
     public double getCurrentRent() {
+        if (!GameManager.isInitialized()) {
+            return 0.0;
+        }
+
+        DiceCup diceCup = GameManager.getInstance().getDiceCup();
+
         // if it's prawned, return 0.0
         if (isPrawned()) {
             return 0.0;
@@ -58,28 +74,53 @@ public class Deed {
 
         double currentRent = 0.0;
         UUID deedOwner = DeedManager.getInstance().getDeedOwnership(deedID);
+        Field field = GameManager.getInstance().getGameBoard().getFieldFromID(DeedManager.getInstance().getFieldID(deedID));
         if (deedOwner == null) {
             return 0.0;
         }
         else {
-            // raise rent to max rent, if they have a hotel built
-            if (this.hotels >= 1) {
-                currentRent = this.rent[5]; // hotel price
-            }
-            else {
-                currentRent = this.rent[this.houses];
-            }
-
-            // get the deed group and if the owner of current deed is owner of both deeds, raise rent to group rent
-            UUID[] deedIDs = DeedManager.getInstance().getDeedGroupDeeds(GameManager.getInstance().getGameBoard().getFieldFromID(DeedManager.getInstance().getFieldID(deedID)).getFieldColor());
-            int sameOwnerCount = 0;
-            for (UUID groupDeedID : deedIDs) {
-                if (deedOwner.equals(DeedManager.getInstance().getDeedOwnership(groupDeedID))) {
-                    sameOwnerCount++;
+            if (field instanceof BreweryField) {
+                switch (DeedManager.getInstance().howManyFieldTypeDoesPlayerOwn("BreweryField", deedOwner)) {
+                    case 1:
+                        currentRent = diceCup.getSum()*100.0;
+                        break;
+                    case 2:
+                        currentRent = diceCup.getSum()*200.0;
+                        break;
                 }
             }
-
-            // TODO: calculate rent, if they own all the group fields
+            else if (field instanceof FerryField) {
+                switch (DeedManager.getInstance().howManyFieldTypeDoesPlayerOwn("FerryField", deedOwner)) {
+                    case 1:
+                        currentRent = this.rent[0];
+                        break;
+                    case 2:
+                        currentRent = this.rent[1];
+                        break;
+                    case 3:
+                        currentRent = this.rent[2];
+                        break;
+                    case 4:
+                        currentRent = this.rent[3];
+                        break;
+                }
+            }
+            else if (field instanceof StreetField) {
+                // raise rent to max rent, if they have a hotel built
+                if (this.hotels >= 1) {
+                    currentRent = this.rent[5]; // hotel price
+                }
+                else if (this.houses > 0) {
+                    currentRent = this.rent[this.houses];
+                }
+                //Calculates rent if one owner owns all the fields.
+                else if (DeedManager.getInstance().playerOwnsAllDeedsInDeedGroup(field.getFieldColor(), deedOwner)){
+                    currentRent = this.rent[0]*2.0;
+                }
+                else {
+                    currentRent = this.rent[0];
+                }
+            }
         }
         return currentRent;
     }

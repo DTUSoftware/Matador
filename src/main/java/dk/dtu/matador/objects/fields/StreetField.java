@@ -7,8 +7,8 @@ import java.awt.*;
 
 public class StreetField extends PropertyField {
 
-    public StreetField(Color color, Color textColor, String fieldName) {
-        super(color, textColor, fieldName);
+    public StreetField(String subType, Color color, Color textColor, String fieldName) {
+        super(subType, color, textColor, fieldName);
     }
 
     public void buildHouse() {

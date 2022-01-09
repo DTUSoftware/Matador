@@ -63,6 +63,27 @@ public class DeedManager {
     /**
      * Creates a new deed for a given field.
      *
+     * @param fieldID       The UUID of the field to create a deed for.
+     * @param price         The price to buy the deed.
+     * @param prawnPrice    The mortgage/prawn value of the deed.
+     * @param rent          The rent options that one would have to pay if they land on the field.
+     * @return              The created Deed.
+     */
+    public Deed createDeed(UUID fieldID, double price, double prawnPrice, double[] rent) {
+        Deed deed = new Deed();
+        deed.setPrices(price, prawnPrice, rent);
+
+        UUID deedID = deed.getID();
+        deedMap.put(deedID, deed);
+        deeds.put(deedID, fieldID);
+        deedOwnership.put(deedID, null);
+
+        return deed;
+    }
+
+    /**
+     * Creates a new deed for a given field.
+     *
      * @param fieldID    The UUID of the field to create a deed for.
      * @param price      The price to buy the deed.
      * @param prawnPrice The mortgage/prawn value of the deed.
@@ -169,6 +190,22 @@ public class DeedManager {
             }
         }
         return true;
+    }
+
+    public int howManyFieldTypeDoesPlayerOwn(String fieldClass, UUID playerID) {
+        int i = 0;
+        for (UUID uuid : getPlayerDeeds(playerID)) {
+            UUID fieldID = getFieldID(uuid);
+            try {
+                if (Class.forName("dk.dtu.matador.objects.fields."+fieldClass).isInstance(GameManager.getInstance().getGameBoard().getFieldFromID(fieldID))) {
+                    i++;
+                }
+            }
+            catch (Exception e) {
+                System.out.println("Could not find fieldName in Field Class names: " + e.toString());
+            }
+        }
+        return i;
     }
 
     /**
