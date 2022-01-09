@@ -38,7 +38,7 @@ public class GUIManager {
     public void initializeGUI() {
         GUI_Field[] fields = GameManager.getInstance().getGameBoard().getGUIFields();
 
-        gui = new GUI(fields, Color.decode("0x" + "3E6990"));
+        gui = new GUI(fields, Color.decode("0x" + "697920"));
 
         gui.setDice(6, 6);
     }

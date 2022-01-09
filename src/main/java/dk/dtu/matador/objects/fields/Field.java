@@ -21,20 +21,23 @@ public abstract class Field {
     private final UUID fieldID;
     private final String fieldName;
     private final Color fieldColor;
+    private final Color textColor;
     private final GUI_Field guiField;
 
     /**
      * Creates a field, and sets up its respective field on the GUI.
      *
      * @param fieldColor    The color of the field.
+     * @param textColor     The color of the text.
      * @param fieldName     The name of the field (this is the programmatically correct name,
      *                      not user understandable name).
      * @param description   Whether to show the fields' description.
      */
-    Field(Color fieldColor, String fieldName, boolean description) {
+    Field(Color fieldColor, Color textColor, String fieldName, boolean description) {
         fieldID = UUID.randomUUID();
         this.fieldName = fieldName;
         this.fieldColor = fieldColor;
+        this.textColor = textColor;
 
         switch (fieldName) {
             case "chance":
@@ -54,6 +57,9 @@ public abstract class Field {
                 break;
         }
         this.guiField.setBackGroundColor(fieldColor);
+        if (this.textColor != null) {
+            this.guiField.setForeGroundColor(this.textColor);
+        }
         this.guiField.setTitle(LanguageManager.getInstance().getString("field_"+fieldName+"_name"));
         this.guiField.setSubText("");
         if (description) {

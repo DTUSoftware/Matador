@@ -82,16 +82,21 @@ public class GameBoard {
         for (int i = 0; i < jsonFields.length(); i++) {
             JSONObject jsonField = jsonFields.getJSONObject(i);
             String fieldType = jsonField.getString("field_type");
+            String fieldColorString = jsonField.getString("field_color");
+            Color fieldColor = getColor(fieldColorString);
+
+            Color textColor = null;
+            if (jsonField.has("field_color_text")) {
+                textColor = getColor(jsonField.getString("field_color_text"));
+            }
 
             switch (fieldType) {
                 case "StartField":
-                    fields[i] = new StartField();
+                    fields[i] = new StartField(fieldColor, textColor);
                     Game.setStartPassReward(jsonField.getDouble("pass_reward"));
                     fields[i].reloadLanguage();
                     break;
                 case "PropertyField":
-                    String fieldColorString = jsonField.getString("field_color");
-                    Color fieldColor = getColor(fieldColorString);
                     String fieldName = jsonField.getString("field_name");
                     JSONObject prices = jsonField.getJSONObject("prices");
 
@@ -103,7 +108,7 @@ public class GameBoard {
                     String fieldSubtype = jsonField.getString("field_subtype");
                     switch (fieldSubtype.toLowerCase()) {
                         case "street":
-                            fields[i] = new StreetField(fieldColor, fieldName);
+                            fields[i] = new StreetField(fieldColor, textColor, fieldName);
                             double housePrice = prices.getDouble("house");
                             double hotelPrice = prices.getDouble("hotel");
                             JSONArray rentJSON = (JSONArray) prices.get("rent");
@@ -122,11 +127,11 @@ public class GameBoard {
                             fieldGroupsMap.get(fieldColor).add(fieldDeed.getID());
                             break;
                         case "brewery":
-                            fields[i] = new BreweryField(fieldColor, fieldName);
+                            fields[i] = new BreweryField(fieldColor, textColor, fieldName);
                             fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice);
                             break;
                         case "ferry":
-                            fields[i] = new FerryField(fieldColor, fieldName);
+                            fields[i] = new FerryField(fieldColor, textColor, fieldName);
                             fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice);
                             break;
                         default:
@@ -142,23 +147,23 @@ public class GameBoard {
                     ((PropertyField) fields[i]).updatePrices(fieldDeed.getID());
                     break;
                 case "ChanceField":
-                    fields[i] = new ChanceField();
+                    fields[i] = new ChanceField(fieldColor, textColor);
                     break;
                 case "JailField":
-                    fields[i] = new JailField();
+                    fields[i] = new JailField(fieldColor, textColor);
                     break;
                 case "BreakField":
-                    fields[i] = new BreakField();
+                    fields[i] = new BreakField(fieldColor, textColor);
                     break;
                 case "GoToJailField":
-                    fields[i] = new GoToJailField();
+                    fields[i] = new GoToJailField(fieldColor, textColor);
                     break;
                 case "TaxField":
-                    fields[i] = new TaxField(jsonField.getString("field_subtype"));
+                    fields[i] = new TaxField(fieldColor, textColor, jsonField.getString("field_subtype"));
                     break;
                 default:
                     System.out.println("Ohno, field type doesn't exist...");
-                    fields[i] = new ChanceField();
+                    fields[i] = new ChanceField(fieldColor, textColor);
             }
 
             Field field = fields[i];

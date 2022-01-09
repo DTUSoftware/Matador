@@ -13,11 +13,11 @@ import java.util.UUID;
 public class JailField extends Field {
     private static DiceCup diceCup;
     private double jailBailOut = 4000.0;
-    public JailField() {
-        super(Color.ORANGE, "jail", true);
+    public JailField(Color color, Color textColor) {
+        super(color, textColor, "jail", true);
     }
-    public JailField(double jailBailOut) {
-        super(Color.ORANGE, "jail", true);
+    public JailField(Color color, Color textColor, double jailBailOut) {
+        super(color, textColor, "jail", true);
         this.jailBailOut = jailBailOut;
     }
 
