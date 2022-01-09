@@ -75,6 +75,7 @@ public class GameBoard {
         loadGameBoardConfig();
 
         JSONArray jsonFields = gameBoardJSON.getJSONArray("fields");
+        JSONObject subtypeConfiguration = gameBoardJSON.getJSONObject("subtype_configuration");
         fields = new Field[jsonFields.length()];
         HashMap<Color, ArrayList<UUID>> fieldGroupsMap = new HashMap<>();
 
@@ -106,13 +107,14 @@ public class GameBoard {
                     Deed fieldDeed = null;
 
                     String fieldSubtype = jsonField.getString("field_subtype");
+                    double[] rent;
                     switch (fieldSubtype.toLowerCase()) {
                         case "street":
-                            fields[i] = new StreetField(fieldColor, textColor, fieldName);
+                            fields[i] = new StreetField(fieldSubtype, fieldColor, textColor, fieldName);
                             double housePrice = prices.getDouble("house");
                             double hotelPrice = prices.getDouble("hotel");
                             JSONArray rentJSON = (JSONArray) prices.get("rent");
-                            double[] rent = new double[rentJSON.length()];
+                            rent = new double[rentJSON.length()];
                             for (int j = 0; j < rentJSON.length(); j++) {
                                 rent[j] = rentJSON.getDouble(j);
                             }
@@ -127,12 +129,18 @@ public class GameBoard {
                             fieldGroupsMap.get(fieldColor).add(fieldDeed.getID());
                             break;
                         case "brewery":
-                            fields[i] = new BreweryField(fieldColor, textColor, fieldName);
+                            fields[i] = new BreweryField(fieldSubtype, fieldColor, textColor, fieldName);
                             fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice);
                             break;
                         case "ferry":
-                            fields[i] = new FerryField(fieldColor, textColor, fieldName);
-                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice);
+                            JSONObject ferryConfiguration = subtypeConfiguration.getJSONObject("ferry");
+                            JSONArray ferryJSONRent = ferryConfiguration.getJSONArray("rent");
+                            rent = new double[ferryJSONRent.length()];
+                            for (int j = 0; j < ferryJSONRent.length(); j++) {
+                                rent[j] = ferryJSONRent.getDouble(j);
+                            }
+                            fields[i] = new FerryField(fieldSubtype, fieldColor, textColor, fieldName);
+                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice, rent);
                             break;
                         default:
                             Game.logDebug("PropertyField has no subtype!");
