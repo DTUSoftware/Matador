@@ -29,9 +29,7 @@ public class TaxField extends Field {
         if (answer == true ) {
             player.withdraw(4000);
         } else {
-            double playerBalanceWithDeeds = player.getBalance();
-            playerBalanceWithDeeds += player.getDeedBalance();
-            player.withdraw(playerBalanceWithDeeds * 0.1);
+            player.withdraw(player.getNetWorth() * 0.1);
         }
     }
 
