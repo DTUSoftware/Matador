@@ -78,16 +78,23 @@ public abstract class PropertyField extends Field {
                                 .replace("{property_name}", propertyName)
                                 .replace("{player_name}", playerName));
                 double playerBalance = PlayerManager.getInstance().getPlayer(playerID).getBalance();
-                boolean able_to_bid = false;
-                if (want_to_bid && (playerBalance >= biddingoptions[0])) {
-                    for (int j = 0; j < biddingoptions.length; j++) {
-                        if (playerBalance < biddingoptions[j]) {
-                            biddingoptions = ArrayUtils.remove(biddingoptions, j);
+                if(playerBalance >= biddingoptions[0]){
+                    if (want_to_bid) {
+                        for (int j = 0; j < biddingoptions.length; j++) {
+                            if (playerBalance < biddingoptions[j]) {
+                                biddingoptions = ArrayUtils.remove(biddingoptions, j);
+                            }
+                        }
+                        highestbid = GUIManager.getInstance().askBid(biddingoptions);
+                        highestbidder = playerID;
+                    } else {
+                        auctionlist = ArrayUtils.remove(auctionlist, i);
+                        if (i > 0) {
+                            i--;
                         }
                     }
-                    highestbid = GUIManager.getInstance().askBid(biddingoptions);
-                    highestbidder = playerID;
-                } else {
+
+                }else {
                     auctionlist = ArrayUtils.remove(auctionlist, i);
                     if (i > 0) {
                         i--;
