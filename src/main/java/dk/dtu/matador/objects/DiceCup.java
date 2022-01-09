@@ -11,6 +11,7 @@ package dk.dtu.matador.objects;
  */
 public class DiceCup {
     private final Die[] dice = new Die[2];
+    public double getSumD = getSum();
 
     /**
      * Constructer function DiceCup

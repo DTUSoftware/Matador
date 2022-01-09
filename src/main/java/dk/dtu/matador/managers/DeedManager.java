@@ -161,6 +161,7 @@ public class DeedManager {
         return deedGroups.get(groupColor);
     }
 
+
     /**
      * Sets the ownership of a deed.
      *

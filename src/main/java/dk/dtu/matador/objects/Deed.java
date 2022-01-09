@@ -4,6 +4,8 @@ import dk.dtu.matador.Game;
 import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.managers.PlayerManager;
+import dk.dtu.matador.objects.DiceCup;
+import dk.dtu.matador.objects.GameBoard;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -22,6 +24,10 @@ public class Deed {
     private int houses = 0;
     private int hotels = 0;
     private int sameOwnerCount;
+    private String subtype = GameBoard
+
+    private static DiceCup diceCup;
+
 
     public Deed() {
         deedID = UUID.randomUUID();
@@ -55,20 +61,55 @@ public class Deed {
             return 0.0;
         }
         else {
-            // raise rent to max rent, if they have a hotel built
-            if (this.hotels >= 1) {
-                currentRent = this.rent[5]; // hotel price
-            }
-            else if (this.sameOwnerCount == 1){
-                currentRent = this.rent[0]*2;
-            }
-            else {
-                currentRent = this.rent[this.houses];
+            switch (GameBoard.field_subtype) {
+                case brewery {
+                    if (this.sameOwnerCount >= 0){
+                        currentRent = diceCup.getSumD*100;
+                    }
+                    if (this.sameOwnerCount >= 1){
+                        currentRent = diceCup.getSumD*200;
+                    }
+
+                }
+                case ferry {
+                    if (this.sameOwnerCount >= 0){
+                        currentRent = this.rent[0];
+                    }
+                    if (this.sameOwnerCount >= 1){
+                        currentRent = this.rent[1];
+                    }
+                    if (this.sameOwnerCount >= 2){
+                        currentRent = this.rent[2];
+                    }
+                    if (this.sameOwnerCount >= 3){
+                        currentRent = this.rent[3];
+                    }
+
+                }
+
+
+                case street {
+                            // raise rent to max rent, if they have a hotel built
+                    if (this.hotels >= 1) {
+                        currentRent = this.rent[5]; // hotel price
+                    }
+                            //Calculates rent if one owner owns all the fields.
+                    else if (this.sameOwnerCount == 2){
+                        currentRent = this.rent[0]*2;
+                    }
+                    else {
+                        currentRent = this.rent[this.houses];
+                    }
+
+                }
+                default:
+                    Game.logDebug("PropertyField has no subtype!");
+                    break;
             }
 
             // get the deed group and if the owner of current deed is owner of both deeds, raise rent to group rent
             UUID[] deedIDs = DeedManager.getInstance().getDeedGroupDeeds(GameManager.getInstance().getGameBoard().getFieldFromID(DeedManager.getInstance().getFieldID(deedID)).getFieldColor());
-            int sameOwnerCount = 0;
+             sameOwnerCount = 0;
             for (UUID groupDeedID : deedIDs) {
                 if (deedOwner.equals(DeedManager.getInstance().getDeedOwnership(groupDeedID))) {
                     sameOwnerCount++;
