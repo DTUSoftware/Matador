@@ -8,25 +8,7 @@ import dk.dtu.matador.managers.PlayerManager;
 import java.util.UUID;
 
 public class ParkingTicket extends PayCC{
-    private double parkticketprice = 200;
-
     public ParkingTicket() {
-        super("parkTicket");
-    }
-    public ParkingTicket(double parkticketprice) {
-        super("parkTicket");
-        this.parkticketprice = parkticketprice;
-    }
-
-    public void doCardAction(UUID playerID) {
-        double money = parkticketprice;
-        if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > money) {
-            PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
-
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("parkTicket_chancecard_message"));
-        }
-        else {
-            GameManager.getInstance().finishGame();
-        }
+        super("ParkingTicket", 200.0);
     }
 }
