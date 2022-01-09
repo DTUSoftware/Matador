@@ -7,8 +7,10 @@ import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
-public class IllegalStop extends PayCC{
-    public IllegalStop() {
-        super("IllegalStop", 1000.0);
+public class dentist extends PayCC{
+    public dentist() {
+        super("dentist", 2000.0);
     }
 }
+
+

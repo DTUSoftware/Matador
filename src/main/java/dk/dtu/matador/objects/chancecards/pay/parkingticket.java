@@ -7,8 +7,8 @@ import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
-public class CarRepair extends PayCC{
-    public CarRepair() {
-        super("CarRepair", 3000.0);
+public class parkingticket extends PayCC{
+    public parkingticket() {
+        super("parkingticket", 200.0);
     }
 }

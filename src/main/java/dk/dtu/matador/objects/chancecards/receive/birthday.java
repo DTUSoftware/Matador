@@ -7,14 +7,14 @@ import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
-public class Birthday extends ReceiveCC {
+public class birthday extends ReceiveCC {
     private double birthdayReceiveAmountFromEveryPLayer = 200.0;
 
-    public Birthday() {
-        super("Birthday");
+    public birthday() {
+        super("birthday");
     }
-    public Birthday(double birthdayReceiveAmountFromEveryPLayer) {
-        super("Birthday");
+    public birthday(double birthdayReceiveAmountFromEveryPLayer) {
+        super("birthday");
         this.birthdayReceiveAmountFromEveryPLayer = birthdayReceiveAmountFromEveryPLayer;
     }
 

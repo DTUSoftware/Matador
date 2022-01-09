@@ -4,8 +4,8 @@ import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
-public class TheLocalAuthority extends ReceiveCC {
-    public TheLocalAuthority() {
-        super("TheLocalAuthority", 3000.0);
+public class raise extends ReceiveCC {
+    public raise() {
+        super("raise", 1000.0);
     }
 }

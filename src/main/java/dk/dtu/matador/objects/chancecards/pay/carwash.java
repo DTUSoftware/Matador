@@ -7,8 +7,8 @@ import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
-public class Carwash extends PayCC{
-    public Carwash() {
-        super("Carwash", 300.0);
+public class carwash extends PayCC{
+    public carwash() {
+        super("carwash", 300.0);
     }
 }
