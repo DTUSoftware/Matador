@@ -56,14 +56,19 @@ public abstract class PropertyField extends Field {
 
     /**
      * Method that starts an auction on properties when needed
-     * @param propertyName Needs the name of the property to auction
-     * @param deedID also needs the deedID of the property
      */
-    public void auction(String propertyName, UUID deedID) {
+    public void startAuction() {
+        String propertyName = LanguageManager.getInstance().getString("field_" + super.getFieldName() + "_name");
+        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("auction_start")
+                .replace("{property_name}", propertyName));
         UUID[] auctionlist = PlayerManager.getInstance().getPlayerIDs();
         double highestbid = 0.0;
-        UUID highestbidder = auctionlist[0];
-        while (auctionlist.length > 1) {
+        UUID highestbidder = null;
+        while (auctionlist.length > 0) {
+            if (auctionlist.length == 1 && auctionlist[0] == highestbidder) {
+                break;
+            }
+
             for (int i = 0; i < auctionlist.length; i++) {
                 UUID playerID = auctionlist[i];
                 String playerName = PlayerManager.getInstance().getPlayer(playerID).getName();
@@ -87,11 +92,17 @@ public abstract class PropertyField extends Field {
                 }
             }
         }
-        GUIManager.getInstance().wonAuction(propertyName,PlayerManager.getInstance().getPlayer(highestbidder).getName());
-        PlayerManager.getInstance().getPlayer(highestbidder).withdraw(highestbid);
-        DeedManager.getInstance().setDeedOwnership(DeedManager.getInstance().getDeedID(super.getID()), highestbidder);
-        DeedManager.getInstance().updatePlayerDeedPrices(highestbidder);
-
+        if (highestbidder != null) {
+            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("auction_won")
+                    .replace("{player_name}",PlayerManager.getInstance().getPlayer(highestbidder).getName())
+                    .replace("{property_name}",propertyName));
+            PlayerManager.getInstance().getPlayer(highestbidder).withdraw(highestbid);
+            DeedManager.getInstance().setDeedOwnership(DeedManager.getInstance().getDeedID(super.getID()), highestbidder);
+            DeedManager.getInstance().updatePlayerDeedPrices(highestbidder);
+        }
+        else {
+            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("auction_no_bids"));
+        }
     }
 
     @Override
@@ -113,7 +124,7 @@ public abstract class PropertyField extends Field {
                     DeedManager.getInstance().setDeedOwnership(DeedManager.getInstance().getDeedID(super.getID()), playerID);
                     DeedManager.getInstance().updatePlayerDeedPrices(playerID);
                 } else {
-                    auction(propertyName, deedID);
+                    startAuction();
                 }
             } else {
                 // End the game

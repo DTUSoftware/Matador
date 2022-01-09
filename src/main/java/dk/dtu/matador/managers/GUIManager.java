@@ -141,16 +141,6 @@ public class GUIManager {
     }
 
     /**
-     * Says who won the auction
-     * @param propertyName the property won
-     * @param playerName the player that won the property
-     */
-    public void wonAuction (String propertyName, String playerName){
-        gui.showMessage(LanguageManager.getInstance().getString("auction_won").replace("{player_name}",playerName)
-                .replace("{property_name}",propertyName));
-    }
-
-    /**
      * Asks the player to pick a number between min and max.
      *
      * @return The number the player chose.
