@@ -78,8 +78,6 @@ public abstract class PropertyField extends Field {
         UUID[] auctionList = PlayerManager.getInstance().getPlayerIDs();
         for (UUID playerID : auctionList) {
             if (bid.getBidder() != null) {
-                Game.logDebug(playerID.toString());
-                Game.logDebug(bid.getBidder().toString());
                 if (playerID == bid.getBidder()) {
                     continue;
                 }
