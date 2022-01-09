@@ -115,6 +115,7 @@ public class GUIManager {
 
     /**
      * Method that asks how many players you want and add that to players
+     *
      * @return returns the amount of players as and integer
      */
     public int askPlayers() {
@@ -124,14 +125,30 @@ public class GUIManager {
     }
 
     /**
+     * Method that asks how much you want to bid in the auction
+     *
+     * @param biddingoptions that is the options of what you can bid on the auction
+     * @return the chosen bid as a double
+     */
+    public double askBid(double[] biddingoptions) {
+        int len = biddingoptions.length;
+        String[] stringbiddingoptions = new String[len];
+        for (int i = 0; i < len; i++) {
+            stringbiddingoptions[i] = String.valueOf(biddingoptions[i]);
+        }
+        String bid = gui.getUserSelection(LanguageManager.getInstance().getString("choose_bid"), stringbiddingoptions);
+        return Double.parseDouble(bid);
+    }
+
+    /**
      * Asks the player to pick a number between min and max.
      *
      * @return The number the player chose.
      */
     public int askNumber(int min, int max) {
-        String[] numbers = new String[max+1-min];
+        String[] numbers = new String[max + 1 - min];
         for (int i = min; i <= numbers.length; i++) {
-            numbers[i-1] = Integer.toString(i);
+            numbers[i - 1] = Integer.toString(i);
         }
         String number = gui.getUserSelection(LanguageManager.getInstance().getString("choose_a_number"), numbers);
         return Integer.parseInt(number);
@@ -139,6 +156,7 @@ public class GUIManager {
 
     /**
      * Method that asks which action the player want to take
+     *
      * @param actionList the list of actions (roll, build, trade)
      * @return the action that the player chose
      */
@@ -166,11 +184,11 @@ public class GUIManager {
         String[] propertyDisplayNames = new String[propertyStreetIDs.length];
         for (int i = 0; i < propertyStreetIDs.length; i++) {
             String propertyName = GameManager.getInstance().getGameBoard().getFieldFromID(propertyStreetIDs[i]).getFieldName();
-            propertyDisplayNames[i] = LanguageManager.getInstance().getString("field_"+propertyName+"_name");
+            propertyDisplayNames[i] = LanguageManager.getInstance().getString("field_" + propertyName + "_name");
             propertyMap.put(propertyDisplayNames[i], propertyStreetIDs[i]);
         }
 
-        String propertyDisplayName = gui.getUserSelection(LanguageManager.getInstance().getString("choose_a_property_"+action), propertyDisplayNames);
+        String propertyDisplayName = gui.getUserSelection(LanguageManager.getInstance().getString("choose_a_property_" + action), propertyDisplayNames);
         return propertyMap.get(propertyDisplayName);
     }
 
@@ -183,7 +201,7 @@ public class GUIManager {
         String[] carTypes = Arrays.stream(GUI_Car.Type.class.getEnumConstants()).map(Enum::name).toArray(String[]::new); // https://stackoverflow.com/a/13783744/12418245
         for (int i = 0; i < carTypes.length; i++) {
             if (!carTypes[i].equals("UFO")) {
-                carTypes[i] = carTypes[i].substring(0,1).toUpperCase() + carTypes[i].substring(1).toLowerCase();
+                carTypes[i] = carTypes[i].substring(0, 1).toUpperCase() + carTypes[i].substring(1).toLowerCase();
             }
         }
         String carType = gui.getUserSelection(LanguageManager.getInstance().getString("choose_player_car"), carTypes);
@@ -212,6 +230,8 @@ public class GUIManager {
     public boolean askJailRoll() {
         return askPrompt(LanguageManager.getInstance().getString("jail_roll_to_get_out"));
     }
+
+
     /**
      * Function to create a new GUIPlayer. This function is
      * for example used in the PlayerManager, where it is passed
@@ -223,7 +243,7 @@ public class GUIManager {
      */
     public GUI_Player createGUIPlayer(String playerName, double startingBalance) {
         GUI_Car.Type carType = askCarType();
-        GUI_Car car = new GUI_Car((Color)null, (Color)null, carType, GUI_Car.Pattern.FILL);
+        GUI_Car car = new GUI_Car((Color) null, (Color) null, carType, GUI_Car.Pattern.FILL);
 
         GUI_Player player = new GUI_Player(playerName, (int) startingBalance, car); // the GUI takes int, so typecast
 
@@ -267,7 +287,7 @@ public class GUIManager {
     /**
      * Shows a chance card with the given text, and stops taking control of thread when user clicks ok.
      *
-     * @param cardText  The text of the chance card.
+     * @param cardText The text of the chance card.
      */
     public void showChanceCard(String cardText) {
         gui.setChanceCard(cardText);
