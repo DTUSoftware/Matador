@@ -4,8 +4,8 @@ import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
-public class premiumbond extends ReceiveCC {
-    public premiumbond() {
-        super("premiumbond", 1000.0);
+public class Garden extends ReceiveCC {
+    public Garden() {
+        super("Garden", 200.0);
     }
 }

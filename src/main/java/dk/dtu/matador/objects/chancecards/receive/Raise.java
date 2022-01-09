@@ -4,8 +4,8 @@ import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
-public class oldfurniture extends ReceiveCC {
-    public oldfurniture() {
-        super("oldfurniture", 1000.0);
+public class Raise extends ReceiveCC {
+    public Raise() {
+        super("Raise", 1000.0);
     }
 }

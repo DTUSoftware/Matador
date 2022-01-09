@@ -7,8 +7,8 @@ import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
-public class newtyres extends PayCC{
-    public newtyres() {
-        super("newtyres", 1000.0);
+public class ParkingTicket extends PayCC{
+    public ParkingTicket() {
+        super("ParkingTicket", 200.0);
     }
 }

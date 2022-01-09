@@ -1,4 +1,4 @@
-package dk.dtu.matador.objects.chancecards.receive;
+package dk.dtu.matador.objects.chancecards.pay;
 
 import dk.dtu.matador.managers.GUIManager;
 import dk.dtu.matador.managers.GameManager;
@@ -7,8 +7,8 @@ import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
-public class ellevenright extends ReceiveCC {
-    public ellevenright() {
-        super("ellevenright", 1000.0);
+public class IllegalCigs extends PayCC{
+    public IllegalCigs() {
+        super("IllegalCigs", 200.0);
     }
 }

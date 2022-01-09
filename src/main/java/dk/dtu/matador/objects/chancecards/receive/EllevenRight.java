@@ -7,8 +7,8 @@ import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
-public class aktie extends ReceiveCC {
-    public aktie() {
-        super("aktie", 1000.0);
+public class EllevenRight extends ReceiveCC {
+    public EllevenRight() {
+        super("EllevenRight", 1000.0);
     }
 }
