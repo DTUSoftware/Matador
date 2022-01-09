@@ -169,7 +169,7 @@ public class GUIManager {
             return false;
         }
     }
-  
+    /**
      * Method that asks which action the player want to take
      *
      * @param actionList the list of actions (roll, build, trade)
