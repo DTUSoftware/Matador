@@ -73,12 +73,12 @@ public abstract class PropertyField extends Field {
                 UUID playerID = auctionlist[i];
                 String playerName = PlayerManager.getInstance().getPlayer(playerID).getName();
                 double[] biddingoptions = {50.0 + highestbid, 100.0 + highestbid, 500.0 + highestbid, 1000.0 + highestbid, 2000.0 + highestbid, 5000.0 + highestbid};
-                boolean want_to_bid = GUIManager.getInstance().askPrompt(
-                        LanguageManager.getInstance().getString("want_to_bid_on_action")
-                                .replace("{property_name}", propertyName)
-                                .replace("{player_name}", playerName));
                 double playerBalance = PlayerManager.getInstance().getPlayer(playerID).getBalance();
-                if(playerBalance >= biddingoptions[0]){
+                if (playerBalance >= biddingoptions[0]) {
+                    boolean want_to_bid = GUIManager.getInstance().askPrompt(
+                            LanguageManager.getInstance().getString("want_to_bid_on_action")
+                                    .replace("{property_name}", propertyName)
+                                    .replace("{player_name}", playerName));
                     if (want_to_bid) {
                         for (int j = 0; j < biddingoptions.length; j++) {
                             if (playerBalance < biddingoptions[j]) {
@@ -87,30 +87,24 @@ public abstract class PropertyField extends Field {
                         }
                         highestbid = GUIManager.getInstance().askBid(biddingoptions);
                         highestbidder = playerID;
-                    } else {
-                        auctionlist = ArrayUtils.remove(auctionlist, i);
-                        if (i > 0) {
-                            i--;
-                        }
-                    }
+                        auctionlist = PlayerManager.getInstance().getPlayerIDs();
 
-                }else {
-                    auctionlist = ArrayUtils.remove(auctionlist, i);
-                    if (i > 0) {
-                        i--;
                     }
+                }
+                auctionlist = ArrayUtils.remove(auctionlist, i);
+                if (i > 0) {
+                    i--;
                 }
             }
         }
         if (highestbidder != null) {
             GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("auction_won")
-                    .replace("{player_name}",PlayerManager.getInstance().getPlayer(highestbidder).getName())
-                    .replace("{property_name}",propertyName));
+                    .replace("{player_name}", PlayerManager.getInstance().getPlayer(highestbidder).getName())
+                    .replace("{property_name}", propertyName));
             PlayerManager.getInstance().getPlayer(highestbidder).withdraw(highestbid);
             DeedManager.getInstance().setDeedOwnership(DeedManager.getInstance().getDeedID(super.getID()), highestbidder);
             DeedManager.getInstance().updatePlayerDeedPrices(highestbidder);
-        }
-        else {
+        } else {
             GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("auction_no_bids"));
         }
     }
