@@ -1,5 +1,8 @@
 package dk.dtu.matador.objects.chancecards.pay;
 
+import dk.dtu.matador.managers.GUIManager;
+import dk.dtu.matador.managers.GameManager;
+import dk.dtu.matador.managers.LanguageManager;
 import dk.dtu.matador.managers.PlayerManager;
 import dk.dtu.matador.objects.chancecards.ChanceCard;
 
@@ -22,7 +25,14 @@ public abstract class PayCC extends ChanceCard {
     @Override
     public void doCardAction(UUID playerID) {
         double money = receiveAmount;
+        if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > money) {
 
+            PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
+            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("buyBeer_chancecard_message"));
+        }
+        else {
+            GameManager.getInstance().finishGame();
+        }
         PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
     }
 }

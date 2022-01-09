@@ -8,25 +8,7 @@ import dk.dtu.matador.managers.PlayerManager;
 import java.util.UUID;
 
 public class NewTyres extends PayCC{
-    private double tyrescost = 1000;
-
     public NewTyres() {
-        super("newTyres");
-    }
-    public NewTyres(double tyrescost) {
-        super("newTyres");
-        this.tyrescost = tyrescost;
-    }
-
-    public void doCardAction(UUID playerID) {
-        double money = tyrescost;
-        if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > money) {
-            PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
-
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("newTyres_chancecard_message"));
-        }
-        else {
-            GameManager.getInstance().finishGame();
-        }
+        super("NewTyres", 1000.0);
     }
 }
