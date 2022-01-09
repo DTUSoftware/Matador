@@ -11,13 +11,14 @@
   "fields": [
     {
       "field_type": "StartField",
+      "field_color": "#911D1E",
       "pass_reward": 4000
     },
     {
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "roedovrevej",
-      "field_color": "BLUE",
+      "field_color": "#01355D",
       "prices": {
         "deed": 1200,
         "house": 1000,
@@ -27,13 +28,15 @@
       }
     },
     {
-      "field_type": "ChanceField"
+      "field_type": "ChanceField",
+      "field_color": "BLACK",
+      "field_color_text": "#4C6A0C"
     },
     {
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "hvidovrevej",
-      "field_color": "BLUE",
+      "field_color": "#01355D",
       "prices": {
         "deed": 1200,
         "house": 1000,
@@ -45,6 +48,7 @@
     {
       "field_type": "TaxField",
       "field_subtype": "income-tax",
+      "field_color": "#01526F",
       "tax-percentage": 10,
       "tax-amount": 4000
     },
@@ -52,7 +56,7 @@
       "field_type": "PropertyField",
       "field_subtype": "ferry",
       "field_name": "scandlines_helsingoer_helsingborg",
-      "field_color": "BLUE",
+      "field_color": "#02375F",
       "prices": {
         "deed": 4000,
         "prawn": 2000
@@ -62,7 +66,7 @@
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "roskildevej",
-      "field_color": "ORANGE",
+      "field_color": "#A63F19",
       "prices": {
         "deed": 2000,
         "house": 1000,
@@ -72,13 +76,15 @@
       }
     },
     {
-      "field_type": "ChanceField"
+      "field_type": "ChanceField",
+      "field_color": "BLACK",
+      "field_color_text": "#4C6A0C"
     },
     {
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "valby_langgade",
-      "field_color": "ORANGE",
+      "field_color": "#A63F19",
       "prices": {
         "deed": 2000,
         "house": 1000,
@@ -91,7 +97,7 @@
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "allegade",
-      "field_color": "ORANGE",
+      "field_color": "#A63F19",
       "prices": {
         "deed": 2400,
         "house": 1000,
@@ -101,7 +107,9 @@
       }
     },
     {
-      "field_type": "JailField"
+      "field_type": "JailField",
+      "field_color": "BLACK",
+      "field_color_text": "WHITE"
     },
     {
       "field_type": "PropertyField",
@@ -120,7 +128,7 @@
       "field_type": "PropertyField",
       "field_subtype": "brewery",
       "field_name": "squash",
-      "field_color": "RED",
+      "field_color": "#911D1E",
       "prices": {
         "deed": 3000,
         "prawn": 1500
@@ -156,7 +164,7 @@
       "field_type": "PropertyField",
       "field_subtype": "ferry",
       "field_name": "mols_linien",
-      "field_color": "RED",
+      "field_color": "#911D1E",
       "prices": {
         "deed": 4000,
         "prawn": 2000
@@ -166,7 +174,7 @@
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "bernstorffsvej",
-      "field_color": "GRAY",
+      "field_color": "#696A5C",
       "prices": {
         "deed": 3600,
         "house": 2000,
@@ -176,13 +184,15 @@
       }
     },
     {
-      "field_type": "ChanceField"
+      "field_type": "ChanceField",
+      "field_color": "BLACK",
+      "field_color_text": "#4C6A0C"
     },
     {
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "hellerupvej",
-      "field_color": "GRAY",
+      "field_color": "#696A5C",
       "prices": {
         "deed": 3600,
         "house": 2000,
@@ -195,7 +205,7 @@
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "strandvejen",
-      "field_color": "GRAY",
+      "field_color": "#696A5C",
       "prices": {
         "deed": 4000,
         "house": 2000,
@@ -205,13 +215,14 @@
       }
     },
     {
-      "field_type": "BreakField"
+      "field_type": "BreakField",
+      "field_color": "#01526F"
     },
     {
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "trianglen",
-      "field_color": "RED",
+      "field_color": "#A22F28",
       "prices": {
         "deed": 4400,
         "house": 3000,
@@ -221,13 +232,15 @@
       }
     },
     {
-      "field_type": "ChanceField"
+      "field_type": "ChanceField",
+      "field_color": "BLACK",
+      "field_color_text": "#4C6A0C"
     },
     {
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "oesterbrogade",
-      "field_color": "RED",
+      "field_color": "#A22F28",
       "prices": {
         "deed": 4400,
         "house": 3000,
@@ -240,7 +253,7 @@
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "groenningen",
-      "field_color": "RED",
+      "field_color": "#A22F28",
       "prices": {
         "deed": 4800,
         "house": 3000,
@@ -253,7 +266,7 @@
       "field_type": "PropertyField",
       "field_subtype": "ferry",
       "field_name": "scandlines_gedser_rostock",
-      "field_color": "BLUE",
+      "field_color": "#02375F",
       "prices": {
         "deed": 4000,
         "prawn": 2000
@@ -289,7 +302,7 @@
       "field_type": "PropertyField",
       "field_subtype": "brewery",
       "field_name": "coca_cola",
-      "field_color": "RED",
+      "field_color": "#911D1E",
       "prices": {
         "deed": 3000,
         "prawn": 1500
@@ -309,13 +322,15 @@
       }
     },
     {
-      "field_type": "GoToJailField"
+      "field_type": "GoToJailField",
+      "field_color": "BLACK",
+      "field_color_text": "WHITE"
     },
     {
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "amagertorv",
-      "field_color": "YELLOW",
+      "field_color": "#AC7F06",
       "prices": {
         "deed": 6000,
         "house": 4000,
@@ -328,7 +343,7 @@
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "vimmelskaftet",
-      "field_color": "YELLOW",
+      "field_color": "#AC7F06",
       "prices": {
         "deed": 6000,
         "house": 4000,
@@ -338,13 +353,15 @@
       }
     },
     {
-      "field_type": "ChanceField"
+      "field_type": "ChanceField",
+      "field_color": "BLACK",
+      "field_color_text": "#4C6A0C"
     },
     {
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "nygade",
-      "field_color": "YELLOW",
+      "field_color": "#AC7F06",
       "prices": {
         "deed": 6400,
         "house": 4000,
@@ -357,20 +374,22 @@
       "field_type": "PropertyField",
       "field_subtype": "ferry",
       "field_name": "scandlines_roedby_puttgarden",
-      "field_color": "BLUE",
+      "field_color": "#02375F",
       "prices": {
         "deed": 4000,
         "prawn": 2000
       }
     },
     {
-      "field_type": "ChanceField"
+      "field_type": "ChanceField",
+      "field_color": "BLACK",
+      "field_color_text": "#4C6A0C"
     },
     {
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "frederiksberggade",
-      "field_color": "MAGENTA",
+      "field_color": "#331640",
       "prices": {
         "deed": 7000,
         "house": 4000,
@@ -382,13 +401,14 @@
     {
       "field_type": "TaxField",
       "field_subtype": "extra-ordinary",
+      "field_color": "#01526F",
       "tax-amount": 2000
     },
     {
       "field_type": "PropertyField",
       "field_subtype": "street",
       "field_name": "raadhuspladsen",
-      "field_color": "MAGENTA",
+      "field_color": "#331640",
       "prices": {
         "deed": 8000,
         "house": 4000,

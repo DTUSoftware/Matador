@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public abstract class PropertyField extends Field {
-    public PropertyField(Color color, String fieldName) {
-        super(color, fieldName, false);
+    public PropertyField(Color color, Color textColor, String fieldName) {
+        super(color, textColor, fieldName, false);
 //        ((GUI_Ownable) super.getGUIField()).setBorder(Color.BLACK);
     }
 

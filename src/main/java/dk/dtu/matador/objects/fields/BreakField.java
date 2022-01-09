@@ -6,8 +6,8 @@ import java.awt.*;
 import java.util.UUID;
 
 public class BreakField extends Field {
-    public BreakField() {
-        super(Color.RED, "break", true);
+    public BreakField(Color color, Color textColor) {
+        super(color, textColor, "break", true);
     }
 
     @Override

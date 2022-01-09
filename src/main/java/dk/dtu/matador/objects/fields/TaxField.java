@@ -7,8 +7,8 @@ public class TaxField extends Field {
     /**
      * Creates a field, and sets up its respective field on the GUI.
      */
-    public TaxField(String taxSubtype) {
-        super(Color.PINK, taxSubtype, true);
+    public TaxField(Color color, Color textColor, String taxSubtype) {
+        super(color, textColor, taxSubtype, true);
     }
 
     @Override
