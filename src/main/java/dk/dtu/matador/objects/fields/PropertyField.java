@@ -85,10 +85,13 @@ public abstract class PropertyField extends Field {
                             biddingoptions = ArrayUtils.remove(biddingoptions, j);
                         }
                     }
-                    highestbid = GUIManager.getInstance().aksBid(biddingoptions);
+                    highestbid = GUIManager.getInstance().askBid(biddingoptions);
                     highestbidder = playerID;
                 } else {
                     auctionlist = ArrayUtils.remove(auctionlist, i);
+                    if (i > 0) {
+                        i--;
+                    }
                 }
             }
         }

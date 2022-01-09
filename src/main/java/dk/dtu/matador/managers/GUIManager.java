@@ -130,7 +130,7 @@ public class GUIManager {
      * @param biddingoptions that is the options of what you can bid on the auction
      * @return the chosen bid as a double
      */
-    public double aksBid(double[] biddingoptions) {
+    public double askBid(double[] biddingoptions) {
         int len = biddingoptions.length;
         String[] stringbiddingoptions = new String[len];
         for (int i = 0; i < len; i++) {
