@@ -155,6 +155,21 @@ public class GUIManager {
     }
 
     /**
+     *  Asks the player to choose between 4000 kr tax or 10 % tax
+     *
+     * @return true if 4000 kr is chosen else false
+     */
+
+    public boolean askTaxField() {
+        String[] choseTax = {"4000 kr.", "10 %"};
+        String chosenTax = gui.getUserSelection(LanguageManager.getInstance().getString("choose_tax_player"), choseTax);
+        if (chosenTax == "4000 kr.") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
      * Method that asks which action the player want to take
      *
      * @param actionList the list of actions (roll, build, trade)

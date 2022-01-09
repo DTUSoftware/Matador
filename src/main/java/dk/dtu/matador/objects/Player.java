@@ -2,6 +2,7 @@ package dk.dtu.matador.objects;
 
 import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.managers.GUIManager;
+import dk.dtu.matador.managers.DeedManager;
 
 import java.util.UUID;
 
@@ -143,6 +144,17 @@ public class Player {
         return account.getBalance();
     }
 
+    public double getDeedBalance() {
+        DeedManager dm = DeedManager.getInstance();
+
+        UUID[] playerDeeds = dm.getPlayerDeeds(playerID);
+        double unitedDeedBalance = 0;
+        for (UUID deedID : playerDeeds)
+            //TODO missing networth from houses mortgage and hotel(trivago)
+            unitedDeedBalance += dm.getDeed(deedID).getPrice();
+        return unitedDeedBalance;
+    }
+  
     public double getNetWorth() {
         double netWorth = 0.0;
         netWorth += getBalance();
