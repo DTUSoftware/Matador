@@ -27,7 +27,7 @@ public class Deed {
     private int hotels = 0;
     private boolean prawned = false;
     private int sameOwnerCount;
-    private String subtype = GameBoard
+    private String subtype = GameBoard;
 
     private static DiceCup diceCup;
 
