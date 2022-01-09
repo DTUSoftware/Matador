@@ -18,4 +18,12 @@ public class StreetField extends PropertyField {
     public void buildHotel() {
         ((GUI_Street) super.getGUIField()).setHotel(true);
     }
+
+    public void demolishHouse() {
+        ((GUI_Street) super.getGUIField()).setHouses(DeedManager.getInstance().getDeed(DeedManager.getInstance().getDeedID(super.getID())).getHouses());
+    }
+
+    public void demolishHotel() {
+        ((GUI_Street) super.getGUIField()).setHotel(false);
+    }
 }

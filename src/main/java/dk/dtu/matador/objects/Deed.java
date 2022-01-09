@@ -51,6 +51,11 @@ public class Deed {
     }
 
     public double getCurrentRent() {
+        // if it's prawned, return 0.0
+        if (isPrawned()) {
+            return 0.0;
+        }
+
         double currentRent = 0.0;
         UUID deedOwner = DeedManager.getInstance().getDeedOwnership(deedID);
         if (deedOwner == null) {
@@ -90,21 +95,16 @@ public class Deed {
     public boolean canBuildHouse() {
         Field field = GameManager.getInstance().getGameBoard().getFieldFromID(DeedManager.getInstance().getFieldID(deedID));
         if (field instanceof StreetField) {
-            Game.logDebug("is street field");
             if ((hotels != 1) && (houses != 4)) {
-                Game.logDebug("no hotels and not 4 houses");
                 UUID deedOwner = DeedManager.getInstance().getDeedOwnership(deedID);
                 // if player has enough money
                 if ((deedOwner != null) && (PlayerManager.getInstance().getPlayer(deedOwner).getBalance() >= housePrice)) {
-                    Game.logDebug("player has enough money");
                     // check the other deeds in the group, if the player owns the deeds
                     if (DeedManager.getInstance().playerOwnsAllDeedsInDeedGroup(field.getFieldColor(), deedOwner)) {
-                        Game.logDebug("player owns all the deeds in the deed group");
                         // does the other deeds in the group have fewer houses on them, than this deed (rule of even building)
                         UUID[] deedGroupIDs = DeedManager.getInstance().getDeedGroupDeeds(field.getFieldColor());
                         for (UUID deedID : deedGroupIDs) {
                             if (DeedManager.getInstance().getDeed(deedID).getHouses() < houses) {
-                                Game.logDebug("cannot build, less houses");
                                 return false;
                             }
                         }
@@ -114,7 +114,6 @@ public class Deed {
                 }
             }
         }
-        Game.logDebug("cannot build");
         return false;
     }
 
@@ -165,9 +164,17 @@ public class Deed {
         houses++;
     }
 
+    public void removeHouse() {
+        houses--;
+    }
+
     public void addHotel() {
         houses = 0;
         hotels++;
+    }
+
+    public void removeHotel() {
+        hotels--;
     }
 
     public boolean isPrawned() {
@@ -180,6 +187,10 @@ public class Deed {
 
     public void buyBack() {
         prawned = false;
+    }
+
+    public double getBuyBackPrice() {
+        return prawnPrice + Math.ceil((prawnPrice * 0.1)/100.0)*100.0;
     }
 
     @Override
