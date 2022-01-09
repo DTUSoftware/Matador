@@ -126,13 +126,28 @@ public class GUIManager {
 
     /**
      * Method that asks how much you want to bid in the auction
+     *
      * @param biddingoptions that is the options of what you can bid on the auction
      * @return the chosen bid as a double
      */
     public double aksBid(double[] biddingoptions) {
-
-        String bid = gui.getUserSelection(LanguageManager.getInstance().getString("choose_bid"), Arrays.toString(biddingoptions));
+        int len = biddingoptions.length;
+        String[] stringbiddingoptions = new String[len];
+        for (int i = 0; i < len; i++) {
+            stringbiddingoptions[i] = String.valueOf(biddingoptions[i]);
+        }
+        String bid = gui.getUserSelection(LanguageManager.getInstance().getString("choose_bid"), stringbiddingoptions);
         return Double.parseDouble(bid);
+    }
+
+    /**
+     * Says who won the auction
+     * @param propertyName the property won
+     * @param playerName the player that won the property
+     */
+    public void wonAuction (String propertyName, String playerName){
+        gui.showMessage(LanguageManager.getInstance().getString("auction_won").replace("{player_name}",playerName)
+                .replace("{property_name}",propertyName));
     }
 
     /**

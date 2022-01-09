@@ -54,6 +54,11 @@ public abstract class PropertyField extends Field {
         }
     }
 
+    /**
+     * Method that starts an auction on properties when needed
+     * @param propertyName Needs the name of the property to auction
+     * @param deedID also needs the deedID of the property
+     */
     public void auction(String propertyName, UUID deedID) {
         UUID[] auctionlist = PlayerManager.getInstance().getPlayerIDs();
         double highestbid = 0.0;
@@ -61,10 +66,10 @@ public abstract class PropertyField extends Field {
         while (auctionlist.length > 1) {
             for (int i = 0; i < auctionlist.length; i++) {
                 UUID playerID = auctionlist[i];
-                String playerName = PlayerManager.getInstance().getPlayer(playerID).toString();
+                String playerName = PlayerManager.getInstance().getPlayer(playerID).getName();
                 double[] biddingoptions = {50.0 + highestbid, 100.0 + highestbid, 500.0 + highestbid, 1000.0 + highestbid, 2000.0 + highestbid, 5000.0 + highestbid};
                 boolean want_to_bid = GUIManager.getInstance().askPrompt(
-                        LanguageManager.getInstance().getString("want_to_buy")
+                        LanguageManager.getInstance().getString("want_to_bid_on_action")
                                 .replace("{property_name}", propertyName)
                                 .replace("{player_name}", playerName));
                 double playerBalance = PlayerManager.getInstance().getPlayer(playerID).getBalance();
@@ -82,6 +87,7 @@ public abstract class PropertyField extends Field {
                 }
             }
         }
+        GUIManager.getInstance().wonAuction(propertyName,PlayerManager.getInstance().getPlayer(highestbidder).getName());
         PlayerManager.getInstance().getPlayer(highestbidder).withdraw(highestbid);
         DeedManager.getInstance().setDeedOwnership(DeedManager.getInstance().getDeedID(super.getID()), highestbidder);
         DeedManager.getInstance().updatePlayerDeedPrices(highestbidder);
