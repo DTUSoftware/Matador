@@ -1,8 +1,12 @@
 package dk.dtu.matador.objects.chancecards.pay;
 
-public abstract class PayCC {
+import dk.dtu.matador.managers.PlayerManager;
+import dk.dtu.matador.objects.chancecards.ChanceCard;
 
-    private final String cardName;
+import java.util.UUID;
+
+public abstract class PayCC extends ChanceCard {
+    private double receiveAmount = 0.0;
 
     /**
      * Initiates a new ChanceCard.
@@ -10,7 +14,16 @@ public abstract class PayCC {
      * @param cardName  The programmable card name,
      *                  also used in the language file.
      */
-    PayCC(String cardName) {this.cardName = cardName;
+    PayCC(String cardName, double receiveAmount) {
+        super(cardName);
+        this.receiveAmount = receiveAmount;
+    }
+
+    @Override
+    public void doCardAction(UUID playerID) {
+        double money = receiveAmount;
+
+        PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
     }
 }
 

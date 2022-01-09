@@ -7,23 +7,23 @@ import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
-public class carEnsurance extends PayCC{
-    private double ensurancecost = 1000;
+public class CarRepair extends PayCC{
+    private double repairprice = 3000;
 
-    public carEnsurance() {
-        super("carEnsurance");
+    public CarRepair() {
+        super("carRepair");
     }
-    public carEnsurance(double ensurancecost) {
+    public CarRepair(double repairprice) {
         super("carEnsurance");
-        this.ensurancecost = ensurancecost;
+        this.repairprice = repairprice;
     }
 
     public void doCardAction(UUID playerID) {
-        double money = ensurancecost;
-        if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > ensurancecost) {
+        double money = repairprice;
+        if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > repairprice) {
             PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
 
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("carEnsurance_chancecard_message"));
+            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("carRepair_chancecard_message"));
         }
         else {
             GameManager.getInstance().finishGame();

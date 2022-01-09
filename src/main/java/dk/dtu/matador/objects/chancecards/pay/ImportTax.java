@@ -7,23 +7,23 @@ import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
-public class parkTicket extends PayCC{
-    private double parkticketprice = 200;
+public class ImportTax extends PayCC{
+    private double importtaxprice = 200;
 
-    public parkTicket() {
-        super("parkTicket");
+    public ImportTax() {
+        super("importTax");
     }
-    public parkTicket(double parkticketprice) {
-        super("parkTicket");
-        this.parkticketprice = parkticketprice;
+    public ImportTax(double importtaxprice) {
+        super("importTax");
+        this.importtaxprice = importtaxprice;
     }
 
     public void doCardAction(UUID playerID) {
-        double money = parkticketprice;
+        double money = importtaxprice;
         if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > money) {
             PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
 
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("parkTicket_chancecard_message"));
+            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("importTax_chancecard_message"));
         }
         else {
             GameManager.getInstance().finishGame();

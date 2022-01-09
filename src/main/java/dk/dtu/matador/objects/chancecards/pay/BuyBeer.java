@@ -7,23 +7,23 @@ import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
-public class illegalStop extends PayCC{
-    private double stopfine = 1000;
+public class BuyBeer extends PayCC{
+    private double beerprice = 200;
 
-    public illegalStop() {
-        super("illegalStop");
+    public BuyBeer() {
+        super("buyBeer");
     }
-    public illegalStop(double stopfine) {
-        super("illegalStop");
-        this.stopfine = stopfine;
+    public BuyBeer(double beerprice) {
+        super("buyBeer");
+        this.beerprice = beerprice;
     }
 
     public void doCardAction(UUID playerID) {
-        double money = stopfine;
-        if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > money) {
+        double money = beerprice;
+        if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > beerprice) {
             PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
 
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("illegalStop_chancecard_message"));
+            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("buyBeer_chancecard_message"));
         }
         else {
             GameManager.getInstance().finishGame();
