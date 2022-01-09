@@ -1,5 +1,6 @@
 package dk.dtu.matador.objects.fields;
 
+import dk.dtu.matador.Game;
 import dk.dtu.matador.managers.*;
 import dk.dtu.matador.objects.Deed;
 import dk.dtu.matador.objects.Player;
@@ -7,6 +8,7 @@ import gui_fields.GUI_Ownable;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -54,6 +56,58 @@ public abstract class PropertyField extends Field {
         }
     }
 
+    private class Bid {
+        private final double bid;
+        private final UUID bidder;
+
+        Bid(double bid, UUID bidder) {
+            this.bid = bid;
+            this.bidder = bidder;
+        }
+
+        public double getBid() {
+            return bid;
+        }
+
+        public UUID getBidder() {
+            return bidder;
+        }
+    }
+
+    private Bid biddingRound(Bid bid, String propertyName) {
+        UUID[] auctionList = PlayerManager.getInstance().getPlayerIDs();
+        for (UUID playerID : auctionList) {
+            if (bid.getBidder() != null) {
+                Game.logDebug(playerID.toString());
+                Game.logDebug(bid.getBidder().toString());
+                if (playerID == bid.getBidder()) {
+                    continue;
+                }
+            }
+
+            String playerName = PlayerManager.getInstance().getPlayer(playerID).getName();
+            double[] biddingoptions = {50.0 + bid.getBid(), 100.0 + bid.getBid(), 500.0 + bid.getBid(), 1000.0 + bid.getBid(), 2000.0 + bid.getBid(), 5000.0 + bid.getBid()};
+            double playerBalance = PlayerManager.getInstance().getPlayer(playerID).getBalance();
+            if (playerBalance >= biddingoptions[0]) {
+                boolean want_to_bid = GUIManager.getInstance().askPrompt(
+                        LanguageManager.getInstance().getString("want_to_bid_on_action")
+                                .replace("{property_name}", propertyName)
+                                .replace("{player_name}", playerName));
+                if (want_to_bid) {
+                    for (int j = 0; j < biddingoptions.length; j++) {
+                        if (playerBalance < biddingoptions[j]) {
+                            biddingoptions = ArrayUtils.remove(biddingoptions, j);
+                        }
+                    }
+
+                    bid = biddingRound(new Bid(GUIManager.getInstance().askBid(biddingoptions), playerID), propertyName);
+                    break;
+                }
+            }
+        }
+        return bid;
+    }
+
     /**
      * Method that starts an auction on properties when needed
      */
@@ -61,49 +115,18 @@ public abstract class PropertyField extends Field {
         String propertyName = LanguageManager.getInstance().getString("field_" + super.getFieldName() + "_name");
         GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("auction_start")
                 .replace("{property_name}", propertyName));
-        UUID[] auctionlist = PlayerManager.getInstance().getPlayerIDs();
-        double highestbid = 0.0;
-        UUID highestbidder = null;
-        while (auctionlist.length > 0) {
-            if (auctionlist.length == 1 && auctionlist[0] == highestbidder) {
-                break;
-            }
 
-            for (int i = 0; i < auctionlist.length; i++) {
-                UUID playerID = auctionlist[i];
-                String playerName = PlayerManager.getInstance().getPlayer(playerID).getName();
-                double[] biddingoptions = {50.0 + highestbid, 100.0 + highestbid, 500.0 + highestbid, 1000.0 + highestbid, 2000.0 + highestbid, 5000.0 + highestbid};
-                double playerBalance = PlayerManager.getInstance().getPlayer(playerID).getBalance();
-                if (playerBalance >= biddingoptions[0]) {
-                    boolean want_to_bid = GUIManager.getInstance().askPrompt(
-                            LanguageManager.getInstance().getString("want_to_bid_on_action")
-                                    .replace("{property_name}", propertyName)
-                                    .replace("{player_name}", playerName));
-                    if (want_to_bid) {
-                        for (int j = 0; j < biddingoptions.length; j++) {
-                            if (playerBalance < biddingoptions[j]) {
-                                biddingoptions = ArrayUtils.remove(biddingoptions, j);
-                            }
-                        }
-                        highestbid = GUIManager.getInstance().askBid(biddingoptions);
-                        highestbidder = playerID;
-                        auctionlist = PlayerManager.getInstance().getPlayerIDs();
+        Bid bid = new Bid(0.0, null);
 
-                    }
-                }
-                auctionlist = ArrayUtils.remove(auctionlist, i);
-                if (i > 0) {
-                    i--;
-                }
-            }
-        }
-        if (highestbidder != null) {
+        bid = biddingRound(bid, propertyName);
+
+        if (bid.getBidder() != null) {
             GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("auction_won")
-                    .replace("{player_name}", PlayerManager.getInstance().getPlayer(highestbidder).getName())
+                    .replace("{player_name}", PlayerManager.getInstance().getPlayer(bid.getBidder()).getName())
                     .replace("{property_name}", propertyName));
-            PlayerManager.getInstance().getPlayer(highestbidder).withdraw(highestbid);
-            DeedManager.getInstance().setDeedOwnership(DeedManager.getInstance().getDeedID(super.getID()), highestbidder);
-            DeedManager.getInstance().updatePlayerDeedPrices(highestbidder);
+            PlayerManager.getInstance().getPlayer(bid.getBidder()).withdraw(bid.getBid());
+            DeedManager.getInstance().setDeedOwnership(DeedManager.getInstance().getDeedID(super.getID()), bid.getBidder());
+            DeedManager.getInstance().updatePlayerDeedPrices(bid.getBidder());
         } else {
             GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("auction_no_bids"));
         }
