@@ -82,10 +82,10 @@ public class Deed {
             if (field instanceof BreweryField) {
                 switch (DeedManager.getInstance().howManyFieldTypeDoesPlayerOwn("BreweryField", deedOwner)) {
                     case 1:
-                        currentRent = diceCup.getSum()*100.0;
+                        currentRent = diceCup.getSum()*this.rent[0];
                         break;
                     case 2:
-                        currentRent = diceCup.getSum()*200.0;
+                        currentRent = diceCup.getSum()*this.rent[1];
                         break;
                 }
             }

@@ -129,8 +129,9 @@ public class GameBoard {
                             fieldGroupsMap.get(fieldColor).add(fieldDeed.getID());
                             break;
                         case "brewery":
+                            JSONObject breweryConfiguration = subtypeConfiguration.getJSONObject("brewery");
                             fields[i] = new BreweryField(fieldSubtype, fieldColor, textColor, fieldName);
-                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice);
+                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice, new double[] {breweryConfiguration.getDouble("rent_multiplier"), breweryConfiguration.getDouble("monopoly_multiplier")});
                             break;
                         case "ferry":
                             JSONObject ferryConfiguration = subtypeConfiguration.getJSONObject("ferry");
