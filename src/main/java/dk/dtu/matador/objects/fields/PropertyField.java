@@ -32,7 +32,8 @@ public abstract class PropertyField extends Field {
                 );
             } else {
                 GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_pay_rent").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
-                GameManager.getInstance().finishGame();
+                PlayerManager.getInstance().getPlayer(playerID).setBroke();
+
             }
         }
     }

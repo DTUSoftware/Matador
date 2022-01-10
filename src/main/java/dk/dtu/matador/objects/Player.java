@@ -160,7 +160,7 @@ public class Player {
      * returns if the player is broke or not
      * @return if the player is broke.
      */
-    public boolean getBroke() {
+    public boolean isBroke() {
         return this.broke;
     }
     /**
