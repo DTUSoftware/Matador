@@ -48,6 +48,8 @@ public class JailField extends Field {
                     GUIManager.getInstance().updateDice(diceValues[0], diceValues[1]);
                     if (diceCup.getValues()[0] == diceCup.getValues()[1]){
                         player.unJail();
+                        GameManager gm = GameManager.getInstance();
+                        gm.setPlayerBoardPosition(playerID, (gm.getPlayerPosition(playerID)+diceCup.getSum()) % gm.getGameBoard().getFieldAmount(), true);
                     }
                 }
                 // if the player can pay bailout fees
