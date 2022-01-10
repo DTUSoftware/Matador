@@ -42,7 +42,7 @@ public class JailField extends Field {
                 player.unJail();
             }
             else {
-                if (player.getJailedTime()<3 && GUIManager.getInstance().askJailRoll()){
+                if (player.getJailedTime() <= 3 && GUIManager.getInstance().askJailRoll()){
                     diceCup.raffle();
                     int[] diceValues = diceCup.getValues();
                     GUIManager.getInstance().updateDice(diceValues[0], diceValues[1]);
@@ -59,7 +59,7 @@ public class JailField extends Field {
                 }
                 else {
                     GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_pay_bailout"));
-                    GameManager.getInstance().finishGame();
+
                 }
             }
 

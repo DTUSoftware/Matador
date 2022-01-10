@@ -26,7 +26,7 @@ public class BirthdayCC extends ChanceCard {
     @Override
     public void doCardAction(UUID playerID) {
         double money = 0.0;
-        for (UUID otherPlayerID : PlayerManager.getInstance().getPlayerIDs()) {
+        for (UUID otherPlayerID : GameManager.getInstance().getPlayersCurrentlyInGame()) {
             if (otherPlayerID != playerID) {
                 if (PlayerManager.getInstance().getPlayer(otherPlayerID).withdraw(birthdayWithdrawalAmount)) {
                     money = money + birthdayWithdrawalAmount;
@@ -36,7 +36,6 @@ public class BirthdayCC extends ChanceCard {
                             .replace("{player_name}", PlayerManager.getInstance().getPlayer(otherPlayerID).getName())
                             .replace("{birthday_player_name}", PlayerManager.getInstance().getPlayer(playerID).getName())
                     );
-                    GameManager.getInstance().finishGame();
                 }
             }
         }

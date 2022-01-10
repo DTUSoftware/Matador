@@ -6,6 +6,7 @@ import gui_fields.GUI_Ownable;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -30,7 +31,6 @@ public abstract class PropertyField extends Field {
                     );
                 } else {
                     GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_pay_rent").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
-                    GameManager.getInstance().finishGame();
                 }
             }
         }
@@ -74,7 +74,7 @@ public abstract class PropertyField extends Field {
     }
 
     private Bid biddingRound(Bid bid, String propertyName) {
-        UUID[] auctionList = PlayerManager.getInstance().getPlayerIDs();
+        UUID[] auctionList = GameManager.getInstance().getPlayersCurrentlyInGame();
         for (UUID playerID : auctionList) {
             if (bid.getBidder() != null) {
                 if (playerID == bid.getBidder()) {
@@ -84,6 +84,7 @@ public abstract class PropertyField extends Field {
 
             String playerName = PlayerManager.getInstance().getPlayer(playerID).getName();
             double[] biddingoptions = {50.0 + bid.getBid(), 100.0 + bid.getBid(), 500.0 + bid.getBid(), 1000.0 + bid.getBid(), 2000.0 + bid.getBid(), 5000.0 + bid.getBid()};
+            ArrayList<Double> validBiddingOptions = new ArrayList<>();
             double playerBalance = PlayerManager.getInstance().getPlayer(playerID).getBalance();
             if (playerBalance >= biddingoptions[0]) {
                 boolean want_to_bid = GUIManager.getInstance().askPrompt(
@@ -92,10 +93,11 @@ public abstract class PropertyField extends Field {
                                 .replace("{player_name}", playerName));
                 if (want_to_bid) {
                     for (int j = 0; j < biddingoptions.length; j++) {
-                        if (playerBalance < biddingoptions[j]) {
-                            biddingoptions = ArrayUtils.remove(biddingoptions, j);
+                        if (playerBalance >= biddingoptions[j]) {
+                            validBiddingOptions.add(biddingoptions[j]);
                         }
                     }
+                    biddingoptions = ArrayUtils.toPrimitive(validBiddingOptions.toArray(new Double[0]));
 
                     bid = biddingRound(new Bid(GUIManager.getInstance().askPrice(biddingoptions, LanguageManager.getInstance().getString("choose_a_bid")), playerID), propertyName);
                     break;
@@ -107,8 +109,10 @@ public abstract class PropertyField extends Field {
 
     /**
      * Method that starts an auction on properties when needed
+     *
+     * @return <code>true</code> if someone bought the property, else <code>false</code>.
      */
-    public void startAuction() {
+    public boolean startAuction() {
         String propertyName = LanguageManager.getInstance().getString("field_" + super.getFieldName() + "_name");
         GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("auction_start")
                 .replace("{property_name}", propertyName));
@@ -124,8 +128,10 @@ public abstract class PropertyField extends Field {
             PlayerManager.getInstance().getPlayer(bid.getBidder()).withdraw(bid.getBid());
             DeedManager.getInstance().setDeedOwnership(DeedManager.getInstance().getDeedID(super.getID()), bid.getBidder());
             DeedManager.getInstance().updatePlayerDeedPrices(bid.getBidder());
+            return true;
         } else {
             GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("auction_no_bids"));
+            return false;
         }
     }
 
@@ -151,9 +157,9 @@ public abstract class PropertyField extends Field {
                     startAuction();
                 }
             } else {
-                // End the game
+                // do auction
                 GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_buy").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
-                GameManager.getInstance().finishGame();
+                startAuction();
             }
         } else {
             // someone owns it
@@ -181,7 +187,12 @@ public abstract class PropertyField extends Field {
     }
 
     public void setPropertyOwner(UUID playerID) {
-        ((GUI_Ownable) super.getGUIField()).setOwnerName(PlayerManager.getInstance().getPlayer(playerID).getName());
+        if (playerID == null) {
+            ((GUI_Ownable) super.getGUIField()).setOwnerName("");
+        }
+        else {
+            ((GUI_Ownable) super.getGUIField()).setOwnerName(PlayerManager.getInstance().getPlayer(playerID).getName());
+        }
     }
 
     @Override
