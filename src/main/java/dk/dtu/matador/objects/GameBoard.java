@@ -6,6 +6,7 @@ import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.objects.chancecards.*;
 import dk.dtu.matador.objects.chancecards.misc.*;
+import dk.dtu.matador.objects.chancecards.move.*;
 import dk.dtu.matador.objects.chancecards.pay.*;
 import dk.dtu.matador.objects.chancecards.receive.*;
 import dk.dtu.matador.objects.fields.*;
@@ -37,6 +38,11 @@ public class GameBoard {
 //        /* Move to free */  // new CarCC(), new ShipCC(),
 //        /* Special */       new MoveFieldsCC(), new MoveOrDrawCC(),
 
+            
+//TODO move "move cards" out from comments when "move cards" are done
+
+//        /* move cards */    new GoToFredriksberg(), new GoToGrønningen(), new GoToJail(), new GoToMolslinjen(), new GoToNearestferry(), new GoToRådhusplads(),
+//        /* move cards */    new GoToStart(), new GoToStrandvejen(), new GoToVimmelskaftet(), new Move3Back(), new Move3Forward(), new MoveToShippingCompany(),
         /* pay cards */     new BuyBeer(), new CarEnsurance(), new CarRepair(), new Carwash(), new Dentist(), new IllegalCigs(), new IllegalStop(),
         /* pay cards */     new NewTyres(), new OilPrices(), new ParkingTicket(), new PropertyTax(),
         /* receive cards */ new Aktie(), new Birthday(), new EllevenRight(), new FamilyParty(), new Garden(), new JointParty(), new MatadorLegatet(),
