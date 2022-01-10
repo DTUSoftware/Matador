@@ -8,13 +8,7 @@ import dk.dtu.matador.managers.PlayerManager;
 import java.util.UUID;
 
 public class EllevenRight extends ReceiveCC {
-    private double ellevenRightReceiveAmount = 1000.0;
-
     public EllevenRight() {
-        super("ellevenRight", 1000.0);
-    }
-    public EllevenRight(double ellevenRightReceiveAmount) {
-        super("ellevenRight", ellevenRightReceiveAmount);
-        this.ellevenRightReceiveAmount = ellevenRightReceiveAmount;
+        super("EllevenRight", 1000.0);
     }
 }

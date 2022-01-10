@@ -1,14 +1,6 @@
 package dk.dtu.matador.objects.chancecards.move;
 
-import dk.dtu.matador.objects.chancecards.ChanceCard;
-
-public abstract class MoveToFieldCC extends ChanceCard {
-
-    MoveToFieldCC(String playerID, int cardfield){
-        super(playerID);
-    }
-
-
+public abstract class MoveToFieldCC {
 }
 
 /**
