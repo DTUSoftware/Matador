@@ -6,6 +6,7 @@ import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.objects.chancecards.*;
 import dk.dtu.matador.objects.chancecards.misc.*;
+import dk.dtu.matador.objects.chancecards.pay.*;
 import dk.dtu.matador.objects.chancecards.receive.*;
 import dk.dtu.matador.objects.fields.*;
 import gui_fields.GUI_Field;
@@ -28,12 +29,16 @@ public class GameBoard {
 
     //TODO Remove old ChanceCards
     private final ChanceCard[] chanceCards = new ChanceCard[] {
-        /* Bail */          new BailCC(),
-        /* Give & Take */   new BirthdayCC(), new DidHomeWorkCC(), new EatCandyCC(),
-        /* Move to field */ new BoardWalkCC(), new SkateparkCC(), new StartCC(),
-        /* Move to color */ new BrownRedCC(), new LightBlueCC(), new LightblueYellowCC(), new OrangeBlueCC(), new OrangeCC(), new RedCC(), new SalmonGreenCC(),
-        /* Move to free */  // new CarCC(), new ShipCC(),
-        /* Special */       new MoveFieldsCC(), new MoveOrDrawCC(),
+
+// Old    /* Bail */          new BailCC(),
+// Chance /* Give & Take */   new BirthdayCC(), new DidHomeWorkCC(), new EatCandyCC(),
+// Cards; /* Move to field */ new BoardWalkCC(), new SkateparkCC(), new StartCC(),
+//        /* Move to color */ new BrownRedCC(), new LightBlueCC(), new LightblueYellowCC(), new OrangeBlueCC(), new OrangeCC(), new RedCC(), new SalmonGreenCC(),
+//        /* Move to free */  // new CarCC(), new ShipCC(),
+//        /* Special */       new MoveFieldsCC(), new MoveOrDrawCC(),
+
+        /* pay cards */     new BuyBeer(), new CarEnsurance(), new CarRepair(), new Carwash(), new Dentist(), new IllegalCigs(), new IllegalStop(),
+        /* pay cards */     new NewTyres(), new OilPrices(), new ParkingTicket(), new PropertyTax(),
         /* receive cards */ new Aktie(), new Birthday(), new EllevenRight(), new FamilyParty(), new Garden(), new JointParty(), new MatadorLegatet(),
         /* receive cards */ new OldFurniture(), new PremiumBond(), new Raise(), new TheClassLottery(), new TheLocalAuthority(),
         /* misc cards */    new KingsBirthdayCC()
