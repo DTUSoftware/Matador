@@ -5,6 +5,7 @@ import gui_fields.GUI_Car;
 import gui_fields.GUI_Field;
 import gui_fields.GUI_Player;
 import gui_main.GUI;
+import org.apache.commons.lang.ArrayUtils;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -130,13 +131,13 @@ public class GUIManager {
      * @param biddingoptions that is the options of what you can bid on the auction
      * @return the chosen bid as a double
      */
-    public double askBid(double[] biddingoptions) {
+    public double askPrice(double[] biddingoptions, String question) {
         int len = biddingoptions.length;
         String[] stringbiddingoptions = new String[len];
         for (int i = 0; i < len; i++) {
             stringbiddingoptions[i] = String.valueOf(biddingoptions[i]);
         }
-        String bid = gui.getUserSelection(LanguageManager.getInstance().getString("choose_bid"), stringbiddingoptions);
+        String bid = gui.getUserSelection(question, stringbiddingoptions);
         return Double.parseDouble(bid);
     }
 
@@ -205,6 +206,28 @@ public class GUIManager {
 
         String propertyDisplayName = gui.getUserSelection(LanguageManager.getInstance().getString("choose_a_property_" + action), propertyDisplayNames);
         return propertyMap.get(propertyDisplayName);
+    }
+
+    /**
+     * Method that asks to choose a player
+     *
+     * @param playerAskingID    the ID of the player asking
+     * @param action            the action (build)
+     * @return the playerID of the player that was chosen
+     */
+    public UUID askPlayer(UUID playerAskingID, String action) {
+        UUID[] playerIDs = PlayerManager.getInstance().getPlayerIDs();
+        playerIDs = (UUID[]) ArrayUtils.removeElement(playerIDs, playerAskingID);
+
+        HashMap<String, UUID> playerMap = new HashMap<>();
+        String[] playerNames = new String[playerIDs.length];
+        for (int i = 0; i < playerIDs.length; i++) {
+            playerNames[i] = PlayerManager.getInstance().getPlayer(playerIDs[i]).getName();
+            playerMap.put(playerNames[i], playerIDs[i]);
+        }
+
+        String playerName = gui.getUserSelection(LanguageManager.getInstance().getString("choose_a_player_" + action), playerNames);
+        return playerMap.get(playerName);
     }
 
     /**
