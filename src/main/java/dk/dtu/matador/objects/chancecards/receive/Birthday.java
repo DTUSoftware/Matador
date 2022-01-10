@@ -18,6 +18,7 @@ public class Birthday extends ReceiveCC {
         this.birthdaygiftFromEveryPLayer = birthdaygiftFromEveryPLayer;
     }
 
+    @Override
     public void doCardAction(UUID playerID) {
         GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("birthday_chancecard_message"));
         double money = 0.0;

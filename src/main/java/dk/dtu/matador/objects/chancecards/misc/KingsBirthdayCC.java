@@ -1,6 +1,16 @@
 package dk.dtu.matador.objects.chancecards.misc;
 
-public class KingsBirthdayCC {
+import dk.dtu.matador.objects.chancecards.ChanceCard;
+
+import java.util.UUID;
+
+public class KingsBirthdayCC extends MiscCC {
+    public OrangeCC() {
+        super("orange");
+    }
+
+    @Override
+    public void doCardAction(UUID playerID) {
 }
 
 /**

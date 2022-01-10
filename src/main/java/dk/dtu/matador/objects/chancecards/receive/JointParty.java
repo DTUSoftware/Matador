@@ -18,6 +18,7 @@ public class JointParty extends ReceiveCC {
         this.JointPartyReceiveAmountFromEveryPLayer = birthdayReceiveAmountFromEveryPLayer;
     }
 
+    @Override
     public void doCardAction(UUID playerID) {
         double money = 0.0;
         GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("jointparty_chancecard_message"));
