@@ -8,19 +8,19 @@ import dk.dtu.matador.managers.PlayerManager;
 import java.util.UUID;
 
 public class Birthday extends ReceiveCC {
-    private double birthdayReceiveAmountFromEveryPLayer = 200.0;
+    private double birthdaygiftFromEveryPLayer = 200.0;
 
     public Birthday() {
         super("Birthday");
     }
-    public Birthday(double birthdayReceiveAmountFromEveryPLayer) {
+    public Birthday(double birthdaygiftFromEveryPLayer) {
         super("Birthday");
-        this.birthdayReceiveAmountFromEveryPLayer = birthdayReceiveAmountFromEveryPLayer;
+        this.birthdaygiftFromEveryPLayer = birthdaygiftFromEveryPLayer;
     }
 
     public void doCardAction(UUID playerID) {
-        double money = birthdayReceiveAmountFromEveryPLayer;
-        if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > birthdayReceiveAmountFromEveryPLayer) {
+        double money = birthdaygiftFromEveryPLayer;
+        if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > birthdaygiftFromEveryPLayer) {
             PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
 
             GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("Birthday_chancecard_message"));
