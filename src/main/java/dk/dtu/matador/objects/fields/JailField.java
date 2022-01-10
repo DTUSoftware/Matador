@@ -46,10 +46,20 @@ public class JailField extends Field {
                     diceCup.raffle();
                     int[] diceValues = diceCup.getValues();
                     GUIManager.getInstance().updateDice(diceValues[0], diceValues[1]);
+                    GameManager gm = GameManager.getInstance();
                     if (diceCup.getValues()[0] == diceCup.getValues()[1]){
                         player.unJail();
-                        GameManager gm = GameManager.getInstance();
                         gm.setPlayerBoardPosition(playerID, (gm.getPlayerPosition(playerID)+diceCup.getSum()) % gm.getGameBoard().getFieldAmount(), true);
+                    }
+                    else if (player.getJailedTime() == 3) {
+                        if (player.withdraw(jailBailOut)) {
+                            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("paid_bailout").replace("{amount}", Float.toString(Math.round(jailBailOut))));
+                            player.unJail();
+                            gm.setPlayerBoardPosition(playerID, (gm.getPlayerPosition(playerID)+diceCup.getSum()) % gm.getGameBoard().getFieldAmount(), true);
+                        }
+                        else {
+                            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_pay_bailout"));
+                        }
                     }
                 }
                 // if the player can pay bailout fees
