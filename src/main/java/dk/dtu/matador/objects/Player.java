@@ -1,6 +1,8 @@
 package dk.dtu.matador.objects;
 
+import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.managers.GUIManager;
+import dk.dtu.matador.managers.DeedManager;
 
 import java.util.UUID;
 
@@ -13,6 +15,7 @@ public class Player {
     private final Account account;
     private int bailCards = 0;
     private boolean jailed = false;
+    private int jailedTime = 0;
 
     public Player(String name) {
         this.name = name;
@@ -92,6 +95,7 @@ public class Player {
      */
     public void unJail() {
         setJailed(false);
+        setJailedTime(0);
     }
 
     public boolean isJailed() {
@@ -104,6 +108,23 @@ public class Player {
     public void giveBailCard() {
         this.bailCards++;
     }
+
+    /**
+     * Counts for how many rounds the player has been in jail.
+     */
+    public void jailedTimeUp () {this.jailedTime++;}
+
+    /**
+     * gives how long the player has been jailed
+     * @return jailedTime as an integer
+     */
+    public int getJailedTime () {return this.jailedTime;}
+
+    /**
+     * Sets the jaiLedTime to the new jailed time
+     * @param newJailedTime integer for what the new JailedTime should be
+     */
+    public void setJailedTime (int newJailedTime){this.jailedTime=newJailedTime;}
 
     /**
      * Takes one of the player's bail cards, if the player has one.
@@ -121,6 +142,36 @@ public class Player {
 
     public double getBalance() {
         return account.getBalance();
+    }
+
+    public double getDeedBalance() {
+        DeedManager dm = DeedManager.getInstance();
+
+        UUID[] playerDeeds = dm.getPlayerDeeds(playerID);
+        double unitedDeedBalance = 0;
+        for (UUID deedID : playerDeeds)
+            //TODO missing networth from houses mortgage and hotel(trivago)
+            unitedDeedBalance += dm.getDeed(deedID).getPrice();
+        return unitedDeedBalance;
+    }
+  
+    public double getNetWorth() {
+        double netWorth = 0.0;
+        netWorth += getBalance();
+
+        // Calculate the worth of the player's deeds (even if it's prawned)
+        for (UUID deedID : DeedManager.getInstance().getPlayerDeeds(playerID)) {
+            Deed deed = DeedManager.getInstance().getDeed(deedID);
+            netWorth += deed.getPrice();
+            for (int i = 0; i < deed.getHouses(); i++) {
+                netWorth += deed.getHousePrice();
+            }
+            for (int i = 0; i < deed.getHotels(); i++) {
+                netWorth += deed.getHotelPrice();
+            }
+        }
+
+        return netWorth;
     }
 
     public UUID getID() {

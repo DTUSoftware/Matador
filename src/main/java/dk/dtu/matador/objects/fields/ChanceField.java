@@ -8,8 +8,8 @@ import java.awt.*;
 import java.util.UUID;
 
 public class ChanceField extends Field {
-    public ChanceField() {
-        super(Color.ORANGE, "chance", true);
+    public ChanceField(Color color, Color textColor) {
+        super(color, textColor, "chance", true);
     }
 
     @Override

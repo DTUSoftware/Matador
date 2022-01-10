@@ -10,9 +10,9 @@ import dk.dtu.matador.objects.Player;
  * Main class for the program
  */
 public class Game {
-    private final static double startingBalance = 12000.0;
-    private static double startPassReward = 3000.0;
-    public final static boolean debug = ((System.getenv("debug") != null) || (System.getProperty("debug") != null));
+    private final static double startingBalance = 30000.0;
+    private static double startPassReward = 4000.0;
+    public static boolean debug = ((System.getenv("debug") != null) || (System.getProperty("debug") != null));
 
     public static void main(String[] args) {
         Game.logDebug("Fields array: " + GameManager.getInstance().getGameBoard().fieldsToString());
@@ -31,6 +31,14 @@ public class Game {
         int amount_of_players = gm.askPlayers();
         for (int i = 1; i <= amount_of_players; i++) {
             String playerName = gm.getUserString(LanguageManager.getInstance().getString("enter_player_name").replace("{player_number}", Integer.toString(i)));
+
+            // check for debug enable
+            if (playerName.equals("cc_k0n4m1")) {
+                debug = true;
+                gm.showMessage("DEBUG MODE ENABLED!");
+                playerName = gm.getUserString(LanguageManager.getInstance().getString("enter_player_name").replace("{player_number}", Integer.toString(i)));
+            }
+
             Player player = PlayerManager.getInstance().createPlayer(playerName, startingBalance);
 
             // Place player at start

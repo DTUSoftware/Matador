@@ -7,8 +7,8 @@ import java.awt.*;
 import java.util.UUID;
 
 public class StartField extends Field {
-    public StartField() {
-        super(Color.WHITE, "start", true);
+    public StartField(Color color, Color textColor) {
+        super(color, textColor, "start", true);
     }
 
     @Override

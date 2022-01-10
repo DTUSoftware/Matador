@@ -9,8 +9,8 @@ import java.awt.*;
 import java.util.UUID;
 
 public class GoToJailField extends Field {
-    public GoToJailField() {
-        super(Color.BLUE, "go_to_jail", true);
+    public GoToJailField(Color color, Color textColor) {
+        super(color, textColor, "go_to_jail", true);
     }
 
     @Override

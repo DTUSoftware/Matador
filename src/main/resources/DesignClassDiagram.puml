@@ -123,13 +123,13 @@ package objects {
         }
     }
 
-    GameBoard --> "24 -fields" Field
-    GameBoard --> "18 -chanceCards" ChanceCard
+    GameBoard --> "40 -fields" Field
+    GameBoard --> "49 -chanceCards" ChanceCard
     DiceCup --> "2 -dice" Die
     Player --> "1 -account" Account
 }
 
-PlayerManager --> "2..4 -players" Player
+PlayerManager --> "3..6 -players" Player
 GameManager --> "1 -gameBoard" GameBoard
 GameManager --> "1 -diceCup" DiceCup
 

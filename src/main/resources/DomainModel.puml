@@ -16,11 +16,11 @@ class Fields {
     name
     price
     rent
+    color
 }
 
 
 class FieldGroup {
-    groupRent
 }
 
 class Account {
@@ -31,10 +31,10 @@ class ChanceCards {
     name
 }
 
-Game "1" -r "2..4" Player : Includes
+Game "1" -r "3..6" Player : Includes
 Game "1" -l "2" Die : Includes
-Game "1" -- "24" Fields : Includes
-Fields "2" -- "1" FieldGroup : Includes
+Game "1" -- "40" Fields : Includes
+Fields "3" -- "1" FieldGroup : Includes
 Player  "1" -d- "1" Account: Includes
-Game "1" -d- "16" ChanceCards: Includes
+Game "1" -d- "49" ChanceCards: Includes
 @enduml

@@ -4,7 +4,7 @@
 skinparam classAttributeIconSize 0
 
 package fields {
-    abstract Field {
+    abstract class Field {
         -fieldID : UUID
 
         {abstract} +doLandingAction(playerID:UUID) : void
@@ -13,7 +13,7 @@ package fields {
     class StartField {
     }
 
-    class PropertyField {
+    abstract class PropertyField {
         -color : Color
 
         +isAvailable() : boolean
@@ -31,12 +31,29 @@ package fields {
     class GoToJailField {
     }
 
+    class TaxField {
+    }
+
     Field <|-- StartField
     Field <|-- PropertyField
     Field <|-- ChanceField
     Field <|-- JailField
     Field <|-- BreakField
     Field <|-- GoToJailField
+    Field <|-- TaxField
+
+    class StreetField {
+    }
+
+    class FerryField {
+    }
+
+    class BreweryField {
+    }
+
+    PropertyField <|-- StreetField
+    PropertyField <|-- FerryField
+    PropertyField <|-- BreweryField
 }
 
 @enduml

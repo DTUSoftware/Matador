@@ -5,31 +5,58 @@ actor Player
 Player -[hidden]-> GUI
 GUI -[hidden]-> Game
 
+== Initialization ==
+
 Game -> Game : main()
 
 GUI <- Game : initializeGUI()
 GUI --> Game : gui
 Player -> GUI : interacts
 
-loop for each player (2-4x)
+loop for each player (3-6x)
     GUI <- Game : askPlayerName()
+    Player <- GUI : show prompt
+    Player --> GUI : playerName
     GUI --> Game : playerName
     Game -> Game : createPlayer(playerName)
 end
 
+== Game Repetition ==
+
 loop players want to keep playing
     GUI <- Game : newGame()
     loop no player won
-        loop for each player (2-4x)
-            GUI <- Game : askRollDice()
-            GUI -> Game : rollDice()
-            GUI <-- Game : diceValues
-            GUI -> GUI : updateDice(diceValues)
-            Game -> Game : getPlayerPosition(player)
-            GUI <- Game : movePlayer(player, position)
+        loop for each player (3-6x)
+            loop didn't roll dice yet
+                GUI <- Game : askPlayerAction()
+                Player <- GUI : show prompt
+                Player --> GUI : chosenAction
+                GUI --> Game : chosenAction
+                alt action: roll dice
+                    GUI <- Game : askRollDice()
+                    Player <- GUI : show button
+                    Player --> GUI : buttonClick
+                    GUI -> Game : rollDice()
+                    GUI <-- Game : diceValues
+                    GUI -> GUI : updateDice(diceValues)
+                    Game -> Game : getPlayerPosition(player)
+                    GUI <- Game : movePlayer(player, position)
+
+                    alt landed on chance card field
+                        GUI <- Game : showChanceCard()
+                    else landed on other player's property
+                        GUI <- Game : updatePlayerBalance()
+                    else landed on own property
+                    end
+                else action: build house
+                else action: build hotel
+                end
+            end
         end
     end
     GUI <- Game : askPlayAgain()
+    Player <- GUI : show prompt
+    Player --> GUI : playersWantToKeepPlaying
     GUI --> Game : playersWantToKeepPlaying
 end
 
