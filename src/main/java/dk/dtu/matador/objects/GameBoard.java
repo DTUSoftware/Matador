@@ -26,8 +26,8 @@ public class GameBoard {
     private final ChanceCard[] chanceCards = new ChanceCard[] {
     /* Bail */          new BailCC(),
     /* Give & Take */   new BirthdayCC(), new DidHomeWorkCC(), new EatCandyCC(),
-    /* Move to field */ new BoardWalkCC(), new SkateparkCC(), new StartCC(),
-    /* Move to color */ new BrownRedCC(), new LightBlueCC(), new LightblueYellowCC(), new OrangeBlueCC(), new OrangeCC(), new RedCC(), new SalmonGreenCC(),
+//    /* Move to field */ new BoardWalkCC(), new SkateparkCC(), new StartCC(),
+//    /* Move to color */ new BrownRedCC(), new LightBlueCC(), new LightblueYellowCC(), new OrangeBlueCC(), new OrangeCC(), new RedCC(), new SalmonGreenCC(),
 //    /* Move to free */  // new CarCC(), new ShipCC(),
     /* Special */       new MoveFieldsCC(), new MoveOrDrawCC(),
     };
@@ -261,8 +261,8 @@ public class GameBoard {
         for (int currentField = playerPosition+1; currentField < playerPosition+getFieldAmount(); currentField++) {
             Field field = getField(currentField % getFieldAmount());
             for (Color color : colors) {
-                System.out.println("FieldColor: " + field.getFieldColor());
-                System.out.println("CheckColor: " + color);
+//                System.out.println("FieldColor: " + field.getFieldColor());
+//                System.out.println("CheckColor: " + color);
                 if (field.getFieldColor().equals(color)) {
                     foundField = field;
                     break;

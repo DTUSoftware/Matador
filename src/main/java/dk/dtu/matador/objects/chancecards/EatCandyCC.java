@@ -25,7 +25,6 @@ public class EatCandyCC extends ChanceCard {
     public void doCardAction(UUID playerID) {
         if (!PlayerManager.getInstance().getPlayer(playerID).withdraw(candyPrice)) {
             GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_buy_candy"));
-            GameManager.getInstance().finishGame();
         }
 
     }

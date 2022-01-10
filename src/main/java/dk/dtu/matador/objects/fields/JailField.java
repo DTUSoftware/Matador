@@ -57,7 +57,7 @@ public class JailField extends Field {
                 }
                 else {
                     GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_pay_bailout"));
-                    GameManager.getInstance().finishGame();
+
                 }
             }
 
