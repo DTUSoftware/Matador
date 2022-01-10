@@ -5,6 +5,7 @@ import dk.dtu.matador.Game;
 import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.objects.chancecards.*;
+import dk.dtu.matador.objects.chancecards.receive.*;
 import dk.dtu.matador.objects.fields.*;
 import gui_fields.GUI_Field;
 import org.json.JSONArray;
@@ -23,13 +24,17 @@ public class GameBoard {
     private final HashMap<UUID, Field> fieldMap = new HashMap<>();
     private final HashMap<UUID, Integer> fieldPositions = new HashMap<>();
     private final HashMap<UUID, GUI_Field> guiFields = new LinkedHashMap<>();
+
+    //TODO Remove old ChanceCards
     private final ChanceCard[] chanceCards = new ChanceCard[] {
     /* Bail */          new BailCC(),
     /* Give & Take */   new BirthdayCC(), new DidHomeWorkCC(), new EatCandyCC(),
     /* Move to field */ new BoardWalkCC(), new SkateparkCC(), new StartCC(),
     /* Move to color */ new BrownRedCC(), new LightBlueCC(), new LightblueYellowCC(), new OrangeBlueCC(), new OrangeCC(), new RedCC(), new SalmonGreenCC(),
-//    /* Move to free */  // new CarCC(), new ShipCC(),
+    /* Move to free */  // new CarCC(), new ShipCC(),
     /* Special */       new MoveFieldsCC(), new MoveOrDrawCC(),
+            /* receive cards */ new Aktie(), new Birthday(), new EllevenRight(), new FamilyParty(), new Garden(), new JointParty(), new MatadorLegatet(),
+            /* receive cards */ new OldFurniture(), new PremiumBond(), new Raise(), new TheClassLottery(), new TheLocalAuthority()
     };
 
     private JSONObject gameBoardJSON;
