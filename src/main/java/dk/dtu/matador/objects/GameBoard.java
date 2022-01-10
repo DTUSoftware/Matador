@@ -295,6 +295,41 @@ public class GameBoard {
     }
 
     /**
+     * Gets the next field with one of the given colors, from the position of given player.
+     *
+     * @param playerID  Player to find next field from.
+     * @param fieldName A field type or name of the field (for example BreakField, JailField, StartField,
+     *                  jail, swimming_pool, bowling_alley, etc.)
+     * @return          The UUID of the found field.
+     */
+    public UUID getNextFieldIDWithType(UUID playerID, String fieldName) {
+        int playerPosition = GameManager.getInstance().getPlayerPosition(playerID);
+        Field foundField = null;
+        for (int currentField = playerPosition+1; currentField < playerPosition+getFieldAmount(); currentField++) {
+            Field field = getField(currentField % getFieldAmount());
+            try {
+                if (Class.forName("dk.dtu.matador.objects.fields."+fieldName).isInstance(field)) {
+                    foundField = field;
+                }
+            }
+            catch (Exception e) {
+                System.out.println("Could not find fieldName in Field Class names: " + e.toString());
+            }
+            if (foundField == null) {
+                if (field.getFieldName().equals(fieldName)) {
+                    foundField = field;
+                }
+            }
+            
+            if (foundField != null) { break; }
+        }
+        if (foundField != null) {
+            return foundField.getID();
+        }
+        return null;
+    }
+
+    /**
      * Returns the UUID of a field that matches the given fieldName.
      *
      * @param fieldName A field type or name of the field (for example BreakField, JailField, StartField,
