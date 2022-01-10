@@ -3,34 +3,53 @@ package dk.dtu.matador.objects.fields;
 import dk.dtu.matador.managers.LanguageManager;
 import dk.dtu.matador.managers.PlayerManager;
 import dk.dtu.matador.managers.GUIManager;
-import dk.dtu.matador.objects.Account;
 import dk.dtu.matador.objects.Player;
-import dk.dtu.matador.managers.DeedManager;
 
 import java.awt.*;
 import java.util.UUID;
 
 public class TaxField extends Field {
+    private String taxSubType;
+    private double taxAmount;
+    private double taxPercentage;
+
     /**
      * Creates a field, and sets up its respective field on the GUI.
      */
-    public TaxField(Color color, Color textColor, String taxSubtype) {
-        super(color, textColor, taxSubtype, true);
+    public TaxField(Color color, Color textColor, String taxSubType, double taxAmount) {
+        super(color, textColor, taxSubType, true);
+        this.taxSubType = taxSubType;
+        this.taxAmount = taxAmount;
+    }
+
+    /**
+     * Creates a field, and sets up its respective field on the GUI.
+     */
+    public TaxField(Color color, Color textColor, String taxSubType, double taxAmount, double taxPercentage) {
+        this(color, textColor, taxSubType, taxAmount);
+        this.taxPercentage = taxPercentage;
     }
 
     @Override
     public void doLandingAction(UUID playerID) {
-
         GUIManager gui = GUIManager.getInstance();
-        boolean answer = gui.askTaxField();
-        
         Player player = PlayerManager.getInstance().getPlayer(playerID);
+        switch (taxSubType) {
+            case "income-tax":
+                boolean answer = gui.askTaxField(taxAmount, taxPercentage);
 
-        if (answer == true ) {
-            player.withdraw(4000);
-        } else {
-            player.withdraw(player.getNetWorth() * 0.1);
+                if (answer) {
+                    player.withdraw(taxAmount);
+                } else {
+                    player.withdraw(player.getNetWorth() * (taxPercentage/100));
+                }
+                break;
+            case "extra-ordinary":
+                gui.showMessage(LanguageManager.getInstance().getString("tax_extra_ordinary").replace("{price}", Double.toString(taxAmount)));
+                player.withdraw(taxAmount);
+                break;
         }
+
     }
 
     @Override

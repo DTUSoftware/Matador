@@ -161,12 +161,13 @@ public class GUIManager {
      * @return true if 4000 kr is chosen else false
      */
 
-    public boolean askTaxField() {
-        String[] choseTax = {"4000 kr.", "10 %"};
+    public boolean askTaxField(double taxAmount, double taxPercentage) {
+        String[] choseTax = {Double.toString(taxAmount)+" kr.", Double.toString(taxPercentage)+" %"};
         String chosenTax = gui.getUserSelection(LanguageManager.getInstance().getString("choose_tax_player"), choseTax);
-        if (chosenTax == "4000 kr.") {
+        if (chosenTax.equals(Double.toString(taxAmount)+" kr.")) {
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
