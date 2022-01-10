@@ -49,5 +49,4 @@ public abstract class PayCC extends ChanceCard {
  * Betal deres bilforsikring, kr 1000
  * De har været udenlands og købt for mange smøger, betal kr 200 i told.
  * Tandlægeregning, betal kr 2000.
- * De har vundet i klasselotteriet. Modtag 500 kr. (Antal kort: 2)
  */

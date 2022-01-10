@@ -18,6 +18,7 @@ public class FamilyParty extends ReceiveCC {
         this.FamilyPartyReceiveAmountFromEveryPLayer = birthdayReceiveAmountFromEveryPLayer;
     }
 
+    @Override
     public void doCardAction(UUID playerID) {
         double money = 0.0;
         GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("familyparty_chancecard_message"));
