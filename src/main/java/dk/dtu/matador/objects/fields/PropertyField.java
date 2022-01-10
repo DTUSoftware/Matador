@@ -1,14 +1,11 @@
 package dk.dtu.matador.objects.fields;
 
-import dk.dtu.matador.Game;
 import dk.dtu.matador.managers.*;
 import dk.dtu.matador.objects.Deed;
-import dk.dtu.matador.objects.Player;
 import gui_fields.GUI_Ownable;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -98,7 +95,7 @@ public abstract class PropertyField extends Field {
                         }
                     }
 
-                    bid = biddingRound(new Bid(GUIManager.getInstance().askBid(biddingoptions), playerID), propertyName);
+                    bid = biddingRound(new Bid(GUIManager.getInstance().askPrice(biddingoptions, LanguageManager.getInstance().getString("choose_a_bid")), playerID), propertyName);
                     break;
                 }
             }

@@ -7,6 +7,7 @@ import dk.dtu.matador.objects.GameBoard;
 import dk.dtu.matador.objects.fields.Field;
 import dk.dtu.matador.objects.fields.PropertyField;
 import dk.dtu.matador.objects.fields.StreetField;
+import org.apache.commons.lang.ArrayUtils;
 
 import java.util.*;
 
@@ -204,6 +205,67 @@ public class GameManager {
         }
     }
 
+    private void tryTrade(Deed deed, UUID fieldID, UUID playerID, UUID tradePlayerID) {
+        String action = "trade";
+        // choose amount to sell for
+        double[] priceOptions = {
+                50.0, 100.0, 500.0, 1000.0, 2000.0, 5000.0,
+                deed.getPrice(), deed.getPrice() + 50.0, deed.getPrice() + 100.0,
+                deed.getPrice() + 500.0, deed.getPrice() + 1000.0,
+                deed.getPrice() + 2000.0, deed.getPrice() + 5000.0};
+
+        // remove prices above player balance
+        double tradePlayerBalance = PlayerManager.getInstance().getPlayer(tradePlayerID).getBalance();
+        for (int j = 0; j < priceOptions.length; j++) {
+            if (tradePlayerBalance < priceOptions[j]) {
+                priceOptions = ArrayUtils.remove(priceOptions, j);
+            }
+        }
+
+        // remove duplicates and sort the prices
+        Set<Double> priceSet = new TreeSet<>();
+        for (double price : priceOptions) {
+            priceSet.add(price);
+        }
+        priceOptions = ArrayUtils.toPrimitive(priceSet.toArray(new Double[0]));
+
+        double tradePrice = GUIManager.getInstance().askPrice(priceOptions, LanguageManager.getInstance().getString("choose_a_price_"+action)
+                .replace("{tradePlayerName}", PlayerManager.getInstance().getPlayer(tradePlayerID).getName())
+                .replace("{playerName}", PlayerManager.getInstance().getPlayer(playerID).getName())
+                .replace("{propertyDisplayName}", LanguageManager.getInstance().getString("field_"+gameBoard.getFieldFromID(fieldID).getFieldName()+"_name")));
+
+        // confirm to trade
+        boolean confirmed = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("confirm_"+action)
+                .replace("{tradePlayerName}", PlayerManager.getInstance().getPlayer(tradePlayerID).getName())
+                .replace("{playerName}", PlayerManager.getInstance().getPlayer(playerID).getName())
+                .replace("{price}", (Double.toString(tradePrice)))
+                .replace("{propertyDisplayName}", LanguageManager.getInstance().getString("field_"+gameBoard.getFieldFromID(fieldID).getFieldName()+"_name")));
+
+        if (confirmed) {
+            // take money
+            PlayerManager.getInstance().getPlayer(tradePlayerID).withdraw(tradePrice);
+            // give money
+            PlayerManager.getInstance().getPlayer(playerID).deposit(tradePrice);
+            // transfer the property
+            DeedManager.getInstance().setDeedOwnership(deed.getID(), tradePlayerID);
+            DeedManager.getInstance().updatePlayerDeedPrices(tradePlayerID);
+            DeedManager.getInstance().updatePlayerDeedPrices(playerID);
+
+            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("trade_confirmed")
+                    .replace("{playerName}", PlayerManager.getInstance().getPlayer(tradePlayerID).getName())
+                    .replace("{propertyDisplayName}", LanguageManager.getInstance().getString("field_"+gameBoard.getFieldFromID(fieldID).getFieldName()+"_name")));
+        }
+        else {
+            boolean tryAgain = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("trade_price_denied"));
+            if (tryAgain) {
+                tryTrade(deed, fieldID, playerID, tradePlayerID);
+            }
+            else {
+                GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("trade_cancelled"));
+            }
+        }
+    }
+
     /**
      * Performs a player's turn.
      *
@@ -262,10 +324,12 @@ public class GameManager {
                             }
                         }
 
-                        if (!actionMap.get("prawn")) {
+                        if (!actionMap.get("prawn") || !actionMap.get("trade")) {
                             if (deed.getHouses() == 0 && deed.getHotels() == 0 && !deed.isPrawned()) {
                                 // if the deed does not have any houses or hotels on it, enable the option to prawn the deed
                                 actionMap.put("prawn", true);
+                                // you can also trade deeds with no houses on them, if it isn't pawned
+                                actionMap.put("trade", true);
                             }
                         }
 
@@ -289,7 +353,7 @@ public class GameManager {
 
                         // break the loop as soon as all the possible actions for deeds are found, to keep processing
                         // low, and not have to loop through ALL the deeds, if possible.
-                        if (actionMap.get("sell") && actionMap.get("build") && actionMap.get("prawn") && actionMap.get("buy_back")) {
+                        if (actionMap.get("sell") && actionMap.get("build") && actionMap.get("prawn") && actionMap.get("buy_back") && actionMap.get("trade")) {
                             break;
                         }
                     }
@@ -388,7 +452,7 @@ public class GameManager {
                             deedID = DeedManager.getInstance().getDeedID(fieldID);
                             deed = DeedManager.getInstance().getDeed(deedID);
                             buildingType = buildableDeeds.get(deedID);
-                            confirmed = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("confirm_build")
+                            confirmed = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("confirm_"+action)
                                     .replace("{price}",((buildingType.equals("house")) ? Double.toString(deed.getHousePrice()) : Double.toString(deed.getHotelPrice())))
                                     .replace("{building}", LanguageManager.getInstance().getString(buildingType))
                                     .replace("{propertyDisplayName}", LanguageManager.getInstance().getString("field_"+gameBoard.getFieldFromID(fieldID).getFieldName()+"_name")));
@@ -446,7 +510,7 @@ public class GameManager {
                             deedID = DeedManager.getInstance().getDeedID(fieldID);
                             deed = DeedManager.getInstance().getDeed(deedID);
                             buildingType = deedsWithBuildings.get(deedID);
-                            confirmed = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("confirm_sell")
+                            confirmed = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("confirm_"+action)
                                     .replace("{payout}",((buildingType.equals("house")) ? Double.toString((deed.getHousePrice()/2)) : Double.toString(((deed.getHotelPrice()+(deed.getHousePrice()*4))/2))))
                                     .replace("{building}", LanguageManager.getInstance().getString(buildingType))
                                     .replace("{propertyDisplayName}", LanguageManager.getInstance().getString("field_"+gameBoard.getFieldFromID(fieldID).getFieldName()+"_name")));
@@ -483,7 +547,7 @@ public class GameManager {
                                 deedID = playerDeeds[i];
                                 deed = DeedManager.getInstance().getDeed(deedID);
 
-                                // if they can build houses or hotels, add the deed to the map of buildable deeds
+                                // if they can build houses or hotels, add the deed to the list of prawnable deeds
                                 if (deed.getHouses() == 0 && deed.getHotels() == 0 && !deed.isPrawned()) {
                                     prawnableDeeds.add(deedID);
                                 }
@@ -497,10 +561,10 @@ public class GameManager {
                             // player chooses a field
                             fieldID = GUIManager.getInstance().askProperty(fieldIDs, action);
 
-                            // confirm to build
+                            // confirm to prawn
                             deedID = DeedManager.getInstance().getDeedID(fieldID);
                             deed = DeedManager.getInstance().getDeed(deedID);
-                            confirmed = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("confirm_prawn")
+                            confirmed = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("confirm_"+action)
                                     .replace("{payout}", (Double.toString((deed.getPrawnPrice()))))
                                     .replace("{propertyDisplayName}", LanguageManager.getInstance().getString("field_"+gameBoard.getFieldFromID(fieldID).getFieldName()+"_name")));
 
@@ -539,10 +603,10 @@ public class GameManager {
                             // player chooses a field
                             fieldID = GUIManager.getInstance().askProperty(fieldIDs, action);
 
-                            // confirm to build
+                            // confirm to buy back
                             deedID = DeedManager.getInstance().getDeedID(fieldID);
                             deed = DeedManager.getInstance().getDeed(deedID);
-                            confirmed = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("confirm_buy_back")
+                            confirmed = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("confirm_"+action)
                                     .replace("{price}", (Double.toString((deed.getBuyBackPrice()))))
                                     .replace("{propertyDisplayName}", LanguageManager.getInstance().getString("field_"+gameBoard.getFieldFromID(fieldID).getFieldName()+"_name")));
 
@@ -558,6 +622,32 @@ public class GameManager {
                             break;
                         // Trade/sell deeds without any buildings on them
                         case "trade":
+                            ArrayList<UUID> tradeableDeeds = new ArrayList<>(); // deedID
+
+                            for (i = 0; i < playerDeeds.length; i++) {
+                                deedID = playerDeeds[i];
+                                deed = DeedManager.getInstance().getDeed(deedID);
+
+                                // if they can build houses or hotels, add the deed to the list of tradeable deeds
+                                if (deed.getHouses() == 0 && deed.getHotels() == 0 && !deed.isPrawned()) {
+                                    tradeableDeeds.add(deedID);
+                                }
+                            }
+
+                            deedIDs = tradeableDeeds.toArray(new UUID[0]);
+                            fieldIDs = new UUID[deedIDs.length];
+                            for (i = 0; i < deedIDs.length; i++) {
+                                fieldIDs[i] = DeedManager.getInstance().getFieldID(deedIDs[i]);
+                            }
+                            // player chooses a field
+                            fieldID = GUIManager.getInstance().askProperty(fieldIDs, action);
+                            deedID = DeedManager.getInstance().getDeedID(fieldID);
+                            deed = DeedManager.getInstance().getDeed(deedID);
+
+                            // choose a player to trade it to
+                            UUID tradePlayerID = GUIManager.getInstance().askPlayer(playerID, action);
+
+                            tryTrade(deed, fieldID, playerID, tradePlayerID);
                             break;
                         default:
                             break;
