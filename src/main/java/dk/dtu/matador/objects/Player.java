@@ -154,6 +154,24 @@ public class Player {
             unitedDeedBalance += dm.getDeed(deedID).getPrice();
         return unitedDeedBalance;
     }
+
+    public int getPlayerHouseOwnNumber() {
+        int houses = 0;
+        for (UUID deedID : DeedManager.getInstance().getPlayerDeeds(playerID)) {
+            Deed deed = DeedManager.getInstance().getDeed(deedID);
+            houses += deed.getHouses();
+            }
+        return houses;
+    }
+
+    public int getPlayerHotelOwnNumber() {
+        int hotels = 0;
+        for (UUID deedID : DeedManager.getInstance().getPlayerDeeds(playerID)) {
+            Deed deed = DeedManager.getInstance().getDeed(deedID);
+            hotels += deed.getHotels();
+        }
+        return hotels;
+    }
   
     public double getNetWorth() {
         double netWorth = 0.0;

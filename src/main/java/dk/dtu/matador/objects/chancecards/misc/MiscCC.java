@@ -13,15 +13,11 @@ public abstract class MiscCC extends ChanceCard {
      * @param cardName  The programmable card name,
      *                  also used in the language file.
      */
-
-    ReceiveCC(String cardName) {
+    MiscCC(String cardName) {
         super(cardName);
-
-        @Override
-        public void doCardAction(UUID playerID) {
-
-
-        }
     }
 
+    @Override
+    public void doCardAction(UUID playerID) {
+    }
 }

@@ -9,7 +9,7 @@ import dk.dtu.matador.objects.chancecards.ChanceCard;
 import java.util.UUID;
 
 public abstract class PayCC extends ChanceCard {
-    private double receiveAmount = 0.0;
+    private double payAmount = 0.0;
 
     /**
      * Initiates a new ChanceCard.
@@ -19,12 +19,12 @@ public abstract class PayCC extends ChanceCard {
      */
     PayCC(String cardName, double receiveAmount) {
         super(cardName);
-        this.receiveAmount = receiveAmount;
+        this.payAmount = receiveAmount;
     }
 
     @Override
     public void doCardAction(UUID playerID) {
-        double money = receiveAmount;
+        double money = payAmount;
         if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > money) {
 
             PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
