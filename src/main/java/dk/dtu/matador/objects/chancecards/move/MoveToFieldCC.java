@@ -1,13 +1,35 @@
 package dk.dtu.matador.objects.chancecards.move;
 
+import dk.dtu.matador.managers.GUIManager;
+import dk.dtu.matador.managers.GameManager;
+import dk.dtu.matador.managers.LanguageManager;
+import dk.dtu.matador.managers.PlayerManager;
 import dk.dtu.matador.objects.chancecards.ChanceCard;
 
+import java.util.UUID;
+
 public abstract class MoveToFieldCC extends ChanceCard {
+    private String fieldname;
 
-    MoveToFieldCC(String playerID, int cardfield){
-        super(playerID);
+    MoveToFieldCC(String fieldname){
+        super(fieldname);
+    };
+
+    public void doCardAction(UUID playerID) {
+        String cardfieldname = fieldname;
+        UUID fieldname = GameManager.getInstance().getGameBoard().getFieldIDFromType(cardfieldname);
+        if (fieldname == null) {
+            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("error_string"));
+            System.out.println("Field ID is null!");
+            return;
+        }
+
+        GameManager.getInstance().setPlayerBoardPosition(
+                playerID,
+                GameManager.getInstance().getGameBoard().getFieldPosition(fieldname),
+                true
+        );
     }
-
 
 }
 
