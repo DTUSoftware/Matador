@@ -30,6 +30,6 @@ public class MatadorLegatet extends ReceiveCC {
         PlayerManager.getInstance().getPlayer(playerID).deposit(matadorLegatetReceiveAmount);
         GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("matador_legatet_receive_amount"));
     } else {
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("matador_legatet_too_rich"));}
+            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("matador_legatet_receive_amount"));}
     }
 }

@@ -20,6 +20,7 @@ public class JointParty extends ReceiveCC {
 
     public void doCardAction(UUID playerID) {
         double money = 0.0;
+        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("jointparty_chancecard_message"));
         for (UUID otherPlayerID : PlayerManager.getInstance().getPlayerIDs()) {
             if (otherPlayerID != playerID) {
                 if (PlayerManager.getInstance().getPlayer(otherPlayerID).withdraw(JointPartyReceiveAmountFromEveryPLayer)) {
