@@ -11,7 +11,6 @@ import java.awt.*;
 import java.util.UUID;
 
 public class JailField extends Field {
-    private static DiceCup diceCup;
     private double jailBailOut = 4000.0;
     public JailField(Color color, Color textColor) {
         super(color, textColor, "jail", true);
@@ -34,6 +33,7 @@ public class JailField extends Field {
     @Override
     public void doLeavingAction(UUID playerID) {
         Player player = PlayerManager.getInstance().getPlayer(playerID);
+        DiceCup diceCup = GameManager.getInstance().getDiceCup();
         if (player.isJailed()) {
             player.jailedTimeUp();
             // if the player has a bail card
