@@ -16,6 +16,7 @@ public class Player {
     private int bailCards = 0;
     private boolean jailed = false;
     private int jailedTime = 0;
+    private boolean broke = false;
 
     public Player(String name) {
         this.name = name;
@@ -41,8 +42,8 @@ public class Player {
      * Withdraws money from the player's account. Do not use negative numbers to withdraw, otherwise it will add to
      * the balance.
      *
-     * @param amount    The amount to subtract from the balance.
-     * @return          Whether the transaction succeeded.
+     * @param amount The amount to subtract from the balance.
+     * @return Whether the transaction succeeded.
      */
     public boolean withdraw(double amount) {
         boolean success = account.withdraw(amount);
@@ -56,7 +57,7 @@ public class Player {
     /**
      * Deposits money onto the player's account.
      *
-     * @param amount    The amount of money to add to the balance.
+     * @param amount The amount of money to add to the balance.
      */
     public void deposit(double amount) {
         account.deposit(amount);
@@ -69,7 +70,7 @@ public class Player {
     /**
      * Sets the balance of the player's account.
      *
-     * @param balance   The new balance.
+     * @param balance The new balance.
      */
     public void setBalance(double balance) {
         account.setBalance(balance);
@@ -112,24 +113,32 @@ public class Player {
     /**
      * Counts for how many rounds the player has been in jail.
      */
-    public void jailedTimeUp () {this.jailedTime++;}
+    public void jailedTimeUp() {
+        this.jailedTime++;
+    }
 
     /**
      * gives how long the player has been jailed
+     *
      * @return jailedTime as an integer
      */
-    public int getJailedTime () {return this.jailedTime;}
+    public int getJailedTime() {
+        return this.jailedTime;
+    }
 
     /**
      * Sets the jaiLedTime to the new jailed time
+     *
      * @param newJailedTime integer for what the new JailedTime should be
      */
-    public void setJailedTime (int newJailedTime){this.jailedTime=newJailedTime;}
+    public void setJailedTime(int newJailedTime) {
+        this.jailedTime = newJailedTime;
+    }
 
     /**
      * Takes one of the player's bail cards, if the player has one.
      *
-     * @return  <code>true</code> if the player has a bail card, and one was subtracted successfully,
+     * @return <code>true</code> if the player has a bail card, and one was subtracted successfully,
      * else <code>false</code>.
      */
     public boolean takeBailCard() {
@@ -140,6 +149,24 @@ public class Player {
         return false;
     }
 
+    /**
+     * Sets the player to broke
+     */
+    public void setBroke() {
+        this.broke = true;
+    }
+
+    /**
+     * returns if the player is broke or not
+     * @return if the player is broke.
+     */
+    public boolean getBroke() {
+        return this.broke;
+    }
+    /**
+     * Gives the balance of the player
+     * @return balance as a double
+     */
     public double getBalance() {
         return account.getBalance();
     }
@@ -154,7 +181,7 @@ public class Player {
             unitedDeedBalance += dm.getDeed(deedID).getPrice();
         return unitedDeedBalance;
     }
-  
+
     public double getNetWorth() {
         double netWorth = 0.0;
         netWorth += getBalance();
