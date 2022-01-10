@@ -1,16 +1,19 @@
 package dk.dtu.matador.objects.chancecards.misc;
 
+import dk.dtu.matador.managers.PlayerManager;
 import dk.dtu.matador.objects.chancecards.ChanceCard;
 
 import java.util.UUID;
 
 public class KingsBirthdayCC extends MiscCC {
-    public OrangeCC() {
-        super("orange");
+    public KingsBirthdayCC() {
+        super("kingsBirthday");
     }
 
     @Override
     public void doCardAction(UUID playerID) {
+        PlayerManager.getInstance().getPlayer(playerID).giveBailCard();
+    }
 }
 
 /**
