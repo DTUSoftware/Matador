@@ -19,14 +19,21 @@ public class Birthday extends ReceiveCC {
     }
 
     public void doCardAction(UUID playerID) {
-        double money = birthdayReceiveAmountFromEveryPLayer;
-        if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > birthdayReceiveAmountFromEveryPLayer) {
-            PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
-
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("Birthday_chancecard_message"));
+        double money = 0.0;
+        for (UUID otherPlayerID : PlayerManager.getInstance().getPlayerIDs()) {
+            if (otherPlayerID != playerID) {
+                if (PlayerManager.getInstance().getPlayer(otherPlayerID).withdraw(birthdayReceiveAmountFromEveryPLayer)) {
+                    money = money + birthdayReceiveAmountFromEveryPLayer;
+                }
+                else {
+                    GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_pay_birthday")
+                            .replace("{player_name}", PlayerManager.getInstance().getPlayer(otherPlayerID).getName())
+                            .replace("{birthday_player_name}", PlayerManager.getInstance().getPlayer(playerID).getName())
+                    );
+                    GameManager.getInstance().finishGame();
+                }
+            }
         }
-        else {
-            GameManager.getInstance().finishGame();
-        }
+        PlayerManager.getInstance().getPlayer(playerID).deposit(money);
     }
 }

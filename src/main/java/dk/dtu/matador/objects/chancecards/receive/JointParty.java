@@ -10,23 +10,30 @@ import java.util.UUID;
 public class JointParty extends ReceiveCC {
     private double JointPartyReceiveAmountFromEveryPLayer = 500.0;
 
-    public birthday() {
+    public JointParty() {
         super("JointParty");
     }
-    public birthday(double birthdayReceiveAmountFromEveryPLayer) {
+    public JointParty(double birthdayReceiveAmountFromEveryPLayer) {
         super("JointParty");
         this.JointPartyReceiveAmountFromEveryPLayer = birthdayReceiveAmountFromEveryPLayer;
     }
 
     public void doCardAction(UUID playerID) {
-        double money = JointPartyReceiveAmountFromEveryPLayer;
-        if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > JointPartyReceiveAmountFromEveryPLayer) {
-            PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
-
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("JointParty_chancecard_message"));
+        double money = 0.0;
+        for (UUID otherPlayerID : PlayerManager.getInstance().getPlayerIDs()) {
+            if (otherPlayerID != playerID) {
+                if (PlayerManager.getInstance().getPlayer(otherPlayerID).withdraw(JointPartyReceiveAmountFromEveryPLayer)) {
+                    money = money + JointPartyReceiveAmountFromEveryPLayer;
+                }
+                else {
+                    GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_pay_joint_party")
+                            .replace("{player_name}", PlayerManager.getInstance().getPlayer(otherPlayerID).getName())
+                            .replace("{joint_party_player_name}", PlayerManager.getInstance().getPlayer(playerID).getName())
+                    );
+                    GameManager.getInstance().finishGame();
+                }
+            }
         }
-        else {
-            GameManager.getInstance().finishGame();
-        }
+        PlayerManager.getInstance().getPlayer(playerID).deposit(money);
     }
 }
