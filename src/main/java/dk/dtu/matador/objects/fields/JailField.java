@@ -11,7 +11,6 @@ import java.awt.*;
 import java.util.UUID;
 
 public class JailField extends Field {
-    private static DiceCup diceCup;
     private double jailBailOut = 4000.0;
     public JailField(Color color, Color textColor) {
         super(color, textColor, "jail", true);
@@ -34,6 +33,7 @@ public class JailField extends Field {
     @Override
     public void doLeavingAction(UUID playerID) {
         Player player = PlayerManager.getInstance().getPlayer(playerID);
+        DiceCup diceCup = GameManager.getInstance().getDiceCup();
         if (player.isJailed()) {
             player.jailedTimeUp();
             // if the player has a bail card
@@ -42,12 +42,14 @@ public class JailField extends Field {
                 player.unJail();
             }
             else {
-                if (player.getJailedTime()<3 && GUIManager.getInstance().askJailRoll()){
+                if (player.getJailedTime() <= 3 && GUIManager.getInstance().askJailRoll()){
                     diceCup.raffle();
                     int[] diceValues = diceCup.getValues();
                     GUIManager.getInstance().updateDice(diceValues[0], diceValues[1]);
                     if (diceCup.getValues()[0] == diceCup.getValues()[1]){
                         player.unJail();
+                        GameManager gm = GameManager.getInstance();
+                        gm.setPlayerBoardPosition(playerID, (gm.getPlayerPosition(playerID)+diceCup.getSum()) % gm.getGameBoard().getFieldAmount(), true);
                     }
                 }
                 // if the player can pay bailout fees

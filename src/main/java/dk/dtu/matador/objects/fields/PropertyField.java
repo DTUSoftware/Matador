@@ -21,15 +21,17 @@ public abstract class PropertyField extends Field {
             // same player owns it
             GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("landed_on_own_property"));
         } else {
-            if (DeedManager.getInstance().getDeed(deedID).payRent(playerID)) {
-                GUIManager.getInstance().showMessage(
-                        LanguageManager.getInstance().getString("paid_rent")
-                                .replace("{property_rent}", Float.toString(Math.round(DeedManager.getInstance().getDeed(deedID).getCurrentRent())))
-                                .replace("{property_owner}", PlayerManager.getInstance().getPlayer(deedOwnership).getName())
-                                .replace("{property_name}", propertyName)
-                );
-            } else {
-                GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_pay_rent").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
+            if (!PlayerManager.getInstance().getPlayer(deedOwnership).isJailed()) {
+                if (DeedManager.getInstance().getDeed(deedID).payRent(playerID)) {
+                    GUIManager.getInstance().showMessage(
+                            LanguageManager.getInstance().getString("paid_rent")
+                                    .replace("{property_rent}", Float.toString(Math.round(DeedManager.getInstance().getDeed(deedID).getCurrentRent())))
+                                    .replace("{property_owner}", PlayerManager.getInstance().getPlayer(deedOwnership).getName())
+                                    .replace("{property_name}", propertyName)
+                    );
+                } else {
+                    GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_pay_rent").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
+                }
             }
         }
     }
@@ -97,7 +99,7 @@ public abstract class PropertyField extends Field {
                     }
                     biddingoptions = ArrayUtils.toPrimitive(validBiddingOptions.toArray(new Double[0]));
 
-                    bid = biddingRound(new Bid(GUIManager.getInstance().askBid(biddingoptions), playerID), propertyName);
+                    bid = biddingRound(new Bid(GUIManager.getInstance().askPrice(biddingoptions, LanguageManager.getInstance().getString("choose_a_bid")), playerID), propertyName);
                     break;
                 }
             }
