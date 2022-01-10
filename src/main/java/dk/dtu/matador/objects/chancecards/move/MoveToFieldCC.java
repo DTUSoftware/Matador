@@ -10,9 +10,11 @@ import java.util.UUID;
 
 public abstract class MoveToFieldCC extends ChanceCard {
     private String fieldname;
+    private boolean giveStartReward;
 
-    MoveToFieldCC(String fieldname){
+    MoveToFieldCC(String fieldname, boolean giveStartReward){
         super(fieldname);
+        this.giveStartReward = giveStartReward;
     };
 
     public void doCardAction(UUID playerID) {
@@ -27,7 +29,7 @@ public abstract class MoveToFieldCC extends ChanceCard {
         GameManager.getInstance().setPlayerBoardPosition(
                 playerID,
                 GameManager.getInstance().getGameBoard().getFieldPosition(fieldname),
-                true
+                giveStartReward
         );
     }
 

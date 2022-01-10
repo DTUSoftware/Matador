@@ -10,6 +10,6 @@ import java.util.UUID;
 public class GoToFredriksberg extends MoveToFieldCC{
 
     public GoToFredriksberg() {
-        super("Frederiksberg Allé");
+        super("frederiksberg_alle", true);
     }
 }
