@@ -8,11 +8,7 @@ import dk.dtu.matador.managers.PlayerManager;
 import java.util.UUID;
 
 public class Aktie extends ReceiveCC {
-    private double aktieReceiveAmount = 1000.0;
-
-    public Aktie() { super("aktie", 1000.0);}
-    public Aktie(double aktieReceiveAmount) {
-        super("aktie", aktieReceiveAmount);
-        this.aktieReceiveAmount = aktieReceiveAmount;
+    public Aktie() {
+        super("Aktie", 1000.0);
     }
 }
