@@ -10,9 +10,10 @@ import java.util.UUID;
  * only if you have less then 15000 value in all
  */
 
-public class MatadorLegatet {
+public class MatadorLegatet extends ReceiveCC {
     private double matadorLegatetReceiveAmount = 40000.0;
     private double matadorLegatetNeedsToBeUnder = 15000.0;
+    PlayerManager player = PlayerManager.getInstance();
 
     public MatadorLegatet() {
         super("MatadorLegatet");
@@ -24,7 +25,8 @@ public class MatadorLegatet {
 
     @Override
     public void doCardAction(UUID playerID) {
-        if (player.getNetWorth(); < matadorLegatetNeedsToBeUnder){
+        double i = player.getNetWorth();
+        if (i < matadorLegatetNeedsToBeUnder){
         PlayerManager.getInstance().getPlayer(playerID).deposit(matadorLegatetReceiveAmount);
         GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("matador_legatet_receive_amount"));
     } else {
