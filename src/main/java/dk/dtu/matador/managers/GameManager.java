@@ -75,6 +75,15 @@ public class GameManager {
     }
 
     /**
+     * Removes the given player from the game's queue, making their current turn their final.
+     *
+     * @param playerID The player to remove from the game.
+     */
+    public void removePlayerFromGame(UUID playerID) {
+        playerQueue.remove(playerID);
+    }
+
+    /**
      * Starts the game.
      */
     public void play() {
