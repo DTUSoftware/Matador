@@ -11,10 +11,10 @@ public class JointParty extends ReceiveCC {
     private double JointPartyReceiveAmountFromEveryPLayer = 500.0;
 
     public JointParty() {
-        super("JointParty");
+        super("jointParty", 500.0);
     }
     public JointParty(double birthdayReceiveAmountFromEveryPLayer) {
-        super("JointParty");
+        super("jointParty", birthdayReceiveAmountFromEveryPLayer);
         this.JointPartyReceiveAmountFromEveryPLayer = birthdayReceiveAmountFromEveryPLayer;
     }
 

@@ -9,15 +9,9 @@ import java.util.UUID;
 public class TheLocalAuthority extends ReceiveCC {
     private double theLocalAuthorityReceiveAmount = 3000.0;
 
-    public TheLocalAuthority() {super("TheLocalAuthority");}
+    public TheLocalAuthority() {super("theLocalAuthority", 3000.0);}
     public TheLocalAuthority(double theLocalAuthorityReceiveAmount) {
-        super("TheLocalAuthority");
+        super("theLocalAuthority", theLocalAuthorityReceiveAmount);
         this.theLocalAuthorityReceiveAmount = theLocalAuthorityReceiveAmount;
-    }
-
-    @Override
-    public void doCardAction(UUID playerID) {
-        PlayerManager.getInstance().getPlayer(playerID).deposit(theLocalAuthorityReceiveAmount);
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("the_local_authority_receive_amount"));
     }
 }

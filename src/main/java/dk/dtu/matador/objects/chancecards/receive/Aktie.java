@@ -10,18 +10,9 @@ import java.util.UUID;
 public class Aktie extends ReceiveCC {
     private double aktieReceiveAmount = 1000.0;
 
-    public Aktie() {
-        super("Aktie");
-    }
+    public Aktie() { super("aktie", 1000.0);}
     public Aktie(double aktieReceiveAmount) {
-        super("Aktie");
+        super("aktie", aktieReceiveAmount);
         this.aktieReceiveAmount = aktieReceiveAmount;
     }
-
-    @Override
-    public void doCardAction(UUID playerID) {
-        PlayerManager.getInstance().getPlayer(playerID).deposit(aktieReceiveAmount);
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("aktie_receive_amount"));
-    }
-
 }

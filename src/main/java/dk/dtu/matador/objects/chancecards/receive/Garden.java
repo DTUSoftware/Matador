@@ -10,16 +10,10 @@ public class Garden extends ReceiveCC {
     private double gardenReceiveAmount = 1000.0;
 
     public Garden() {
-        super("Garden");
+        super("garden", 1000.0);
     }
     public Garden(double gardenReceiveAmount) {
-        super("Garden");
+        super("garden", gardenReceiveAmount);
         this.gardenReceiveAmount = gardenReceiveAmount;
-    }
-
-    @Override
-    public void doCardAction(UUID playerID) {
-        PlayerManager.getInstance().getPlayer(playerID).deposit(gardenReceiveAmount);
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("garden_receive_amount"));
     }
 }

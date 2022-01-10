@@ -16,10 +16,9 @@ public class MatadorLegatet extends ReceiveCC {
     PlayerManager player = PlayerManager.getInstance();
 
     public MatadorLegatet() {
-        super("MatadorLegatet");
-    }
+        super("matadorLegatet", 40000.0);}
     public MatadorLegatet(double matadorLegatetReceiveAmount) {
-        super("MatadorLegatet");
+        super("matadorLegatet", matadorLegatetReceiveAmount);
         this.matadorLegatetReceiveAmount = matadorLegatetReceiveAmount;
     }
 

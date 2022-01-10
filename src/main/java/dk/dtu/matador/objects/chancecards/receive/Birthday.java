@@ -11,10 +11,10 @@ public class Birthday extends ReceiveCC {
     private double birthdayReceiveAmountFromEveryPLayer = 200.0;
 
     public Birthday() {
-        super("Birthday");
+        super("birthday", 200.0);
     }
     public Birthday(double birthdayReceiveAmountFromEveryPLayer) {
-        super("Birthday");
+        super("birthday", birthdayReceiveAmountFromEveryPLayer);
         this.birthdayReceiveAmountFromEveryPLayer = birthdayReceiveAmountFromEveryPLayer;
     }
 

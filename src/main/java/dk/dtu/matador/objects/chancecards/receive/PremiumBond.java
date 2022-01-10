@@ -10,16 +10,10 @@ public class PremiumBond extends ReceiveCC {
     private double premiumBondReceiveAmount = 1000.0;
 
     public PremiumBond() {
-        super("PremiumBond");
+        super("premiumBond", 1000.0);
     }
     public PremiumBond(double premiumBondReceiveAmount) {
-        super("PremiumBond");
+        super("premiumBond", premiumBondReceiveAmount);
         this.premiumBondReceiveAmount = premiumBondReceiveAmount;
-    }
-
-    @Override
-    public void doCardAction(UUID playerID) {
-        PlayerManager.getInstance().getPlayer(playerID).deposit(premiumBondReceiveAmount);
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("premiumBond_receive_amount"));
     }
 }

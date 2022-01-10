@@ -11,10 +11,10 @@ public class FamilyParty extends ReceiveCC {
     private double FamilyPartyReceiveAmountFromEveryPLayer = 500.0;
 
     public FamilyParty() {
-        super("FamilyParty");
+        super("familyParty", 500.0);
     }
     public FamilyParty(double birthdayReceiveAmountFromEveryPLayer) {
-        super("FamilyParty");
+        super("familyParty", birthdayReceiveAmountFromEveryPLayer);
         this.FamilyPartyReceiveAmountFromEveryPLayer = birthdayReceiveAmountFromEveryPLayer;
     }
 

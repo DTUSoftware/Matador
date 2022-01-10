@@ -11,16 +11,10 @@ public class EllevenRight extends ReceiveCC {
     private double ellevenRightReceiveAmount = 1000.0;
 
     public EllevenRight() {
-        super("EllevenRight");
+        super("ellevenRight", 1000.0);
     }
     public EllevenRight(double ellevenRightReceiveAmount) {
-        super("EllevenRight");
+        super("ellevenRight", ellevenRightReceiveAmount);
         this.ellevenRightReceiveAmount = ellevenRightReceiveAmount;
-    }
-
-    @Override
-    public void doCardAction(UUID playerID) {
-        PlayerManager.getInstance().getPlayer(playerID).deposit(ellevenRightReceiveAmount);
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("elleven_right_receive_amount"));
     }
 }

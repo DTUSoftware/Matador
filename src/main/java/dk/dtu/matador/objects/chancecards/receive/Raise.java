@@ -9,15 +9,9 @@ import java.util.UUID;
 public class Raise extends ReceiveCC {
     private double raiseReceiveAmount = 1000.0;
 
-    public Raise() {super("Raise");}
+    public Raise() {super("raise", 1000.0);}
     public Raise(double raiseReceiveAmount) {
-        super("Raise");
+        super("raise", raiseReceiveAmount);
         this.raiseReceiveAmount = raiseReceiveAmount;
-    }
-
-    @Override
-    public void doCardAction(UUID playerID) {
-        PlayerManager.getInstance().getPlayer(playerID).deposit(raiseReceiveAmount);
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("raise_receive_amount"));
     }
 }

@@ -10,16 +10,10 @@ public class OldFurniture extends ReceiveCC {
     private double oldFurnitureReceiveAmount = 1000.0;
 
     public OldFurniture() {
-        super("OldFurniture");
+        super("oldFurniture", 1000.0);
     }
     public OldFurniture(double oldFurnitureReceiveAmount) {
-        super("OldFurniture");
+        super("oldFurniture", oldFurnitureReceiveAmount);
         this.oldFurnitureReceiveAmount = oldFurnitureReceiveAmount;
-    }
-
-    @Override
-    public void doCardAction(UUID playerID) {
-        PlayerManager.getInstance().getPlayer(playerID).deposit(oldFurnitureReceiveAmount);
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("old_furniture_receive_amount"));
     }
 }

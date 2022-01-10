@@ -9,15 +9,9 @@ import java.util.UUID;
 public class TheClassLottery extends ReceiveCC {
     private double theClassLotteryReceiveAmount = 1000.0;
 
-    public TheClassLottery() {super("TheClassLottery");}
+    public TheClassLottery() {super("theClassLottery", 1000.0);}
     public TheClassLottery(double theClassLotteryReceiveAmount) {
-        super("TheClassLottery");
+        super("theClassLottery", theClassLotteryReceiveAmount);
         this.theClassLotteryReceiveAmount = theClassLotteryReceiveAmount;
-    }
-
-    @Override
-    public void doCardAction(UUID playerID) {
-        PlayerManager.getInstance().getPlayer(playerID).deposit(theClassLotteryReceiveAmount);
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("the_class_lottery_receive_amount"));
     }
 }
