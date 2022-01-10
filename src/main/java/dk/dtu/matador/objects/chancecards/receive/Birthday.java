@@ -14,22 +14,8 @@ public class Birthday extends ReceiveCC {
         super("birthday", 200.0);
     }
     public Birthday(double birthdaygiftFromEveryPLayer) {
-        super("Birthday");
+        super("Birthday", birthdaygiftFromEveryPLayer);
         this.birthdaygiftFromEveryPLayer = birthdaygiftFromEveryPLayer;
-    }
-
-    public void doCardAction(UUID playerID) {
-        double money = birthdaygiftFromEveryPLayer;
-        if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > birthdaygiftFromEveryPLayer) {
-            PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
-
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("Birthday_chancecard_message"));
-        }
-        else {
-            GameManager.getInstance().finishGame();
-    public Birthday(double birthdayReceiveAmountFromEveryPLayer) {
-        super("birthday", birthdayReceiveAmountFromEveryPLayer);
-        this.birthdayReceiveAmountFromEveryPLayer = birthdayReceiveAmountFromEveryPLayer;
     }
 
     public void doCardAction(UUID playerID) {
@@ -37,8 +23,8 @@ public class Birthday extends ReceiveCC {
         double money = 0.0;
         for (UUID otherPlayerID : PlayerManager.getInstance().getPlayerIDs()) {
             if (otherPlayerID != playerID) {
-                if (PlayerManager.getInstance().getPlayer(otherPlayerID).withdraw(birthdayReceiveAmountFromEveryPLayer)) {
-                    money = money + birthdayReceiveAmountFromEveryPLayer;
+                if (PlayerManager.getInstance().getPlayer(otherPlayerID).withdraw(birthdaygiftFromEveryPLayer)) {
+                    money = money + birthdaygiftFromEveryPLayer;
                 }
                 else {
                     GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_pay_birthday")
