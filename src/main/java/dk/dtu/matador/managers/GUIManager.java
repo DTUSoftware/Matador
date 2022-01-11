@@ -217,7 +217,7 @@ public class GUIManager {
      * @return the playerID of the player that was chosen
      */
     public UUID askPlayer(UUID playerAskingID, String action) {
-        UUID[] playerIDs = PlayerManager.getInstance().getPlayerIDs();
+        UUID[] playerIDs = GameManager.getInstance().getPlayersCurrentlyInGame();
         playerIDs = (UUID[]) ArrayUtils.removeElement(playerIDs, playerAskingID);
 
         HashMap<String, UUID> playerMap = new HashMap<>();
