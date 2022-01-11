@@ -13,7 +13,7 @@ public class GoToNearestFerry extends MoveToFieldCC{
     private String ferry3 = "scandlines_gedser_rostock";
     private String ferry4 = "scandlines_roedby_puttgarden";
 
-    GoToNearestFerry() {
+     public GoToNearestFerry() {
         super("goToNearestFerry", false);
     }
 
