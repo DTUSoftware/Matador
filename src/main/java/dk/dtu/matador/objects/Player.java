@@ -71,16 +71,18 @@ public class Player {
                     }
                 }
 
-                if (!actionMap.get("prawn")) {
+                if (!actionMap.get("prawn") || !actionMap.get("trade")) {
                     if (deed.getHouses() == 0 && deed.getHotels() == 0 && !deed.isPrawned()) {
                         // if the deed does not have any houses or hotels on it, enable the option to prawn the deed
                         actionMap.put("prawn", true);
+                        // you can also trade deeds with no houses on them, if it isn't pawned
+                        actionMap.put("trade", true);
                     }
                 }
 
                 // break the loop as soon as all the possible actions for deeds are found, to keep processing
                 // low, and not have to loop through ALL the deeds, if possible.
-                if (actionMap.get("sell") && actionMap.get("prawn")) {
+                if (actionMap.get("sell") && actionMap.get("prawn") && actionMap.get("trade")) {
                     break;
                 }
             }
