@@ -30,14 +30,6 @@ public class GameBoard {
 
     //TODO Remove old ChanceCards
     private final ChanceCard[] chanceCards = new ChanceCard[] {
-
-// Old    /* Bail */          new BailCC(),
-// Chance /* Give & Take */   new BirthdayCC(), new DidHomeWorkCC(), new EatCandyCC(),
-// Cards; /* Move to field */ new BoardWalkCC(), new SkateparkCC(), new StartCC(),
-//        /* Move to color */ new BrownRedCC(), new LightBlueCC(), new LightblueYellowCC(), new OrangeBlueCC(), new OrangeCC(), new RedCC(), new SalmonGreenCC(),
-//        /* Move to free */  new CarCC(), new ShipCC(),
-//        /* Special */       new MoveFieldsCC(), new MoveOrDrawCC(),
-
         /* move cards */    new GoToFredriksberg(), new GoToGrønningen(), new GoToJail(), new GoToMolslinien(), new GoToNearestFerry(), new GoToRådhusplads(),
         /* move cards */    new GoToStart(), new GoToStrandvejen(), new GoToVimmelskaftet(), new Move3Back(), new Move3Forward(), new GoToNearestFerryDouble(),
         /* pay cards */     new BuyBeer(), new CarEnsurance(), new CarRepair(), new Carwash(), new Dentist(), new IllegalCigs(), new IllegalStop(),
