@@ -17,7 +17,7 @@ public abstract class ChanceCard {
      * @param cardName  The programmable card name,
      *                  also used in the language file.
      */
-    ChanceCard(String cardName) {
+    public ChanceCard(String cardName) {
         this.cardName = cardName;
     }
 
@@ -35,4 +35,8 @@ public abstract class ChanceCard {
      * @param playerID  The UUID of the Player that drew the card.
      */
     public abstract void doCardAction(UUID playerID);
+
+    public String getCardName() {
+        return cardName;
+    }
 }

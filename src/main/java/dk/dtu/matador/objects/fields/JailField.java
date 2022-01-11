@@ -11,7 +11,7 @@ import java.awt.*;
 import java.util.UUID;
 
 public class JailField extends Field {
-    private double jailBailOut = 4000.0;
+    private double jailBailOut = 1000.0;
     public JailField(Color color, Color textColor) {
         super(color, textColor, "jail", true);
     }

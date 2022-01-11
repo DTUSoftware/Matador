@@ -5,6 +5,10 @@ import dk.dtu.matador.Game;
 import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.objects.chancecards.*;
+import dk.dtu.matador.objects.chancecards.misc.*;
+import dk.dtu.matador.objects.chancecards.move.*;
+import dk.dtu.matador.objects.chancecards.pay.*;
+import dk.dtu.matador.objects.chancecards.receive.*;
 import dk.dtu.matador.objects.fields.*;
 import gui_fields.GUI_Field;
 import org.json.JSONArray;
@@ -23,13 +27,16 @@ public class GameBoard {
     private final HashMap<UUID, Field> fieldMap = new HashMap<>();
     private final HashMap<UUID, Integer> fieldPositions = new HashMap<>();
     private final HashMap<UUID, GUI_Field> guiFields = new LinkedHashMap<>();
+
+    //TODO Remove old ChanceCards
     private final ChanceCard[] chanceCards = new ChanceCard[] {
-    /* Bail */          new BailCC(),
-    /* Give & Take */   new BirthdayCC(), new DidHomeWorkCC(), new EatCandyCC(),
-//    /* Move to field */ new BoardWalkCC(), new SkateparkCC(), new StartCC(),
-//    /* Move to color */ new BrownRedCC(), new LightBlueCC(), new LightblueYellowCC(), new OrangeBlueCC(), new OrangeCC(), new RedCC(), new SalmonGreenCC(),
-//    /* Move to free */  // new CarCC(), new ShipCC(),
-    /* Special */       new MoveFieldsCC(), new MoveOrDrawCC(),
+        /* move cards */    new GoToFredriksberg(), new GoToGrønningen(), new GoToJail(), new GoToMolslinien(), new GoToNearestFerry(), new GoToRådhusplads(),
+        /* move cards */    new GoToStart(), new GoToStrandvejen(), new GoToVimmelskaftet(), new Move3Back(), new Move3Forward(), new GoToNearestFerryDouble(),
+        /* pay cards */     new BuyBeer(), new CarEnsurance(), new CarRepair(), new Carwash(), new Dentist(), new IllegalCigs(), new IllegalStop(),
+        /* pay cards */     new NewTyres(), new OilPrices(), new ParkingTicket(), new PropertyTax(),
+        /* receive cards */ new Aktie(), new Birthday(), new EllevenRight(), new FamilyParty(), new Garden(), new JointParty(), new MatadorLegatet(),
+        /* receive cards */ new OldFurniture(), new PremiumBond(), new Raise(), new TheClassLottery(), new TheLocalAuthority(),
+        /* misc cards */    new KingsBirthdayCC()
     };
 
     private JSONObject gameBoardJSON;
@@ -276,6 +283,41 @@ public class GameBoard {
                     break;
                 }
             }
+            if (foundField != null) { break; }
+        }
+        if (foundField != null) {
+            return foundField.getID();
+        }
+        return null;
+    }
+
+    /**
+     * Gets the next field with one of the given colors, from the position of given player.
+     *
+     * @param playerID  Player to find next field from.
+     * @param fieldName A field type or name of the field (for example BreakField, JailField, StartField,
+     *                  jail, swimming_pool, bowling_alley, etc.)
+     * @return          The UUID of the found field.
+     */
+    public UUID getNextFieldIDWithType(UUID playerID, String fieldName) {
+        int playerPosition = GameManager.getInstance().getPlayerPosition(playerID);
+        Field foundField = null;
+        for (int currentField = playerPosition+1; currentField < playerPosition+getFieldAmount(); currentField++) {
+            Field field = getField(currentField % getFieldAmount());
+            try {
+                if (Class.forName("dk.dtu.matador.objects.fields."+fieldName).isInstance(field)) {
+                    foundField = field;
+                }
+            }
+            catch (Exception e) {
+                System.out.println("Could not find fieldName in Field Class names: " + e.toString());
+            }
+            if (foundField == null) {
+                if (field.getFieldName().equals(fieldName)) {
+                    foundField = field;
+                }
+            }
+            
             if (foundField != null) { break; }
         }
         if (foundField != null) {
