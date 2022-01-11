@@ -82,10 +82,10 @@ public class Deed {
             if (field instanceof BreweryField) {
                 switch (DeedManager.getInstance().howManyFieldTypeDoesPlayerOwn("BreweryField", deedOwner)) {
                     case 1:
-                        currentRent = diceCup.getSum()*100.0;
+                        currentRent = diceCup.getSum()*this.rent[0];
                         break;
                     case 2:
-                        currentRent = diceCup.getSum()*200.0;
+                        currentRent = diceCup.getSum()*this.rent[1];
                         break;
                 }
             }
@@ -129,8 +129,18 @@ public class Deed {
         return this.rent;
     }
 
+    /**
+     * Withdraws the rent from the player that landed on the field, and transfers the rent to the deed owner.
+     * @param playerID the player that landed.
+     * @return whether the player succeeded.
+     */
     public boolean payRent(UUID playerID) {
-        return PlayerManager.getInstance().getPlayer(playerID).withdraw(getCurrentRent());
+        double currentRent = getCurrentRent();
+        boolean success = PlayerManager.getInstance().getPlayer(playerID).withdraw(currentRent);
+        if (success) {
+            PlayerManager.getInstance().getPlayer(DeedManager.getInstance().getDeedOwnership(deedID)).deposit(currentRent);
+        }
+        return success;
     }
 
     public boolean canBuildHouse() {

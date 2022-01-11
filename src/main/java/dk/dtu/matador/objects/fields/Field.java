@@ -1,11 +1,14 @@
 package dk.dtu.matador.objects.fields;
 
+import com.google.common.io.Resources;
 import dk.dtu.matador.Game;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.managers.LanguageManager;
 import gui_fields.*;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -53,7 +56,30 @@ public abstract class Field {
             default:
                 switch (subType) {
                     case "brewery":
-                        this.guiField = new GUI_Brewery();
+                        Image image = null;
+                        switch (fieldName) {
+                            case "squash":
+                                try {
+                                    image = ImageIO.read(Resources.getResource("squash.png"));
+                                }
+                                catch (IOException e) {
+                                    Game.logDebug(e.toString());
+                                }
+                                this.guiField = new GUIBreweryField(image);
+                                break;
+                            case "coca_cola":
+                                try {
+                                    image = ImageIO.read(Resources.getResource("coca_cola.png"));
+                                }
+                                catch (IOException e) {
+                                    Game.logDebug(e.toString());
+                                }
+                                this.guiField = new GUIBreweryField(image);
+                                break;
+                            default:
+                                this.guiField = new GUI_Brewery();
+                        }
+
                         break;
                     case "ferry":
                         this.guiField = new GUI_Shipping();

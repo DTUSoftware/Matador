@@ -49,8 +49,8 @@
       "field_type": "TaxField",
       "field_subtype": "income-tax",
       "field_color": "#01526F",
-      "tax-percentage": 10,
-      "tax-amount": 4000
+      "tax_percentage": 10,
+      "tax_amount": 4000
     },
     {
       "field_type": "PropertyField",
@@ -402,7 +402,7 @@
       "field_type": "TaxField",
       "field_subtype": "extra-ordinary",
       "field_color": "#01526F",
-      "tax-amount": 2000
+      "tax_amount": 2000
     },
     {
       "field_type": "PropertyField",

@@ -144,8 +144,9 @@ public class GameBoard {
                             fieldGroupsMap.get(fieldColor).add(fieldDeed.getID());
                             break;
                         case "brewery":
+                            JSONObject breweryConfiguration = subtypeConfiguration.getJSONObject("brewery");
                             fields[i] = new BreweryField(fieldSubtype, fieldColor, textColor, fieldName);
-                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice);
+                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice, new double[] {breweryConfiguration.getDouble("rent_multiplier"), breweryConfiguration.getDouble("monopoly_multiplier")});
                             break;
                         case "ferry":
                             JSONObject ferryConfiguration = subtypeConfiguration.getJSONObject("ferry");
@@ -182,7 +183,14 @@ public class GameBoard {
                     fields[i] = new GoToJailField(fieldColor, textColor);
                     break;
                 case "TaxField":
-                    fields[i] = new TaxField(fieldColor, textColor, jsonField.getString("field_subtype"));
+                    switch (jsonField.getString("field_subtype")) {
+                        case "income-tax":
+                            fields[i] = new TaxField(fieldColor, textColor, jsonField.getString("field_subtype"), jsonField.getDouble("tax_amount"), jsonField.getDouble("tax_percentage"));
+                            break;
+                        case "extra-ordinary":
+                            fields[i] = new TaxField(fieldColor, textColor, jsonField.getString("field_subtype"), jsonField.getDouble("tax_amount"));
+                            break;
+                    }
                     break;
                 default:
                     System.out.println("Ohno, field type doesn't exist...");
@@ -276,8 +284,8 @@ public class GameBoard {
         for (int currentField = playerPosition+1; currentField < playerPosition+getFieldAmount(); currentField++) {
             Field field = getField(currentField % getFieldAmount());
             for (Color color : colors) {
-                System.out.println("FieldColor: " + field.getFieldColor());
-                System.out.println("CheckColor: " + color);
+//                System.out.println("FieldColor: " + field.getFieldColor());
+//                System.out.println("CheckColor: " + color);
                 if (field.getFieldColor().equals(color)) {
                     foundField = field;
                     break;
