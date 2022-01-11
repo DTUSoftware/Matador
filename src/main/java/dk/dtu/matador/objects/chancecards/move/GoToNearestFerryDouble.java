@@ -18,7 +18,7 @@ public class GoToNearestFerryDouble extends MoveToFieldCC {
     public GoToNearestFerryDouble() {
         super("goToNearestFerryDouble", false);
     }
-    //TODO add so they pay double and not just "doLandingAction"
+    //TODO add so they pay double and not just "doLandingAction" double
     @Override
     public void doCardAction(UUID playerID) {
         if (GameManager.getInstance().getPlayerPosition(playerID) == 2 || GameManager.getInstance().getPlayerPosition(playerID) == 7) {
@@ -29,11 +29,8 @@ public class GoToNearestFerryDouble extends MoveToFieldCC {
                 return;
             }
 
-            GameManager.getInstance().setPlayerBoardPosition(
-                    playerID,
-                    GameManager.getInstance().getGameBoard().getFieldPosition(fieldname),
-                    giveStartReward
-            );
+            GameManager.getInstance().setPlayerBoardPosition(playerID, GameManager.getInstance().getGameBoard().getFieldPosition(fieldname), giveStartReward);
+            GameManager.getInstance().setPlayerBoardPosition(playerID, GameManager.getInstance().getGameBoard().getFieldPosition(fieldname), giveStartReward);
 
         } else if (GameManager.getInstance().getPlayerPosition(playerID) == 17) {
             UUID fieldname = GameManager.getInstance().getGameBoard().getFieldIDFromType(ferry2);
@@ -43,11 +40,9 @@ public class GoToNearestFerryDouble extends MoveToFieldCC {
                 return;
             }
 
-            GameManager.getInstance().setPlayerBoardPosition(
-                    playerID,
-                    GameManager.getInstance().getGameBoard().getFieldPosition(fieldname),
-                    giveStartReward
-            );
+            GameManager.getInstance().setPlayerBoardPosition(playerID, GameManager.getInstance().getGameBoard().getFieldPosition(fieldname), giveStartReward);
+            GameManager.getInstance().setPlayerBoardPosition(playerID, GameManager.getInstance().getGameBoard().getFieldPosition(fieldname), giveStartReward);
+
         } else if (GameManager.getInstance().getPlayerPosition(playerID) == 22) {
             UUID fieldname = GameManager.getInstance().getGameBoard().getFieldIDFromType(ferry3);
             if (fieldname == null) {
@@ -56,11 +51,8 @@ public class GoToNearestFerryDouble extends MoveToFieldCC {
                 return;
             }
 
-            GameManager.getInstance().setPlayerBoardPosition(
-                    playerID,
-                    GameManager.getInstance().getGameBoard().getFieldPosition(fieldname),
-                    giveStartReward
-            );
+            GameManager.getInstance().setPlayerBoardPosition(playerID, GameManager.getInstance().getGameBoard().getFieldPosition(fieldname), giveStartReward);
+            GameManager.getInstance().setPlayerBoardPosition(playerID, GameManager.getInstance().getGameBoard().getFieldPosition(fieldname), giveStartReward);
 
         } else if (GameManager.getInstance().getPlayerPosition(playerID) == 33 || GameManager.getInstance().getPlayerPosition(playerID) == 36) {
             UUID fieldname = GameManager.getInstance().getGameBoard().getFieldIDFromType(ferry4);
@@ -70,11 +62,8 @@ public class GoToNearestFerryDouble extends MoveToFieldCC {
                 return;
             }
 
-            GameManager.getInstance().setPlayerBoardPosition(
-                    playerID,
-                    GameManager.getInstance().getGameBoard().getFieldPosition(fieldname),
-                    giveStartReward
-            );
+            GameManager.getInstance().setPlayerBoardPosition(playerID, GameManager.getInstance().getGameBoard().getFieldPosition(fieldname), giveStartReward);
+            GameManager.getInstance().setPlayerBoardPosition(playerID, GameManager.getInstance().getGameBoard().getFieldPosition(fieldname), giveStartReward);
         }
 
     }
