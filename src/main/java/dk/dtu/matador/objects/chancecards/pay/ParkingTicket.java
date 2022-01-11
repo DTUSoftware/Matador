@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public class ParkingTicket extends PayCC{
     public ParkingTicket() {
-        super("ParkingTicket", 200.0);
+        super("parking_ticket", 200.0);
     }
 }

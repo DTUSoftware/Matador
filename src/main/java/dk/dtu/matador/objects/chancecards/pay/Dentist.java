@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class Dentist extends PayCC{
     public Dentist() {
-        super("Dentist", 2000.0);
+        super("dentist", 2000.0);
     }
 }
 

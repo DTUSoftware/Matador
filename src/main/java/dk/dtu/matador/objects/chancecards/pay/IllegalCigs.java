@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public class IllegalCigs extends PayCC{
     public IllegalCigs() {
-        super("IllegalCigs", 200.0);
+        super("illegal_cigs", 200.0);
     }
 }
