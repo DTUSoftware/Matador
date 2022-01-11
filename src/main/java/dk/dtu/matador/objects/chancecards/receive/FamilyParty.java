@@ -11,17 +11,17 @@ public class FamilyParty extends ReceiveCC {
     private double FamilyPartyReceiveAmountFromEveryPLayer = 500.0;
 
     public FamilyParty() {
-        super("familyParty", 500.0);
+        super("family_party", 500.0);
     }
     public FamilyParty(double birthdayReceiveAmountFromEveryPLayer) {
-        super("familyParty", birthdayReceiveAmountFromEveryPLayer);
+        super("family_party", birthdayReceiveAmountFromEveryPLayer);
         this.FamilyPartyReceiveAmountFromEveryPLayer = birthdayReceiveAmountFromEveryPLayer;
     }
 
     @Override
     public void doCardAction(UUID playerID) {
         double money = 0.0;
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("familyparty_chancecard_message"));
+        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("family_party_chancecard_message"));
         for (UUID otherPlayerID : PlayerManager.getInstance().getPlayerIDs()) {
             if (otherPlayerID != playerID) {
                 if (PlayerManager.getInstance().getPlayer(otherPlayerID).withdraw(FamilyPartyReceiveAmountFromEveryPLayer)) {

@@ -8,7 +8,7 @@ public class Move3Forward extends MoveToFieldCC{
 
     private boolean giveStartReward = true;
 
-    public Move3Forward() {super("move3Forward", true);}
+    public Move3Forward() {super("move_3_forward", true);}
 
 
     @Override

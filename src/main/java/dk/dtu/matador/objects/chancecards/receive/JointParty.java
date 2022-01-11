@@ -11,17 +11,17 @@ public class JointParty extends ReceiveCC {
     private double JointPartyReceiveAmountFromEveryPLayer = 500.0;
 
     public JointParty() {
-        super("jointParty", 500.0);
+        super("joint_party", 500.0);
     }
     public JointParty(double birthdayReceiveAmountFromEveryPLayer) {
-        super("jointParty", birthdayReceiveAmountFromEveryPLayer);
+        super("joint_party", birthdayReceiveAmountFromEveryPLayer);
         this.JointPartyReceiveAmountFromEveryPLayer = birthdayReceiveAmountFromEveryPLayer;
     }
 
     @Override
     public void doCardAction(UUID playerID) {
         double money = 0.0;
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("jointparty_chancecard_message"));
+        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("joint_party_chancecard_message"));
         for (UUID otherPlayerID : PlayerManager.getInstance().getPlayerIDs()) {
             if (otherPlayerID != playerID) {
                 if (PlayerManager.getInstance().getPlayer(otherPlayerID).withdraw(JointPartyReceiveAmountFromEveryPLayer)) {

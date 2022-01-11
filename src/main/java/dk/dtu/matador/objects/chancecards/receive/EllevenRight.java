@@ -11,10 +11,10 @@ public class EllevenRight extends ReceiveCC {
     private double ellevenRightReceiveAmount = 1000.0;
 
     public EllevenRight() {
-        super("ellevenRight", 1000.0);
+        super("elleven_right", 1000.0);
     }
     public EllevenRight(double ellevenRightReceiveAmount) {
-        super("ellevenRight", ellevenRightReceiveAmount);
+        super("elleven_right", ellevenRightReceiveAmount);
         this.ellevenRightReceiveAmount = ellevenRightReceiveAmount;
     }
 }
