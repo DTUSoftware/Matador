@@ -38,9 +38,6 @@ public class GameBoard {
 //        /* Move to free */  // new CarCC(), new ShipCC(),
 //        /* Special */       new MoveFieldsCC(), new MoveOrDrawCC(),
 
-            
-//TODO move "move cards" out from comments when "move cards" are done
-
         /* move cards */    new GoToFredriksberg(), new GoToGrønningen(), new GoToJail(), new GoToMolslinien(), new GoToNearestFerry(), new GoToRådhusplads(),
         /* move cards */    new GoToStart(), new GoToStrandvejen(), new GoToVimmelskaftet(), new Move3Back(), new Move3Forward(), new GoToNearestFerryDouble(),
         /* pay cards */     new BuyBeer(), new CarEnsurance(), new CarRepair(), new Carwash(), new Dentist(), new IllegalCigs(), new IllegalStop(),

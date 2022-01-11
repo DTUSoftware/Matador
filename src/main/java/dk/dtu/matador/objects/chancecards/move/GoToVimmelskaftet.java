@@ -2,5 +2,5 @@ package dk.dtu.matador.objects.chancecards.move;
 
 public class GoToVimmelskaftet extends MoveToFieldCC{
 
-    GoToVimmelskaftet() {super("vimmelskaftet", true);}
+    public GoToVimmelskaftet() {super("vimmelskaftet", true);}
 }
