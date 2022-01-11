@@ -64,7 +64,11 @@ public class GameManager {
         for (UUID playerID : playerIDs) {
             setPlayerPosition(playerID, 0, false);
             PlayerManager.getInstance().getPlayer(playerID).setBalance(Game.getStartBalance());
+            for (UUID deedID : DeedManager.getInstance().getPlayerDeeds(playerID)) {
+                DeedManager.getInstance().setDeedOwnership(deedID, null);
+            }
         }
+
         gameFinished = false;
     }
 
