@@ -10,6 +10,7 @@ import java.util.UUID;
 
 public abstract class PayCC extends ChanceCard {
     private double payAmount = 0.0;
+    private String cardName;
 
     /**
      * Initiates a new ChanceCard.
@@ -25,15 +26,9 @@ public abstract class PayCC extends ChanceCard {
     @Override
     public void doCardAction(UUID playerID) {
         double money = payAmount;
-        if (PlayerManager.getInstance().getPlayer(playerID).getBalance() > money) {
 
-            PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("buyBeer_chancecard_message"));
-        }
-        else {
-            GameManager.getInstance().finishGame();
-        }
         PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
+        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString(cardName + "_chancecard_message"));
     }
 }
 
