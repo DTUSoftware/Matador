@@ -16,9 +16,9 @@ public class MatadorLegatet extends ReceiveCC {
     private double matadorLegatetNeedsToBeUnder = 15000.0;
 
     public MatadorLegatet() {
-        super("matadorLegatet", 40000.0);}
+        super("matador_legatet", 40000.0);}
     public MatadorLegatet(double matadorLegatetReceiveAmount) {
-        super("matadorLegatet", matadorLegatetReceiveAmount);
+        super("matador_legatet", matadorLegatetReceiveAmount);
         this.matadorLegatetReceiveAmount = matadorLegatetReceiveAmount;
     }
 
@@ -27,8 +27,8 @@ public class MatadorLegatet extends ReceiveCC {
         double i = PlayerManager.getInstance().getPlayer(playerID).getNetWorth();
         if (i < matadorLegatetNeedsToBeUnder){
         PlayerManager.getInstance().getPlayer(playerID).deposit(matadorLegatetReceiveAmount);
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("matador_legatet_receive_amount"));
+        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("matador_legatet_chancecard_message"));
     } else {
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("matador_legatet_receive_amount"));}
+            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("matador_legatet_chancecard_message"));}
     }
 }

@@ -7,7 +7,7 @@ import java.util.UUID;
 public class Move3Back extends MoveToFieldCC{
     private boolean giveStartReward = false;
 
-    public Move3Back() {super("move3Back", false);}
+    public Move3Back() {super("move_3_back", false);}
 
 
     @Override

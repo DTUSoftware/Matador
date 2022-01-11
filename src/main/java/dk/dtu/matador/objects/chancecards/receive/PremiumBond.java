@@ -4,10 +4,10 @@ public class PremiumBond extends ReceiveCC {
     private double premiumBondReceiveAmount = 1000.0;
 
     public PremiumBond() {
-        super("premiumBond", 1000.0);
+        super("premium_bond", 1000.0);
     }
     public PremiumBond(double premiumBondReceiveAmount) {
-        super("premiumBond", premiumBondReceiveAmount);
+        super("premium_bond", premiumBondReceiveAmount);
         this.premiumBondReceiveAmount = premiumBondReceiveAmount;
     }
 }
