@@ -66,6 +66,13 @@ public class GameManager {
             PlayerManager.getInstance().getPlayer(playerID).setBalance(Game.getStartBalance());
             for (UUID deedID : DeedManager.getInstance().getPlayerDeeds(playerID)) {
                 DeedManager.getInstance().setDeedOwnership(deedID, null);
+                Deed deed = DeedManager.getInstance().getDeed(deedID);
+                deed.resetDeed();
+                Field field = gameBoard.getFieldFromID(DeedManager.getInstance().getFieldID(deedID));
+                if (field instanceof StreetField) {
+                    ((StreetField) field).demolishHouse();
+                    ((StreetField) field).demolishHotel();
+                }
             }
         }
 

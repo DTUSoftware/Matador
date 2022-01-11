@@ -244,6 +244,12 @@ public class Deed {
         return prawnPrice + Math.ceil((prawnPrice * 0.1)/100.0)*100.0;
     }
 
+    public void resetDeed() {
+        buyBack();
+        houses = 0;
+        hotels = 0;
+    }
+
     @Override
     public String toString() {
         return "Price: " + getPrice() + ", Rent: " + Arrays.toString(getRent());
