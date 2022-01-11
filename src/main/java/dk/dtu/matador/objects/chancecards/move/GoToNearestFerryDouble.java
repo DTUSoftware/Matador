@@ -15,7 +15,9 @@ public class GoToNearestFerryDouble extends MoveToFieldCC {
     private String ferry3 = "scandlines_gedser_rostock";
     private String ferry4 = "scandlines_roedby_puttgarden";
 
-    GoToNearestFerryDouble() {super("goToNearestFerryDouble", false);}
+    GoToNearestFerryDouble() {
+        super("goToNearestFerryDouble", false);
+    }
 
     @Override
     public void doCardAction(UUID playerID) {
@@ -46,8 +48,7 @@ public class GoToNearestFerryDouble extends MoveToFieldCC {
                     GameManager.getInstance().getGameBoard().getFieldPosition(fieldname),
                     giveStartReward
             );
-        }
-        else if (GameManager.getInstance().getPlayerPosition(playerID) == 22) {
+        } else if (GameManager.getInstance().getPlayerPosition(playerID) == 22) {
             UUID fieldname = GameManager.getInstance().getGameBoard().getFieldIDFromType(ferry3);
             if (fieldname == null) {
                 GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("error_string"));
@@ -61,8 +62,7 @@ public class GoToNearestFerryDouble extends MoveToFieldCC {
                     giveStartReward
             );
 
-        }
-        else if (GameManager.getInstance().getPlayerPosition(playerID) == 33 || GameManager.getInstance().getPlayerPosition(playerID) == 36) {
+        } else if (GameManager.getInstance().getPlayerPosition(playerID) == 33 || GameManager.getInstance().getPlayerPosition(playerID) == 36) {
             UUID fieldname = GameManager.getInstance().getGameBoard().getFieldIDFromType(ferry4);
             if (fieldname == null) {
                 GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("error_string"));
@@ -75,6 +75,7 @@ public class GoToNearestFerryDouble extends MoveToFieldCC {
                     GameManager.getInstance().getGameBoard().getFieldPosition(fieldname),
                     giveStartReward
             );
-    }
+        }
 
+    }
 }
