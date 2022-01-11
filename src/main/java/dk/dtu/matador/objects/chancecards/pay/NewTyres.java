@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public class NewTyres extends PayCC{
     public NewTyres() {
-        super("NewTyres", 1000.0);
+        super("new_tyres", 1000.0);
     }
 }

@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public class BuyBeer extends PayCC{
     public BuyBeer() {
-        super("BuyBeer", 200.0);
+        super("buy_beer", 200.0);
     }
 }

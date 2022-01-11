@@ -9,10 +9,10 @@ public class OilPrices extends PayCC{
     private double oilpricehotel = 2000;
 
     public OilPrices() {
-        super("oilPrices", 500.0);
+        super("oil_prices", 500.0);
     }
     public OilPrices(double oilpricehouse) {
-        super("oilPrices", oilpricehouse);
+        super("oil_prices", oilpricehouse);
         this.oilpricehouse = oilpricehouse;
     }
 

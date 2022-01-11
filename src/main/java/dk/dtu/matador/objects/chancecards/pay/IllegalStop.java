@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public class IllegalStop extends PayCC{
     public IllegalStop() {
-        super("IllegalStop", 1000.0);
+        super("illegal_stop", 1000.0);
     }
 }

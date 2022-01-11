@@ -32,7 +32,6 @@ public abstract class MoveToFieldCC extends ChanceCard {
                 giveStartReward
         );
     }
-
 }
 
 /**

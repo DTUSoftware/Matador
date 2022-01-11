@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public class CarEnsurance extends PayCC{
     public CarEnsurance() {
-        super("CarEnsurance", 1000.0);
+        super("car_ensurance", 1000.0);
     }
 }
