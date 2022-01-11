@@ -613,7 +613,7 @@ public class GameManager {
         int turnCounter = 0;
         do {
             turnCounter++;
-            if (turnCounter > 2) {
+            if (turnCounter > 3) {
                 GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("feature_speeding").replace("{player_name}", PlayerManager.getInstance().getPlayer(playerID).getName()));
                 PlayerManager.getInstance().getPlayer(playerID).jail();
                 GameManager.getInstance().setPlayerBoardPosition(playerID, GameManager.getInstance().getGameBoard().getFieldPosition(GameManager.getInstance().getGameBoard().getFieldIDFromType("JailField")), false);
