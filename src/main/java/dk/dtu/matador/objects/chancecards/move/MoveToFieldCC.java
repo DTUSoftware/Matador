@@ -9,18 +9,25 @@ import dk.dtu.matador.objects.chancecards.ChanceCard;
 import java.util.UUID;
 
 public abstract class MoveToFieldCC extends ChanceCard {
-    private String fieldname;
     private boolean giveStartReward;
+    private String fieldName;
 
-    MoveToFieldCC(String fieldname, boolean giveStartReward){
-        super(fieldname);
+    MoveToFieldCC(String cardName, String fieldName, boolean giveStartReward){
+        super(cardName);
+        this.fieldName = fieldName;
         this.giveStartReward = giveStartReward;
-    };
+    }
 
+    MoveToFieldCC(String cardName, boolean giveStartReward){
+        super(cardName);
+        this.fieldName = cardName;
+        this.giveStartReward = giveStartReward;
+    }
+
+    @Override
     public void doCardAction(UUID playerID) {
-        String cardfieldname = fieldname;
-        UUID fieldname = GameManager.getInstance().getGameBoard().getFieldIDFromType(cardfieldname);
-        if (fieldname == null) {
+        UUID fieldID = GameManager.getInstance().getGameBoard().getFieldIDFromType(fieldName);
+        if (fieldID == null) {
             GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("error_string"));
             System.out.println("Field ID is null!");
             return;
@@ -28,9 +35,17 @@ public abstract class MoveToFieldCC extends ChanceCard {
 
         GameManager.getInstance().setPlayerBoardPosition(
                 playerID,
-                GameManager.getInstance().getGameBoard().getFieldPosition(fieldname),
+                GameManager.getInstance().getGameBoard().getFieldPosition(fieldID),
                 giveStartReward
         );
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public boolean isGivenStartReward() {
+        return giveStartReward;
     }
 }
 

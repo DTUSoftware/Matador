@@ -25,10 +25,8 @@ public class MatadorLegatet extends ReceiveCC {
     @Override
     public void doCardAction(UUID playerID) {
         double i = PlayerManager.getInstance().getPlayer(playerID).getNetWorth();
-        if (i < matadorLegatetNeedsToBeUnder){
-        PlayerManager.getInstance().getPlayer(playerID).deposit(matadorLegatetReceiveAmount);
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("matador_legatet_chancecard_message"));
-    } else {
-            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("matador_legatet_chancecard_message"));}
+        if (i < matadorLegatetNeedsToBeUnder) {
+            PlayerManager.getInstance().getPlayer(playerID).deposit(matadorLegatetReceiveAmount);
+        }
     }
 }

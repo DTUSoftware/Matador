@@ -11,10 +11,10 @@ public class PropertyTax extends PayCC{
     private double hoteltax = 2300;
 
     public PropertyTax() {
-        super("houseTax", 500.0);
+        super("property_tax", 500.0);
     }
     public PropertyTax(double housetax) {
-        super("houseTax", housetax);
+        super("property_tax", housetax);
         this.housetax = housetax;
     }
 

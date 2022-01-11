@@ -1,5 +1,7 @@
 package dk.dtu.matador.objects.chancecards.misc;
 
+import dk.dtu.matador.managers.GUIManager;
+import dk.dtu.matador.managers.LanguageManager;
 import dk.dtu.matador.managers.PlayerManager;
 import dk.dtu.matador.objects.chancecards.ChanceCard;
 
@@ -7,7 +9,7 @@ import java.util.UUID;
 
 public class KingsBirthdayCC extends MiscCC {
     public KingsBirthdayCC() {
-        super("kingsBirthday");
+        super("kings_birthday");
     }
 
     @Override

@@ -35,4 +35,8 @@ public abstract class ChanceCard {
      * @param playerID  The UUID of the Player that drew the card.
      */
     public abstract void doCardAction(UUID playerID);
+
+    public String getCardName() {
+        return cardName;
+    }
 }

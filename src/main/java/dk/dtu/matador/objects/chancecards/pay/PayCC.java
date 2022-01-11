@@ -10,7 +10,6 @@ import java.util.UUID;
 
 public abstract class PayCC extends ChanceCard {
     private double payAmount = 0.0;
-    private String cardName;
 
     /**
      * Initiates a new ChanceCard.
@@ -28,7 +27,6 @@ public abstract class PayCC extends ChanceCard {
         double money = payAmount;
 
         PlayerManager.getInstance().getPlayer(playerID).withdraw(money);
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString(cardName + "_chancecard_message"));
     }
 }
 
