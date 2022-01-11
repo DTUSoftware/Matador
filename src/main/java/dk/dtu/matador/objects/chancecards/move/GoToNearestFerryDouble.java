@@ -15,10 +15,10 @@ public class GoToNearestFerryDouble extends MoveToFieldCC {
     private String ferry3 = "scandlines_gedser_rostock";
     private String ferry4 = "scandlines_roedby_puttgarden";
 
-    GoToNearestFerryDouble() {
+    public GoToNearestFerryDouble() {
         super("goToNearestFerryDouble", false);
     }
-
+    //TODO add so they pay double and not just "doLandingAction"
     @Override
     public void doCardAction(UUID playerID) {
         if (GameManager.getInstance().getPlayerPosition(playerID) == 2 || GameManager.getInstance().getPlayerPosition(playerID) == 7) {
