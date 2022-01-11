@@ -47,6 +47,7 @@ public class Player {
      * @return true, if they had something to sell or prawn.
      */
     private boolean tryAvoidBankruptcy() {
+        Game.logDebug("Balance before try avoid bankryptcy: " + Double.toString(getBalance()));
         // ask the player to take an action
         // Which actions can the player currently take
         HashMap<String, Boolean> actionMap = new HashMap<String, Boolean>() {{
@@ -104,8 +105,10 @@ public class Player {
                     Game.logDebug("Player performed the " + action + " action, to avoid bankruptcy.");
                 }
             }
+            Game.logDebug("Balance after try avoid bankryptcy, and taking action: " + Double.toString(getBalance()));
             return true;
         }
+        Game.logDebug("Balance after try avoid bankryptcy, no action taken: " + Double.toString(getBalance()));
         return false;
     }
 
@@ -186,6 +189,7 @@ public class Player {
      * @return Whether the transaction succeeded.
      */
     public boolean withdraw(double amount) {
+        Game.logDebug("Before withdraw: " + Double.toString(account.getBalance()));
         boolean success = account.withdraw(amount);
 
         // If not success, handle bankruptcy
@@ -201,6 +205,7 @@ public class Player {
                 Game.logDebug("Handle bankruptcy for " + getName());
                 handleBankruptcy(null);
             }
+            Game.logDebug("After withdraw: " + Double.toString(account.getBalance()));
         }
 
         // update the GUI
@@ -217,11 +222,13 @@ public class Player {
      * @param amount The amount of money to add to the balance.
      */
     public void deposit(double amount) {
+        Game.logDebug("Before deposit: " + Double.toString(account.getBalance()));
         account.deposit(amount);
         // update the GUI
         if (guiInitialized()) {
             GUIManager.getInstance().setPlayerBalance(playerID, getBalance());
         }
+        Game.logDebug("After deposit: " + Double.toString(account.getBalance()));
     }
 
     /**
@@ -230,11 +237,13 @@ public class Player {
      * @param balance The new balance.
      */
     public void setBalance(double balance) {
+        Game.logDebug("Before setBalance: " + Double.toString(account.getBalance()));
         account.setBalance(balance);
         // update the GUI
         if (guiInitialized()) {
             GUIManager.getInstance().setPlayerBalance(playerID, getBalance());
         }
+        Game.logDebug("After setBalance: " + Double.toString(account.getBalance()));
     }
 
     private void setJailed(boolean jailed) {
