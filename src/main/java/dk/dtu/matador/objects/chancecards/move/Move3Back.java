@@ -12,9 +12,17 @@ public class Move3Back extends MoveToFieldCC{
 
     @Override
     public void doCardAction(UUID playerID) {
-        GameManager.getInstance().setPlayerBoardPosition(playerID,
-                GameManager.getInstance().getPlayerPosition(playerID)-3,
-                giveStartReward
-        );
+        if (GameManager.getInstance().getPlayerPosition(playerID) < 3) {
+            GameManager.getInstance().setPlayerBoardPosition(playerID,
+                    GameManager.getInstance().getPlayerPosition(playerID) + 37,
+                    giveStartReward
+
+            );
+        } else {
+            GameManager.getInstance().setPlayerBoardPosition(playerID,
+                    GameManager.getInstance().getPlayerPosition(playerID) - 3,
+                    giveStartReward
+            );
+        }
     }
 }
