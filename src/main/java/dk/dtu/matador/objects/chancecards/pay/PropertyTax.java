@@ -1,5 +1,7 @@
 package dk.dtu.matador.objects.chancecards.pay;
 
+import dk.dtu.matador.managers.GUIManager;
+import dk.dtu.matador.managers.LanguageManager;
 import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
@@ -20,5 +22,6 @@ public class PropertyTax extends PayCC{
     public void doCardAction(UUID playerID) {
         PlayerManager.getInstance().getPlayer(playerID).withdraw(housetax * PlayerManager.getInstance().getPlayer(playerID).getPlayerHotelOwnNumber());
         PlayerManager.getInstance().getPlayer(playerID).withdraw(hoteltax * PlayerManager.getInstance().getPlayer(playerID).getPlayerHouseOwnNumber());
+        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("property_tax_chancecard_message"));}
     }
 }
