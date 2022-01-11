@@ -19,7 +19,7 @@ public class GoToNearestFerry extends MoveToFieldCC{
 
     @Override
     public void doCardAction(UUID playerID) {
-        if (GameManager.getInstance().getPlayerPosition(playerID)%40 == 2 || GameManager.getInstance().getPlayerPosition(playerID) == 7) {
+        if (GameManager.getInstance().getPlayerPosition(playerID) == 2 || GameManager.getInstance().getPlayerPosition(playerID) == 7) {
             UUID fieldname = GameManager.getInstance().getGameBoard().getFieldIDFromType(ferry1);
             if (fieldname == null) {
                 GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("error_string"));
@@ -33,7 +33,7 @@ public class GoToNearestFerry extends MoveToFieldCC{
                     giveStartReward
             );
 
-        } else if (GameManager.getInstance().getPlayerPosition(playerID)%40 == 17) {
+        } else if (GameManager.getInstance().getPlayerPosition(playerID) == 17) {
             UUID fieldname = GameManager.getInstance().getGameBoard().getFieldIDFromType(ferry2);
             if (fieldname == null) {
                 GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("error_string"));
@@ -46,7 +46,7 @@ public class GoToNearestFerry extends MoveToFieldCC{
                     GameManager.getInstance().getGameBoard().getFieldPosition(fieldname),
                     giveStartReward
             );
-        } else if (GameManager.getInstance().getPlayerPosition(playerID)%40 == 22) {
+        } else if (GameManager.getInstance().getPlayerPosition(playerID) == 22) {
             UUID fieldname = GameManager.getInstance().getGameBoard().getFieldIDFromType(ferry3);
             if (fieldname == null) {
                 GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("error_string"));
@@ -60,7 +60,7 @@ public class GoToNearestFerry extends MoveToFieldCC{
                     giveStartReward
             );
 
-        } else if (GameManager.getInstance().getPlayerPosition(playerID)%40 == 33 || GameManager.getInstance().getPlayerPosition(playerID)%40 == 36) {
+        } else if (GameManager.getInstance().getPlayerPosition(playerID) == 33 || GameManager.getInstance().getPlayerPosition(playerID) == 36) {
             UUID fieldname = GameManager.getInstance().getGameBoard().getFieldIDFromType(ferry4);
             if (fieldname == null) {
                 GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("error_string"));
