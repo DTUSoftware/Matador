@@ -6,7 +6,7 @@
 
     <groupId>dk.dtu</groupId>
     <artifactId>matador</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
     <name>Matador</name>
     <description>The Danish Matador Boardgame</description>
     <url>https://github.com/DTUSoftware/Matador</url>
