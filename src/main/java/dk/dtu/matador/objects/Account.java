@@ -45,7 +45,6 @@ public class Account {
      */
     private boolean doAccountWithdraw(double amount) {
         if (balance+amount < 0) {
-            balance = 0;
             return false;
         }
         balance = balance+amount;

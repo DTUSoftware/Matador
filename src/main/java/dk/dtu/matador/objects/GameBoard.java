@@ -5,6 +5,10 @@ import dk.dtu.matador.Game;
 import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.objects.chancecards.*;
+import dk.dtu.matador.objects.chancecards.misc.*;
+import dk.dtu.matador.objects.chancecards.move.*;
+import dk.dtu.matador.objects.chancecards.pay.*;
+import dk.dtu.matador.objects.chancecards.receive.*;
 import dk.dtu.matador.objects.fields.*;
 import gui_fields.GUI_Field;
 import org.json.JSONArray;
@@ -23,13 +27,16 @@ public class GameBoard {
     private final HashMap<UUID, Field> fieldMap = new HashMap<>();
     private final HashMap<UUID, Integer> fieldPositions = new HashMap<>();
     private final HashMap<UUID, GUI_Field> guiFields = new LinkedHashMap<>();
+
+    //TODO Remove old ChanceCards
     private final ChanceCard[] chanceCards = new ChanceCard[] {
-    /* Bail */          new BailCC(),
-    /* Give & Take */   new BirthdayCC(), new DidHomeWorkCC(), new EatCandyCC(),
-    /* Move to field */ new BoardWalkCC(), new SkateparkCC(), new StartCC(),
-    /* Move to color */ new BrownRedCC(), new LightBlueCC(), new LightblueYellowCC(), new OrangeBlueCC(), new OrangeCC(), new RedCC(), new SalmonGreenCC(),
-//    /* Move to free */  // new CarCC(), new ShipCC(),
-    /* Special */       new MoveFieldsCC(), new MoveOrDrawCC(),
+        /* move cards */    new GoToFredriksberg(), new GoToGrønningen(), new GoToJail(), new GoToMolslinien(), new GoToNearestFerry(), new GoToRådhusplads(),
+        /* move cards */    new GoToStart(), new GoToStrandvejen(), new GoToVimmelskaftet(), new Move3Back(), new Move3Forward(), new GoToNearestFerryDouble(),
+        /* pay cards */     new BuyBeer(), new CarEnsurance(), new CarRepair(), new Carwash(), new Dentist(), new IllegalCigs(), new IllegalStop(),
+        /* pay cards */     new NewTyres(), new OilPrices(), new ParkingTicket(), new PropertyTax(),
+        /* receive cards */ new Aktie(), new Birthday(), new EllevenRight(), new FamilyParty(), new Garden(), new JointParty(), new MatadorLegatet(),
+        /* receive cards */ new OldFurniture(), new PremiumBond(), new Raise(), new TheClassLottery(), new TheLocalAuthority(),
+        /* misc cards */    new KingsBirthdayCC()
     };
 
     private JSONObject gameBoardJSON;
@@ -75,55 +82,111 @@ public class GameBoard {
         loadGameBoardConfig();
 
         JSONArray jsonFields = gameBoardJSON.getJSONArray("fields");
+        JSONObject subtypeConfiguration = gameBoardJSON.getJSONObject("subtype_configuration");
         fields = new Field[jsonFields.length()];
-        JSONObject jsonFieldGroups = gameBoardJSON.getJSONObject("property_field_groups");
         HashMap<Color, ArrayList<UUID>> fieldGroupsMap = new HashMap<>();
-        // populate map
-        for (String colorString : jsonFieldGroups.keySet()) {
-            fieldGroupsMap.put(getColor(colorString), new ArrayList<>());
-        }
 
         // Load fields from Game Board config
         for (int i = 0; i < jsonFields.length(); i++) {
             JSONObject jsonField = jsonFields.getJSONObject(i);
             String fieldType = jsonField.getString("field_type");
+            String fieldColorString = jsonField.getString("field_color");
+            Color fieldColor = getColor(fieldColorString);
+
+            Color textColor = null;
+            if (jsonField.has("field_color_text")) {
+                textColor = getColor(jsonField.getString("field_color_text"));
+            }
 
             switch (fieldType) {
                 case "StartField":
-                    fields[i] = new StartField();
+                    fields[i] = new StartField(fieldColor, textColor);
                     Game.setStartPassReward(jsonField.getDouble("pass_reward"));
+                    fields[i].reloadLanguage();
                     break;
                 case "PropertyField":
-                    String fieldColorString = jsonField.getString("field_color");
-                    Color fieldColor = getColor(fieldColorString);
-                    fields[i] = new PropertyField(fieldColor, jsonField.getString("field_name"));
+                    String fieldName = jsonField.getString("field_name");
+                    JSONObject prices = jsonField.getJSONObject("prices");
 
-                    // Register the rent
-                    JSONObject groupRentJSON = jsonFieldGroups.getJSONObject(fieldColorString);
-                    double price = groupRentJSON.getDouble("base_price");
-                    double rent = groupRentJSON.getDouble("base_rent");
-                    double groupRent = groupRentJSON.getDouble("group_rent");
-                    Deed fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, rent, groupRent);
+                    double price = prices.getDouble("deed");
+                    double prawnPrice = prices.getDouble("prawn");
+
+                    Deed fieldDeed = null;
+
+                    String fieldSubtype = jsonField.getString("field_subtype");
+                    double[] rent;
+                    switch (fieldSubtype.toLowerCase()) {
+                        case "street":
+                            fields[i] = new StreetField(fieldSubtype, fieldColor, textColor, fieldName);
+                            double housePrice = prices.getDouble("house");
+                            double hotelPrice = prices.getDouble("hotel");
+                            JSONArray rentJSON = (JSONArray) prices.get("rent");
+                            rent = new double[rentJSON.length()];
+                            for (int j = 0; j < rentJSON.length(); j++) {
+                                rent[j] = rentJSON.getDouble(j);
+                            }
+                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice, rent, housePrice, hotelPrice);
+
+                            // Add the group color
+                            if (!fieldGroupsMap.containsKey(fieldColor)) {
+                                fieldGroupsMap.put(fieldColor, new ArrayList<>());
+                            }
+
+                            // Add the field deed to the group array
+                            fieldGroupsMap.get(fieldColor).add(fieldDeed.getID());
+                            break;
+                        case "brewery":
+                            JSONObject breweryConfiguration = subtypeConfiguration.getJSONObject("brewery");
+                            fields[i] = new BreweryField(fieldSubtype, fieldColor, textColor, fieldName);
+                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice, new double[] {breweryConfiguration.getDouble("rent_multiplier"), breweryConfiguration.getDouble("monopoly_multiplier")});
+                            break;
+                        case "ferry":
+                            JSONObject ferryConfiguration = subtypeConfiguration.getJSONObject("ferry");
+                            JSONArray ferryJSONRent = ferryConfiguration.getJSONArray("rent");
+                            rent = new double[ferryJSONRent.length()];
+                            for (int j = 0; j < ferryJSONRent.length(); j++) {
+                                rent[j] = ferryJSONRent.getDouble(j);
+                            }
+                            fields[i] = new FerryField(fieldSubtype, fieldColor, textColor, fieldName);
+                            fieldDeed = DeedManager.getInstance().createDeed(fields[i].getID(), price, prawnPrice, rent);
+                            break;
+                        default:
+                            Game.logDebug("PropertyField has no subtype!");
+                            break;
+                    }
+
+                    if (fieldDeed == null) {
+                        break;
+                    }
+
+                    // Update prices
                     ((PropertyField) fields[i]).updatePrices(fieldDeed.getID());
-
-                    // Add the field deed to the group array
-                    fieldGroupsMap.get(fieldColor).add(fieldDeed.getID());
                     break;
                 case "ChanceField":
-                    fields[i] = new ChanceField();
+                    fields[i] = new ChanceField(fieldColor, textColor);
                     break;
                 case "JailField":
-                    fields[i] = new JailField();
+                    fields[i] = new JailField(fieldColor, textColor);
                     break;
                 case "BreakField":
-                    fields[i] = new BreakField();
+                    fields[i] = new BreakField(fieldColor, textColor);
                     break;
                 case "GoToJailField":
-                    fields[i] = new GoToJailField();
+                    fields[i] = new GoToJailField(fieldColor, textColor);
+                    break;
+                case "TaxField":
+                    switch (jsonField.getString("field_subtype")) {
+                        case "income-tax":
+                            fields[i] = new TaxField(fieldColor, textColor, jsonField.getString("field_subtype"), jsonField.getDouble("tax_amount"), jsonField.getDouble("tax_percentage"));
+                            break;
+                        case "extra-ordinary":
+                            fields[i] = new TaxField(fieldColor, textColor, jsonField.getString("field_subtype"), jsonField.getDouble("tax_amount"));
+                            break;
+                    }
                     break;
                 default:
                     System.out.println("Ohno, field type doesn't exist...");
-                    fields[i] = new ChanceField();
+                    fields[i] = new ChanceField(fieldColor, textColor);
             }
 
             Field field = fields[i];
@@ -213,13 +276,48 @@ public class GameBoard {
         for (int currentField = playerPosition+1; currentField < playerPosition+getFieldAmount(); currentField++) {
             Field field = getField(currentField % getFieldAmount());
             for (Color color : colors) {
-                System.out.println("FieldColor: " + field.getFieldColor());
-                System.out.println("CheckColor: " + color);
+//                System.out.println("FieldColor: " + field.getFieldColor());
+//                System.out.println("CheckColor: " + color);
                 if (field.getFieldColor().equals(color)) {
                     foundField = field;
                     break;
                 }
             }
+            if (foundField != null) { break; }
+        }
+        if (foundField != null) {
+            return foundField.getID();
+        }
+        return null;
+    }
+
+    /**
+     * Gets the next field with one of the given colors, from the position of given player.
+     *
+     * @param playerID  Player to find next field from.
+     * @param fieldName A field type or name of the field (for example BreakField, JailField, StartField,
+     *                  jail, swimming_pool, bowling_alley, etc.)
+     * @return          The UUID of the found field.
+     */
+    public UUID getNextFieldIDWithType(UUID playerID, String fieldName) {
+        int playerPosition = GameManager.getInstance().getPlayerPosition(playerID);
+        Field foundField = null;
+        for (int currentField = playerPosition+1; currentField < playerPosition+getFieldAmount(); currentField++) {
+            Field field = getField(currentField % getFieldAmount());
+            try {
+                if (Class.forName("dk.dtu.matador.objects.fields."+fieldName).isInstance(field)) {
+                    foundField = field;
+                }
+            }
+            catch (Exception e) {
+                System.out.println("Could not find fieldName in Field Class names: " + e.toString());
+            }
+            if (foundField == null) {
+                if (field.getFieldName().equals(fieldName)) {
+                    foundField = field;
+                }
+            }
+            
             if (foundField != null) { break; }
         }
         if (foundField != null) {
@@ -238,7 +336,7 @@ public class GameBoard {
     public UUID getFieldIDFromType(String fieldName) {
         for (UUID uuid : fieldMap.keySet()) {
             try {
-                if (Class.forName("dk.dtu.cdio3.objects.fields."+fieldName).isInstance(fieldMap.get(uuid))) {
+                if (Class.forName("dk.dtu.matador.objects.fields."+fieldName).isInstance(fieldMap.get(uuid))) {
                     return uuid;
                 }
             }

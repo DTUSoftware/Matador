@@ -1,4 +1,4 @@
-package dk.dtu.matador.objects.chancecards;
+package dk.dtu.matador.objects.chancecards.receive;
 
 import dk.dtu.matador.managers.GUIManager;
 import dk.dtu.matador.managers.GameManager;
@@ -7,20 +7,15 @@ import dk.dtu.matador.managers.PlayerManager;
 
 import java.util.UUID;
 
-/**
- * Det er din fødselsdag!
- * Alle giver dig M1
- * TILYKKE MED FØDSELDAGEN!
- */
-public class BirthdayCC extends ChanceCard {
-    private double birthdayWithdrawalAmount = 500.0;
+public class Birthday extends ReceiveCC {
+    private double birthdaygiftFromEveryPLayer = 200.0;
 
-    public BirthdayCC() {
-        super("birthday");
+    public Birthday() {
+        super("birthday", 200.0);
     }
-    public BirthdayCC(double birthdayWithdrawalAmount) {
-        super("birthday");
-        this.birthdayWithdrawalAmount = birthdayWithdrawalAmount;
+    public Birthday(double birthdaygiftFromEveryPLayer) {
+        super("birthday", birthdaygiftFromEveryPLayer);
+        this.birthdaygiftFromEveryPLayer = birthdaygiftFromEveryPLayer;
     }
 
     @Override
@@ -28,8 +23,8 @@ public class BirthdayCC extends ChanceCard {
         double money = 0.0;
         for (UUID otherPlayerID : PlayerManager.getInstance().getPlayerIDs()) {
             if (otherPlayerID != playerID) {
-                if (PlayerManager.getInstance().getPlayer(otherPlayerID).withdraw(birthdayWithdrawalAmount)) {
-                    money = money + birthdayWithdrawalAmount;
+                if (PlayerManager.getInstance().getPlayer(otherPlayerID).withdraw(birthdaygiftFromEveryPLayer)) {
+                    money = money + birthdaygiftFromEveryPLayer;
                 }
                 else {
                     GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("could_not_pay_birthday")

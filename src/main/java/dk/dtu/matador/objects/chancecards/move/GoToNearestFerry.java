@@ -1,33 +1,21 @@
-package dk.dtu.matador.objects.chancecards;
+package dk.dtu.matador.objects.chancecards.move;
 
 import dk.dtu.matador.managers.GUIManager;
 import dk.dtu.matador.managers.GameManager;
 import dk.dtu.matador.managers.LanguageManager;
 
-import java.awt.*;
 import java.util.UUID;
 
-/**
- * Funktion af kort;
- * Ryk frem til et orange felt.
- * Hvis det er ledigt, får du det GRATIS
- * Ellers skal du BETALE leje til ejeren
- */
+public class GoToNearestFerry extends MoveToFieldCC {
+    private boolean giveStartReward = false;
 
-public class OrangeCC extends ChanceCard {
-    /**
-     * Initiates a new ChanceCard.
-     */
-    public OrangeCC() {
-        super("orange");
+     public GoToNearestFerry() {
+        super("go_to_nearest_ferry", false);
     }
 
     @Override
     public void doCardAction(UUID playerID) {
-        UUID fieldID = GameManager.getInstance().getGameBoard().getNextFieldIDWithColor(
-                playerID,
-                new Color[] { Color.ORANGE }
-        );
+        UUID fieldID = GameManager.getInstance().getGameBoard().getNextFieldIDWithType(playerID, "FerryField");
         if (fieldID == null) {
             GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("error_string"));
             System.out.println("Field ID is null!");
@@ -37,8 +25,7 @@ public class OrangeCC extends ChanceCard {
         GameManager.getInstance().setPlayerBoardPosition(
                 playerID,
                 GameManager.getInstance().getGameBoard().getFieldPosition(fieldID),
-                true,
-                true
+                giveStartReward
         );
     }
 }
