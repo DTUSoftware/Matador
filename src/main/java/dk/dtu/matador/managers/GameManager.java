@@ -4,6 +4,7 @@ import dk.dtu.matador.Game;
 import dk.dtu.matador.objects.Deed;
 import dk.dtu.matador.objects.DiceCup;
 import dk.dtu.matador.objects.GameBoard;
+import dk.dtu.matador.objects.chancecards.ChanceCard;
 import dk.dtu.matador.objects.fields.Field;
 import dk.dtu.matador.objects.fields.PropertyField;
 import dk.dtu.matador.objects.fields.StreetField;
@@ -219,6 +220,12 @@ public class GameManager {
                         ((StreetField) field).buildHotel();
                         ((StreetField) field).updatePrices(deed.getID());
                     }
+                    break;
+                case "chancecard":
+                    int cardNumber = Integer.parseInt(cheatCode.split(" ")[1]);
+                    ChanceCard cc = GameManager.getInstance().getGameBoard().getChanceCard(cardNumber);
+                    cc.showCardMessage();
+                    cc.doCardAction(playerID);
                     break;
                 case "balance":
                     double amount = 0.0;

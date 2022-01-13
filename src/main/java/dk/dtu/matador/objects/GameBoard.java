@@ -264,6 +264,15 @@ public class GameBoard {
     }
 
     /**
+     * Gets a specific chance card.
+     *
+     * @return  The picked chance card.
+     */
+    public ChanceCard getChanceCard(int chanceCard) {
+        return chanceCards[chanceCard];
+    }
+
+    /**
      * Gets the next field with one of the given colors, from the position of given player.
      *
      * @param playerID  Player to find next field from.
