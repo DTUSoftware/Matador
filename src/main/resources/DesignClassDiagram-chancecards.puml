@@ -28,11 +28,7 @@ package chancecards {
         abstract class MoveToFieldCC {
         }
 
-        abstract class MoveToColorCC {
-        }
-
         ChanceCard <|-- MoveToFieldCC
-        ChanceCard <|-- MoveToColorCC
     }
 
     package misc {

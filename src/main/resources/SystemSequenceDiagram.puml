@@ -44,12 +44,15 @@ loop players want to keep playing
 
                     alt landed on chance card field
                         GUI <- Game : showChanceCard()
+                    else landed on go to jail field
                     else landed on other player's property
                         GUI <- Game : updatePlayerBalance()
                     else landed on own property
                     end
-                else action: build house
-                else action: build hotel
+                else action: build on property
+                else action: sell buildings
+                else action: prawn property
+                else action: trade property
                 end
             end
         end
