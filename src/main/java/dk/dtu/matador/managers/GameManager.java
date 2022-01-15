@@ -514,7 +514,7 @@ public class GameManager {
                         deed = DeedManager.getInstance().getDeed(deedID);
 
                         // if they can build houses or hotels, add the deed to the list of tradeable deeds
-                        if (deed.getHouses() == 0 && deed.getHotels() == 0 && !deed.isPrawned()) {
+                        if (deed.getHouses() == 0 && deed.getHotels() == 0) {
                             tradeableDeeds.add(deedID);
                         }
                     }
@@ -665,11 +665,13 @@ public class GameManager {
                         }
 
                         if (!actionMap.get("prawn") || !actionMap.get("trade")) {
-                            if (deed.getHouses() == 0 && deed.getHotels() == 0 && !deed.isPrawned()) {
-                                // if the deed does not have any houses or hotels on it, enable the option to prawn the deed
-                                actionMap.put("prawn", true);
-                                // you can also trade deeds with no houses on them, if it isn't pawned
+                            if (deed.getHouses() == 0 && deed.getHotels() == 0) {
+                                // you can also trade deeds with no houses on them, even if it's prawned
                                 actionMap.put("trade", true);
+                                if (!deed.isPrawned()) {
+                                    // if the deed does not have any houses or hotels on it, enable the option to prawn the deed
+                                    actionMap.put("prawn", true);
+                                }
                             }
                         }
 
