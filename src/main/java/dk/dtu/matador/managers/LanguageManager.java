@@ -30,9 +30,6 @@ public class LanguageManager {
             locale = new Locale("en", "US");
         }
 
-        // TODO: remove following line after adding English
-        locale = new Locale("da", "DK");
-
         // initialize
         messages = getMessages();
     }

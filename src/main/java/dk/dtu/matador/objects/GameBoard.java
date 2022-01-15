@@ -28,7 +28,6 @@ public class GameBoard {
     private final HashMap<UUID, Integer> fieldPositions = new HashMap<>();
     private final HashMap<UUID, GUI_Field> guiFields = new LinkedHashMap<>();
 
-    //TODO Remove old ChanceCards
     private final ChanceCard[] chanceCards = new ChanceCard[] {
         /* move cards */    new GoToFredriksberg(), new GoToGrønningen(), new GoToJail(), new GoToMolslinien(), new GoToNearestFerry(), new GoToRådhusplads(),
         /* move cards */    new GoToStart(), new GoToStrandvejen(), new GoToVimmelskaftet(), new Move3Back(), new Move3Forward(), new GoToNearestFerryDouble(),
