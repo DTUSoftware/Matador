@@ -97,6 +97,9 @@ public class GameManager {
     }
 
     public UUID[] getPlayersCurrentlyInGame() {
+        if (playerQueue == null) {
+            return new UUID[0];
+        }
         return playerQueue.toArray(new UUID[0]);
     }
 
