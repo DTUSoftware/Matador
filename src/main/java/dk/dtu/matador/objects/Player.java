@@ -128,7 +128,9 @@ public class Player {
      * Remove the player from the game, and set their properties, if any, on auction.
      */
     private void handleBankruptcy(UUID otherPlayerID) {
-        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("bankruptcy").replace("{player}", getName()));
+        if (guiInitialized()) {
+            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("bankruptcy").replace("{player}", getName()));
+        }
 
         if (otherPlayerID != null) {
             // give the rest of the balance to the other player
