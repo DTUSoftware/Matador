@@ -4,6 +4,7 @@ import dk.dtu.matador.Game;
 import dk.dtu.matador.objects.Deed;
 import dk.dtu.matador.objects.DiceCup;
 import dk.dtu.matador.objects.GameBoard;
+import dk.dtu.matador.objects.chancecards.ChanceCard;
 import dk.dtu.matador.objects.fields.Field;
 import dk.dtu.matador.objects.fields.PropertyField;
 import dk.dtu.matador.objects.fields.StreetField;
@@ -96,6 +97,9 @@ public class GameManager {
     }
 
     public UUID[] getPlayersCurrentlyInGame() {
+        if (playerQueue == null) {
+            return new UUID[0];
+        }
         return playerQueue.toArray(new UUID[0]);
     }
 
@@ -219,6 +223,12 @@ public class GameManager {
                         ((StreetField) field).buildHotel();
                         ((StreetField) field).updatePrices(deed.getID());
                     }
+                    break;
+                case "chancecard":
+                    int cardNumber = Integer.parseInt(cheatCode.split(" ")[1]);
+                    ChanceCard cc = GameManager.getInstance().getGameBoard().getChanceCard(cardNumber);
+                    cc.showCardMessage();
+                    cc.doCardAction(playerID);
                     break;
                 case "balance":
                     double amount = 0.0;
@@ -507,7 +517,7 @@ public class GameManager {
                         deed = DeedManager.getInstance().getDeed(deedID);
 
                         // if they can build houses or hotels, add the deed to the list of tradeable deeds
-                        if (deed.getHouses() == 0 && deed.getHotels() == 0 && !deed.isPrawned()) {
+                        if (deed.getHouses() == 0 && deed.getHotels() == 0) {
                             tradeableDeeds.add(deedID);
                         }
                     }
@@ -658,11 +668,13 @@ public class GameManager {
                         }
 
                         if (!actionMap.get("prawn") || !actionMap.get("trade")) {
-                            if (deed.getHouses() == 0 && deed.getHotels() == 0 && !deed.isPrawned()) {
-                                // if the deed does not have any houses or hotels on it, enable the option to prawn the deed
-                                actionMap.put("prawn", true);
-                                // you can also trade deeds with no houses on them, if it isn't pawned
+                            if (deed.getHouses() == 0 && deed.getHotels() == 0) {
+                                // you can also trade deeds with no houses on them, even if it's prawned
                                 actionMap.put("trade", true);
+                                if (!deed.isPrawned()) {
+                                    // if the deed does not have any houses or hotels on it, enable the option to prawn the deed
+                                    actionMap.put("prawn", true);
+                                }
                             }
                         }
 

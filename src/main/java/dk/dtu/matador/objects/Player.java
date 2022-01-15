@@ -4,6 +4,7 @@ import dk.dtu.matador.Game;
 import dk.dtu.matador.managers.*;
 import dk.dtu.matador.managers.DeedManager;
 import dk.dtu.matador.objects.fields.PropertyField;
+import org.apache.commons.codec.language.bm.Lang;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,11 +73,13 @@ public class Player {
                 }
 
                 if (!actionMap.get("prawn") || !actionMap.get("trade")) {
-                    if (deed.getHouses() == 0 && deed.getHotels() == 0 && !deed.isPrawned()) {
-                        // if the deed does not have any houses or hotels on it, enable the option to prawn the deed
-                        actionMap.put("prawn", true);
-                        // you can also trade deeds with no houses on them, if it isn't pawned
+                    if (deed.getHouses() == 0 && deed.getHotels() == 0) {
+                        // you can also trade deeds with no houses on them, even if it's prawned
                         actionMap.put("trade", true);
+                        if (!deed.isPrawned()) {
+                            // if the deed does not have any houses or hotels on it, enable the option to prawn the deed
+                            actionMap.put("prawn", true);
+                        }
                     }
                 }
 
@@ -100,6 +103,13 @@ public class Player {
         String[] actions = actionList.toArray(new String[0]);
 
         if (actions.length > 0) {
+            if (actions.length == 1 && actionMap.get("trade")) {
+                boolean wantToTrade = GUIManager.getInstance().askPrompt(LanguageManager.getInstance().getString("confirm_trade_avoid_bankrupt"));
+                if (!wantToTrade) {
+                    Game.logDebug("Player did not want to trade, to avoid bankruptcy. Balance: " + Double.toString(getBalance()));
+                    return false;
+                }
+            }
             HashMap<String, Boolean> actionsPerformed = GameManager.getInstance().playerChooseAction(actions, playerID);
 
             for (String action : actions) {
@@ -118,6 +128,10 @@ public class Player {
      * Remove the player from the game, and set their properties, if any, on auction.
      */
     private void handleBankruptcy(UUID otherPlayerID) {
+        if (guiInitialized()) {
+            GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("bankruptcy").replace("{player}", getName()));
+        }
+
         if (otherPlayerID != null) {
             // give the rest of the balance to the other player
             PlayerManager.getInstance().getPlayer(otherPlayerID).deposit(this.getBalance());

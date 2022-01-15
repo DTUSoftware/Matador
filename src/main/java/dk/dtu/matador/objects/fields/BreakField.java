@@ -1,5 +1,6 @@
 package dk.dtu.matador.objects.fields;
 
+import dk.dtu.matador.managers.GUIManager;
 import dk.dtu.matador.managers.LanguageManager;
 
 import java.awt.*;
@@ -12,7 +13,7 @@ public class BreakField extends Field {
 
     @Override
     public void doLandingAction(UUID playerID) {
-
+        GUIManager.getInstance().showMessage(LanguageManager.getInstance().getString("free_break"));
     }
 
     @Override
